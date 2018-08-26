@@ -36,7 +36,7 @@ kotlin {
 ext.lifecycle_version = "1.1.1"
 ext.room_version = "1.1.1"
 ext.dagger_version = "2.16"
-ext.coroutines_version = '0.25.0'
+ext.coroutines_version = '0.24.0'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
