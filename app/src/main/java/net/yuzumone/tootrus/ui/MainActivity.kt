@@ -1,8 +1,9 @@
-package net.yuzumone.tootrus
+package net.yuzumone.tootrus.ui
 
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
