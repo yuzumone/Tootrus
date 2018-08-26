@@ -2,7 +2,7 @@ package net.yuzumone.tootrus.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import net.yuzumone.tootrus.MainActivity
+import net.yuzumone.tootrus.ui.MainActivity
 
 @Module
 abstract class ActivityModule {
