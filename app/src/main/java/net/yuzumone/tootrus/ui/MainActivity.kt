@@ -1,9 +1,13 @@
 package net.yuzumone.tootrus.ui
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -16,16 +20,29 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var mainViewModel: MainViewModel
     @Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setSupportActionBar(binding.toolbar)
+        mainViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(MainViewModel::class.java)
         if (savedInstanceState == null) {
-            val fragment = OAuthFragment()
-            supportFragmentManager.beginTransaction().add(R.id.content, fragment).commit()
+            mainViewModel.setFragment.observe(this, Observer {
+                when (it) {
+                    SetFragment.OAUTH -> {
+                        supportFragmentManager.beginTransaction()
+                                .add(R.id.content, OAuthFragment()).commit()
+                    }
+                    SetFragment.TOP -> {
+                        Log.d("MainActivity", "Top fragment")
+                    }
+                }
+            })
         }
     }
 
