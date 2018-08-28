@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Tootrus</string>
+    <string name="error">Error</string>
+    <string name="instance_name">instance name</string>
+    <string name="web_oauth">web oauth</string>
+    <string name="oauth_code">oauth code</string>
+    <string name="oauth">oauth</string>
 </resources>

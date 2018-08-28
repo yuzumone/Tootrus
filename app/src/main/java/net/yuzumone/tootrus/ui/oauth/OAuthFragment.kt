@@ -1,0 +1,59 @@
+package net.yuzumone.tootrus.ui.oauth
+
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import dagger.android.support.AndroidSupportInjection
+import net.yuzumone.tootrus.R
+import net.yuzumone.tootrus.databinding.FragmentOauthBinding
+import javax.inject.Inject
+
+class OAuthFragment : Fragment() {
+
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var binding: FragmentOauthBinding
+    private lateinit var viewModel: OAuthViewModel
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        binding = FragmentOauthBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(OAuthViewModel::class.java)
+        binding.viewModel = viewModel
+        viewModel.oauthParameter.observe(this, Observer {
+            it?.url.let { url ->
+                requireActivity().run {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                }
+            }
+        })
+        viewModel.oauthParameterError.observe(this, Observer {
+            binding.inputInstanceName.error = getString(R.string.error)
+        })
+        viewModel.accessToken.observe(this, Observer {
+            Log.d("Token", it.toString())
+        })
+        viewModel.accessTokenError.observe(this, Observer {
+            binding.inputOauthCode.error = getString(R.string.error)
+        })
+    }
+}
