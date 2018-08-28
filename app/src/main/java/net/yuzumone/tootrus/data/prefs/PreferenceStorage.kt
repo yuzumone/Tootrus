@@ -8,6 +8,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 interface PreferenceStorage {
+    var instanceName: String?
     var accessToken: String?
 }
 
@@ -17,9 +18,11 @@ class SharedPreferenceStorage @Inject constructor(context: Context) : Preference
 
     companion object {
         private const val PREFS_NAME = "net.yuzumone.tootrus.prefs"
+        private const val PREF_INSTANCE_NAME = "pref_instance_name"
         private const val PREF_ACCESS_TOKEN = "pref_access_token"
     }
 
+    override var instanceName by StringPreference(prefs, PREF_INSTANCE_NAME, null)
     override var accessToken by StringPreference(prefs, PREF_ACCESS_TOKEN, null)
 }
 

@@ -25,6 +25,7 @@ class OAuthViewModel @Inject constructor(
         val name = if (instanceName.isNullOrBlank()) "social.mikutter.hachune.net" else instanceName!!
         try {
             val param = async { repository.getOAuthParameter(name) }.await()
+            preferenceStorage.instanceName = param.instanceName
             oauthParameter.postValue(param)
         } catch (e: Mastodon4jRequestException) {
             oauthParameterError.postValue(e)
