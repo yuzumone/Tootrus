@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+        <variable
+            name="viewModel"
+            type="net.yuzumone.tootrus.ui.oauth.OAuthViewModel"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        >
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_instance_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/instance_name"
+                android:inputType="textUri"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_web_oauth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/web_oauth"
+            android:onClick="@{(v) -> viewModel.getOAuthParameter(inputInstanceName.getEditText().getText().toString())}"
+            app:layout_constraintTop_toBottomOf="@id/input_instance_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_oauth_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:errorEnabled="true"
+            app:layout_constraintTop_toBottomOf="@id/button_web_oauth"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/oauth_code"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_oauth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/oauth"
+            android:onClick="@{(v) -> viewModel.getAccessToken(inputOauthCode.getEditText().getText().toString())}"
+            app:layout_constraintTop_toBottomOf="@+id/input_oauth_code"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
+</layout>
