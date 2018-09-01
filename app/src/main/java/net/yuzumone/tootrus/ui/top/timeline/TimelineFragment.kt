@@ -6,18 +6,22 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import dagger.android.support.AndroidSupportInjection
+import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTimelineBinding
+import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import javax.inject.Inject
 
 class TimelineFragment : Fragment() {
 
     private lateinit var binding: FragmentTimelineBinding
     private lateinit var timelineViewModel: TimelineViewModel
+    private lateinit var adapter: StatusBindingAdapter
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onAttach(context: Context?) {
@@ -29,19 +33,21 @@ class TimelineFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         timelineViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TimelineViewModel::class.java)
-        binding = FragmentTimelineBinding.inflate(inflater, container, false)
+        adapter = StatusBindingAdapter()
+        binding = FragmentTimelineBinding.inflate(inflater, container, false).apply {
+            recyclerTimeline.adapter = adapter
+            recyclerTimeline.layoutManager = LinearLayoutManager(activity)
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         timelineViewModel.statuses.observe(this, Observer {
-            it?.forEach { status ->
-                Log.d("Timeline", status.content)
-            }
+            adapter.update(it)
         })
         timelineViewModel.error.observe(this, Observer {
-            Log.d("Timeline", it.toString())
+            Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
     }
 }
