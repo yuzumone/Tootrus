@@ -9,12 +9,14 @@ import net.yuzumone.tootrus.domain.mastodon.oauth.GetAccessTokenUseCase
 import net.yuzumone.tootrus.domain.mastodon.oauth.GetOAuthParameterUseCase
 import net.yuzumone.tootrus.domain.mastodon.oauth.Params
 import net.yuzumone.tootrus.domain.prefs.StoreAccessTokenPrefUseCase
+import net.yuzumone.tootrus.domain.prefs.StoreInstanceNamePrefUseCase
 import net.yuzumone.tootrus.vo.OAuthParameter
 import javax.inject.Inject
 
 class OAuthViewModel @Inject constructor(
         private val getOAuthParameterUseCase: GetOAuthParameterUseCase,
         private val getAccessTokenUseCase: GetAccessTokenUseCase,
+        private val storeInstanceNamePrefUseCase: StoreInstanceNamePrefUseCase,
         private val storeAccessTokenPrefUseCase: StoreAccessTokenPrefUseCase
 ) : ViewModel() {
 
@@ -40,6 +42,7 @@ class OAuthViewModel @Inject constructor(
                     when (it) {
                         is Success -> {
                             accessToken.value = it.value
+                            storeInstanceNamePrefUseCase(oauthParameter.value!!.instanceName)
                             storeAccessTokenPrefUseCase(it.value.accessToken)
                         }
                         is Failure -> accessTokenError.value = it.reason
