@@ -7,7 +7,6 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -15,6 +14,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ActivityMainBinding
 import net.yuzumone.tootrus.ui.oauth.OAuthFragment
+import net.yuzumone.tootrus.ui.top.TopFragment
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                                 .add(R.id.content, OAuthFragment()).commit()
                     }
                     SetFragment.TOP -> {
-                        Log.d("MainActivity", "Top fragment")
+                        supportFragmentManager.beginTransaction()
+                                .add(R.id.content, TopFragment()).commit()
                     }
                 }
             })

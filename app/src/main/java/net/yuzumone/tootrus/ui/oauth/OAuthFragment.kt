@@ -8,13 +8,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentOauthBinding
+import net.yuzumone.tootrus.ui.top.TopFragment
 import javax.inject.Inject
 
 class OAuthFragment : Fragment() {
@@ -50,7 +50,9 @@ class OAuthFragment : Fragment() {
             binding.inputInstanceName.error = getString(R.string.error)
         })
         viewModel.accessToken.observe(this, Observer {
-            Log.d("Token", it.toString())
+            requireFragmentManager().run {
+                beginTransaction().replace(R.id.content, TopFragment()).commit()
+            }
         })
         viewModel.accessTokenError.observe(this, Observer {
             binding.inputOauthCode.error = getString(R.string.error)
