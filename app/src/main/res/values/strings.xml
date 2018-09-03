@@ -6,4 +6,6 @@
     <string name="oauth_code">oauth code</string>
     <string name="oauth">oauth</string>
     <string name="boosted_by">Boosted by %1$s</string>
+    <string name="toot_hint">What\'s happening?</string>
+    <string name="post_status">Post status</string>
 </resources>

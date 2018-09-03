@@ -1,5 +1,6 @@
 package net.yuzumone.tootrus.ui.top
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import net.yuzumone.tootrus.databinding.FragmentTopBinding
+import net.yuzumone.tootrus.ui.PostStatusActivity
 import net.yuzumone.tootrus.ui.top.timeline.TimelineFragment
 
 class TopFragment : Fragment() {
@@ -16,12 +18,22 @@ class TopFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        binding = FragmentTopBinding.inflate(inflater, container, false)
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             add("HomeTimeline", TimelineFragment())
         }
+        binding = FragmentTopBinding.inflate(inflater, container, false)
         binding.pager.adapter = adapter
+        binding.postStatusButtonListener = getPostStatusButtonListener()
         return binding.root
+    }
+
+    private fun getPostStatusButtonListener(): View.OnClickListener {
+        return View.OnClickListener {
+            val intent = Intent(activity, PostStatusActivity::class.java)
+            requireActivity().run {
+                startActivity(intent)
+            }
+        }
     }
 
     class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
