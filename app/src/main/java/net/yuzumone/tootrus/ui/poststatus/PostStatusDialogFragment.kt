@@ -1,9 +1,6 @@
 package net.yuzumone.tootrus.ui.poststatus
 
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.content.DialogInterface
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -12,22 +9,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import com.sys1yagi.mastodon4j.api.entity.Status
-import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentPostStatusBinding
-import net.yuzumone.tootrus.ui.PostStatusViewModel
-import javax.inject.Inject
+import net.yuzumone.tootrus.domain.mastodon.status.PostStatusParams
+import net.yuzumone.tootrus.service.PostStatusService
 
 class PostStatusDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentPostStatusBinding
-    private lateinit var postStatusViewModel: PostStatusViewModel
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override fun onAttach(context: Context?) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(activity!!)
@@ -38,8 +27,6 @@ class PostStatusDialogFragment : DialogFragment() {
             setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
-        postStatusViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get(PostStatusViewModel::class.java)
         initializeToolbar()
         return dialog
     }
@@ -68,7 +55,11 @@ class PostStatusDialogFragment : DialogFragment() {
                            sensitive: Boolean,
                            spoilerText: String?,
                            visibility: Status.Visibility = Status.Visibility.Public) {
-        postStatusViewModel.postStatus(text, inReplyToId, mediaIds, sensitive, spoilerText, visibility)
+        val params = PostStatusParams(text, inReplyToId, mediaIds, sensitive, spoilerText, visibility)
+        requireActivity().run {
+            val intent = PostStatusService.createIntent(this, params)
+            startService(intent)
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
