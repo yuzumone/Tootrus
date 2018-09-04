@@ -22,6 +22,9 @@
             android:name=".ui.PostStatusActivity"
             android:theme="@style/TransparentTheme"
             />
+        <service
+            android:name=".service.PostStatusService"
+            />
     </application>
 
 </manifest>
