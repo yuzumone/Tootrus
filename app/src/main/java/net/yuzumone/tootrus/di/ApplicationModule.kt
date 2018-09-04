@@ -6,10 +6,7 @@ import com.sys1yagi.mastodon4j.MastodonClient
 import dagger.Module
 import dagger.Provides
 import net.yuzumone.tootrus.App
-import net.yuzumone.tootrus.data.mastodon.DefaultOAuthRepository
-import net.yuzumone.tootrus.data.mastodon.DefaultTimelineRepository
-import net.yuzumone.tootrus.data.mastodon.OAuthRepository
-import net.yuzumone.tootrus.data.mastodon.TimelineRepository
+import net.yuzumone.tootrus.data.mastodon.*
 import net.yuzumone.tootrus.data.prefs.PreferenceStorage
 import net.yuzumone.tootrus.data.prefs.SharedPreferenceStorage
 import okhttp3.OkHttpClient
@@ -59,5 +56,10 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun providesTimelineRepository(repository: DefaultTimelineRepository): TimelineRepository =
+            repository
+
+    @Singleton
+    @Provides
+    fun providesStatusRepository(repository: DefaultStatusRepository): StatusRepository =
             repository
 }
