@@ -8,4 +8,8 @@
     <string name="boosted_by">Boosted by %1$s</string>
     <string name="toot_hint">What\'s happening?</string>
     <string name="post_status">Post status</string>
+    <string name="channel_id">default</string>
+    <string name="channel_name">Notification</string>
+    <string name="toot_now">Toot now....</string>
+    <string name="toot">Toot!</string>
 </resources>
