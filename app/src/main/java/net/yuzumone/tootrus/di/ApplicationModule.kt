@@ -38,6 +38,7 @@ class ApplicationModule {
 
     @Singleton
     @Provides
+    @Named("client")
     fun providesMastodonClient(
             okHttpClientBuilder: OkHttpClient.Builder,
             gson: Gson,
