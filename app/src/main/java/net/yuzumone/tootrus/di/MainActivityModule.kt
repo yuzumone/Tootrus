@@ -7,14 +7,18 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import net.yuzumone.tootrus.ui.oauth.OAuthFragment
 import net.yuzumone.tootrus.ui.oauth.OAuthViewModel
+import net.yuzumone.tootrus.ui.top.TopFragment
+import net.yuzumone.tootrus.ui.top.TopViewModel
 import net.yuzumone.tootrus.ui.top.timeline.TimelineFragment
-import net.yuzumone.tootrus.ui.top.timeline.TimelineViewModel
 
 @Module
 abstract class MainActivityModule {
 
     @ContributesAndroidInjector
     abstract fun contributesOAuthFragment(): OAuthFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributesTopFragment(): TopFragment
 
     @ContributesAndroidInjector
     abstract fun contributesTimelineFragment(): TimelineFragment
@@ -26,6 +30,6 @@ abstract class MainActivityModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(TimelineViewModel::class)
-    abstract fun bindTimelineViewModel(viewModel: TimelineViewModel): ViewModel
+    @ViewModelKey(TopViewModel::class)
+    abstract fun bindTopViewModel(viewModel: TopViewModel): ViewModel
 }

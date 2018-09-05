@@ -10,6 +10,7 @@ import net.yuzumone.tootrus.data.mastodon.*
 import net.yuzumone.tootrus.data.prefs.PreferenceStorage
 import net.yuzumone.tootrus.data.prefs.SharedPreferenceStorage
 import okhttp3.OkHttpClient
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -37,6 +38,7 @@ class ApplicationModule {
 
     @Singleton
     @Provides
+    @Named("client")
     fun providesMastodonClient(
             okHttpClientBuilder: OkHttpClient.Builder,
             gson: Gson,
@@ -46,6 +48,21 @@ class ApplicationModule {
                 okHttpClientBuilder = okHttpClientBuilder,
                 gson = gson)
                 .accessToken(preferenceStorage.accessToken ?: "").build()
+    }
+
+    @Singleton
+    @Provides
+    @Named("streaming_client")
+    fun providesMastodonStreamingClient(
+            okHttpClientBuilder: OkHttpClient.Builder,
+            gson: Gson,
+            preferenceStorage: PreferenceStorage): MastodonClient {
+        return MastodonClient.Builder(
+                instanceName = preferenceStorage.instanceName ?: "",
+                okHttpClientBuilder = okHttpClientBuilder,
+                gson = gson)
+                .accessToken(preferenceStorage.accessToken ?: "")
+                .useStreamingApi().build()
     }
 
     @Singleton
@@ -61,5 +78,10 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun providesStatusRepository(repository: DefaultStatusRepository): StatusRepository =
+            repository
+
+    @Singleton
+    @Provides
+    fun providesStreamRepository(repository: DefaultStreamRepository): StreamRepository =
             repository
 }
