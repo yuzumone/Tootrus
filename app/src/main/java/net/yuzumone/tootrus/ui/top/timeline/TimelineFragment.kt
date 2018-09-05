@@ -15,12 +15,13 @@ import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTimelineBinding
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
+import net.yuzumone.tootrus.ui.top.TopViewModel
 import javax.inject.Inject
 
 class TimelineFragment : Fragment() {
 
     private lateinit var binding: FragmentTimelineBinding
-    private lateinit var timelineViewModel: TimelineViewModel
+    private lateinit var topViewModel: TopViewModel
     private lateinit var adapter: StatusBindingAdapter
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -31,8 +32,8 @@ class TimelineFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        timelineViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(TimelineViewModel::class.java)
+        topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(TopViewModel::class.java)
         adapter = StatusBindingAdapter()
         binding = FragmentTimelineBinding.inflate(inflater, container, false).apply {
             recyclerTimeline.adapter = adapter
@@ -43,10 +44,10 @@ class TimelineFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        timelineViewModel.statuses.observe(this, Observer {
+        topViewModel.statuses.observe(this, Observer {
             adapter.update(it)
         })
-        timelineViewModel.error.observe(this, Observer {
+        topViewModel.error.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
     }

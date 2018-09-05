@@ -4,6 +4,7 @@ import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.api.entity.Status
 import com.sys1yagi.mastodon4j.api.method.Statuses
 import javax.inject.Inject
+import javax.inject.Named
 
 interface StatusRepository {
     fun postStatus(status: String,
@@ -16,7 +17,7 @@ interface StatusRepository {
 }
 
 class DefaultStatusRepository @Inject constructor(
-        private val client: MastodonClient
+        @Named("client") private val client: MastodonClient
 ) : StatusRepository {
     override fun postStatus(status: String,
                             inReplyToId: Long?,
