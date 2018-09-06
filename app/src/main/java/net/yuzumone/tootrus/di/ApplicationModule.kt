@@ -84,4 +84,9 @@ class ApplicationModule {
     @Provides
     fun providesStreamRepository(repository: DefaultStreamRepository): StreamRepository =
             repository
+
+    @Singleton
+    @Provides
+    fun providesNotificationRepository(repository: DefaultNotificationRepository): NotificationRepository =
+            repository
 }
