@@ -12,4 +12,7 @@
     <string name="channel_name">Notification</string>
     <string name="toot_now">Toot now....</string>
     <string name="toot">Toot!</string>
+    <string name="favorited_status">%1$s favorited your status</string>
+    <string name="boosted_status">%1$s boosted your status</string>
+    <string name="followed_you">%1$s followed you</string>
 </resources>
