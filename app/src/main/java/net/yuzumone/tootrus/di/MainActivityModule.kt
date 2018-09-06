@@ -9,6 +9,7 @@ import net.yuzumone.tootrus.ui.oauth.OAuthFragment
 import net.yuzumone.tootrus.ui.oauth.OAuthViewModel
 import net.yuzumone.tootrus.ui.top.TopFragment
 import net.yuzumone.tootrus.ui.top.TopViewModel
+import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
 import net.yuzumone.tootrus.ui.top.timeline.TimelineFragment
 
 @Module
@@ -22,6 +23,9 @@ abstract class MainActivityModule {
 
     @ContributesAndroidInjector
     abstract fun contributesTimelineFragment(): TimelineFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributesNotificationFragment(): NotificationFragment
 
     @Binds
     @IntoMap
