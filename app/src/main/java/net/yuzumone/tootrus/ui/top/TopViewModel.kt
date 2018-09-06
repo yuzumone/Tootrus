@@ -8,6 +8,7 @@ import com.sys1yagi.mastodon4j.api.entity.Notification
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
+import net.yuzumone.tootrus.domain.mastodon.notification.getNotificationsUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.ShutdownUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.StartUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
@@ -17,10 +18,12 @@ import javax.inject.Inject
 class TopViewModel @Inject constructor(
         private val startUserStreamUseCase: StartUserStreamUseCase,
         private val shutdownUserStreamUseCase: ShutdownUserStreamUseCase,
-        getTimelineUseCase: GetTimelineUseCase
+        getTimelineUseCase: GetTimelineUseCase,
+        getNotificationsUseCase: getNotificationsUseCase
 ): ViewModel() {
 
     val statuses = MutableLiveData<List<Status>>()
+    val notifications = MutableLiveData<List<Notification>>()
     val error = MutableLiveData<Exception>()
 
     init {
@@ -28,6 +31,12 @@ class TopViewModel @Inject constructor(
         getTimelineUseCase(range) {
             when (it) {
                 is Success -> statuses.value = it.value
+                is Failure -> error.value = it.reason
+            }
+        }
+        getNotificationsUseCase(range) {
+            when (it) {
+                is Success -> notifications.value = it.value
                 is Failure -> error.value = it.reason
             }
         }
@@ -40,7 +49,7 @@ class TopViewModel @Inject constructor(
             }
 
             override fun onNotification(notification: Notification) {
-
+                notifications.postInsertValue(notification)
             }
 
             override fun onDelete(id: Long) {
