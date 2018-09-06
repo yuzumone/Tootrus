@@ -4,11 +4,12 @@ import android.databinding.BindingAdapter
 import android.text.Html
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
+import com.sys1yagi.mastodon4j.api.entity.Notification
 import net.yuzumone.tootrus.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-object CustomStatusBindingAdapters {
+object CustomBindingAdapters {
 
     @BindingAdapter("icon")
     @JvmStatic
@@ -44,13 +45,33 @@ object CustomStatusBindingAdapters {
 
     @BindingAdapter("content")
     @JvmStatic
-    fun setContent(view: TextView, content: String) {
-        view.text = Html.fromHtml(content, Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL)
+    fun setContent(view: TextView, content: String?) {
+        view.text = Html.fromHtml(content ?: "", Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL)
     }
 
     @BindingAdapter("boosted_by")
     @JvmStatic
     fun setBoostedBy(view: TextView, userName: String) {
         view.text = view.context.getString(R.string.boosted_by, userName)
+    }
+
+    @BindingAdapter("notification_label")
+    @JvmStatic
+    fun setNotificationLabel(view: TextView, notification: Notification) {
+        val name = notification.account?.displayName
+        when (notification.type) {
+            Notification.Type.Mention.value -> {
+                view.text = ""
+            }
+            Notification.Type.Favourite.value -> {
+                view.text = view.context.getString(R.string.favorited_status, name)
+            }
+            Notification.Type.Reblog.value -> {
+                view.text = view.context.getString(R.string.boosted_status, name)
+            }
+            Notification.Type.Follow.value -> {
+                view.text = view.context.getString(R.string.followed_you, name)
+            }
+        }
     }
 }
