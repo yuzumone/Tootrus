@@ -4,11 +4,12 @@ import android.databinding.BindingAdapter
 import android.text.Html
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
+import com.sys1yagi.mastodon4j.api.entity.Notification
 import net.yuzumone.tootrus.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-object CustomStatusBindingAdapters {
+object CustomBindingAdapters {
 
     @BindingAdapter("icon")
     @JvmStatic
@@ -44,8 +45,8 @@ object CustomStatusBindingAdapters {
 
     @BindingAdapter("content")
     @JvmStatic
-    fun setContent(view: TextView, content: String) {
-        view.text = Html.fromHtml(content, Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL)
+    fun setContent(view: TextView, content: String?) {
+        view.text = Html.fromHtml(content ?: "", Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL)
     }
 
     @BindingAdapter("boosted_by")
