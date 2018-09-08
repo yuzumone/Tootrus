@@ -89,4 +89,9 @@ class ApplicationModule {
     @Provides
     fun providesNotificationRepository(repository: DefaultNotificationRepository): NotificationRepository =
             repository
+
+    @Singleton
+    @Provides
+    fun providesPublicRepository(repository: DefaultPublicRepository): PublicRepository =
+            repository
 }
