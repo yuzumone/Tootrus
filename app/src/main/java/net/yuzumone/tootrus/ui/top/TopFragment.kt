@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.databinding.FragmentTopBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
+import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
 import net.yuzumone.tootrus.ui.top.timeline.TimelineFragment
 import javax.inject.Inject
@@ -37,9 +38,11 @@ class TopFragment : Fragment() {
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             add("HomeTimeline", TimelineFragment())
             add("Notifications", NotificationFragment())
+            add("LocalTimeline", LocalTimelineFragment())
         }
         binding = FragmentTopBinding.inflate(inflater, container, false)
         binding.pager.adapter = adapter
+        binding.pager.offscreenPageLimit = 2
         binding.postStatusButtonListener = getPostStatusButtonListener()
         return binding.root
     }
