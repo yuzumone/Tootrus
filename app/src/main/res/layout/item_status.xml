@@ -57,7 +57,7 @@
             android:id="@+id/text_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:created_at="@{status.createdAt}"
+            app:created_at="@{status.reblog == null ? status.createdAt : status.reblog.createdAt}"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="5s"
             />
