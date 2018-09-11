@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,9 +41,23 @@ class TopFragment : Fragment() {
             add("Notifications", NotificationFragment())
             add("LocalTimeline", LocalTimelineFragment())
         }
-        binding = FragmentTopBinding.inflate(inflater, container, false)
-        binding.pager.adapter = adapter
-        binding.pager.offscreenPageLimit = 2
+        binding = FragmentTopBinding.inflate(inflater, container, false).apply {
+            pager.adapter = adapter
+            pager.offscreenPageLimit = 2
+            pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrollStateChanged(state: Int) {
+
+                }
+
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                    activity!!.title = adapter.getPageTitle(position)
+                }
+
+                override fun onPageSelected(position: Int) {
+
+                }
+            })
+        }
         binding.postStatusButtonListener = getPostStatusButtonListener()
         return binding.root
     }
