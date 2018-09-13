@@ -15,4 +15,7 @@
     <string name="favorited_status">%1$s favorited your status</string>
     <string name="boosted_status">%1$s boosted your status</string>
     <string name="followed_you">%1$s followed you</string>
+    <string name="section_home">Home</string>
+    <string name="section_notification">Notifications</string>
+    <string name="section_local_timeline">Local timeline</string>
 </resources>

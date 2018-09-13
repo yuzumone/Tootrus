@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_drawer_home"
+        android:title="@string/section_home"
+        />
+
+    <item
+        android:id="@+id/navigation_notification"
+        android:icon="@drawable/ic_drawer_notification"
+        android:title="@string/section_notification"
+        />
+
+    <item
+        android:id="@+id/navigation_local_timeline"
+        android:icon="@drawable/ic_drawer_local_timeline"
+        android:title="@string/section_local_timeline"
+        />
+</menu>
