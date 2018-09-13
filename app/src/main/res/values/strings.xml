@@ -18,4 +18,6 @@
     <string name="section_home">Home</string>
     <string name="section_notification">Notifications</string>
     <string name="section_local_timeline">Local timeline</string>
+    <string name="open_drawer_content">Open drawer</string>
+    <string name="close_drawer_content">Close drawer</string>
 </resources>
