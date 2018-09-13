@@ -5,7 +5,10 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.view.GravityCompat
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -39,11 +42,25 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                                 .add(R.id.content, OAuthFragment()).commit()
                     }
                     SetFragment.TOP -> {
+                        val topFragment = TopFragment()
                         supportFragmentManager.beginTransaction()
-                                .add(R.id.content, TopFragment()).commit()
+                                .add(R.id.content, topFragment).commit()
+                        initializeDrawer(topFragment)
                     }
                 }
             })
+        }
+    }
+
+    private fun initializeDrawer(listener: NavigationView.OnNavigationItemSelectedListener) {
+        val drawerToggle = ActionBarDrawerToggle(this, binding.drawer, binding.toolbar,
+                R.string.open_drawer_content, R.string.close_drawer_content)
+        binding.drawer.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
+        binding.navigation.inflateMenu(R.menu.navigation)
+        binding.navigation.setNavigationItemSelectedListener {
+            binding.drawer.closeDrawer(GravityCompat.START)
+            listener.onNavigationItemSelected(it)
         }
     }
 
