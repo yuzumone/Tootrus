@@ -3,6 +3,7 @@ package net.yuzumone.tootrus.util
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
+import android.support.v4.view.ViewPager
 
 fun <X, Y> LiveData<X>.map(body: (X) -> Y): LiveData<Y> {
     return Transformations.map(this, body)
@@ -35,3 +36,14 @@ fun <T> MutableLiveData<List<T>>.postInsertValues(values: List<T>) {
     values.reversed().forEach { list.add(0, it) }
     this.postValue(list)
 }
+
+fun ViewPager.addOnPageChangeListener(
+        onPageScrollStateChanged: (Int) -> Unit,
+        onPageScrolled: (Int, Float, Int) -> Unit,
+        onPageSelected: (Int) -> Unit
+) = addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+    override fun onPageScrollStateChanged(state: Int): Unit = onPageScrollStateChanged(state)
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int): Unit =
+            onPageScrolled(position, positionOffset, positionOffsetPixels)
+    override fun onPageSelected(position: Int): Unit = onPageSelected(position)
+})
