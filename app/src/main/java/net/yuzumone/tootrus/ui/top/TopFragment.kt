@@ -9,7 +9,6 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -21,6 +20,7 @@ import net.yuzumone.tootrus.ui.PostStatusActivity
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
 import net.yuzumone.tootrus.ui.top.timeline.TimelineFragment
+import net.yuzumone.tootrus.util.addOnPageChangeListener
 import javax.inject.Inject
 
 class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
@@ -47,19 +47,11 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
         binding = FragmentTopBinding.inflate(inflater, container, false).apply {
             pager.adapter = adapter
             pager.offscreenPageLimit = 2
-            pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrollStateChanged(state: Int) {
-
-                }
-
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                    activity!!.title = adapter.getPageTitle(position)
-                }
-
-                override fun onPageSelected(position: Int) {
-
-                }
-            })
+            pager.addOnPageChangeListener(
+                onPageSelected = { activity!!.title = adapter.getPageTitle(it) },
+                onPageScrolled = { _, _, _ -> },
+                onPageScrollStateChanged = {}
+            )
         }
         binding.postStatusButtonListener = getPostStatusButtonListener()
         return binding.root
