@@ -6,6 +6,8 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -33,9 +35,13 @@ class LocalTimelineFragment : Fragment() {
         localTimelineViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(LocalTimelineViewModel::class.java)
         adapter = StatusBindingAdapter()
+        val layoutManager = LinearLayoutManager(activity)
+        val divider = DividerItemDecoration(activity, layoutManager.orientation)
+        divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
         binding = FragmentLocalTimelineBinding.inflate(inflater, container, false).apply {
             recyclerLocalTimeline.adapter = adapter
-            recyclerLocalTimeline.layoutManager = LinearLayoutManager(activity)
+            recyclerLocalTimeline.layoutManager = layoutManager
+            recyclerLocalTimeline.addItemDecoration(divider)
             swipeRefresh.setColorSchemeResources(R.color.colorPrimary)
             swipeRefresh.setOnRefreshListener { localTimelineViewModel.updateLocalTimeline() }
         }
