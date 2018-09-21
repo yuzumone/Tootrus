@@ -2,19 +2,46 @@ package net.yuzumone.tootrus.ui.common
 
 import android.databinding.BindingAdapter
 import android.text.Html
+import android.view.View
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
+import com.sys1yagi.mastodon4j.api.entity.Attachment
 import com.sys1yagi.mastodon4j.api.entity.Notification
+import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
 import java.text.SimpleDateFormat
 import java.util.*
 
 object CustomBindingAdapters {
 
-    @BindingAdapter("icon")
+    @BindingAdapter("image_url")
     @JvmStatic
-    fun setIcon(view: SimpleDraweeView, avatar: String) {
-        view.setImageURI(avatar)
+    fun setIcon(view: SimpleDraweeView, imageUrl: String) {
+        view.setImageURI(imageUrl)
+    }
+
+    @BindingAdapter("media_attachments")
+    @JvmStatic
+    fun setMediaAttachments(view: ThumbnailView, attachments: List<Attachment>) {
+        view.setAttachments(attachments)
+    }
+
+    @BindingAdapter("thumbnail_visibility")
+    @JvmStatic
+    fun setThumbnailViewVisibility(view: ThumbnailView, status: Status) {
+        if (status.reblog == null) {
+            if (status.mediaAttachments.isEmpty()) {
+                view.visibility = View.GONE
+            } else {
+                view.visibility = View.VISIBLE
+            }
+        } else {
+            if (status.reblog!!.mediaAttachments.isEmpty()) {
+                view.visibility = View.GONE
+            } else {
+                view.visibility = View.VISIBLE
+            }
+        }
     }
 
     @BindingAdapter("created_at")
