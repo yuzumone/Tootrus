@@ -92,5 +92,17 @@
             app:layout_constraintTop_toBottomOf="@id/text_content"
             app:layout_constraintStart_toStartOf="@id/text_content"
             />
+
+        <net.yuzumone.tootrus.ui.common.ThumbnailView
+            android:id="@+id/view_thumbnail"
+            android:layout_width="0dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="8dp"
+            app:thumbnail_visibility="@{status}"
+            app:media_attachments="@{status.reblog == null ? status.mediaAttachments : status.reblog.mediaAttachments}"
+            app:layout_constraintTop_toBottomOf="@id/text_boosted_by"
+            app:layout_constraintStart_toStartOf="@id/text_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
     </android.support.constraint.ConstraintLayout>
 </layout>
