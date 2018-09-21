@@ -11,10 +11,10 @@ import java.util.*
 
 object CustomBindingAdapters {
 
-    @BindingAdapter("icon")
+    @BindingAdapter("image_url")
     @JvmStatic
-    fun setIcon(view: SimpleDraweeView, avatar: String) {
-        view.setImageURI(avatar)
+    fun setIcon(view: SimpleDraweeView, imageUrl: String) {
+        view.setImageURI(imageUrl)
     }
 
     @BindingAdapter("created_at")
