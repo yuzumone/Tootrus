@@ -13,6 +13,7 @@ class StatusBindingAdapter : BindingRecyclerAdapter<Status, ItemStatusBinding>()
     }
 
     override fun bind(binding: ItemStatusBinding, item: Status) {
+        binding.viewThumbnail.clearThumbnail()
         binding.status = item
     }
 }

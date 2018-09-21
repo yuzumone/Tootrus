@@ -31,6 +31,10 @@ class ThumbnailView : LinearLayout {
         }
     }
 
+    fun clearThumbnail() {
+        removeAllViews()
+    }
+
     private fun bindView(attachment: Attachment) {
         val binding = DataBindingUtil.inflate<ViewThumbnailBinding>(
                 LayoutInflater.from(context), R.layout.view_thumbnail, this, false
