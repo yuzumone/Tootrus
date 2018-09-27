@@ -15,94 +15,181 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         >
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/image_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:image_url="@{status.reblog == null ? status.account.avatar : status.reblog.account.avatar}"
-            />
-
-        <LinearLayout
-            android:id="@+id/container_name"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/view_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toEndOf="@id/image_icon"
-            app:layout_constraintEnd_toStartOf="@id/text_time"
+            android:padding="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             >
 
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/image_icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:image_url="@{status.reblog == null ? status.account.avatar : status.reblog.account.avatar}"
+                />
+
+            <LinearLayout
+                android:id="@+id/container_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toEndOf="@id/image_icon"
+                app:layout_constraintEnd_toStartOf="@id/text_time"
+                >
+
+                <TextView
+                    android:id="@+id/text_display_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:ellipsize="end"
+                    android:text="@{status.reblog == null ? status.account.displayName : status.reblog.account.displayName}"
+                    tools:text="DisplayName"
+                    />
+
+                <TextView
+                    android:id="@+id/text_acct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="@{status.reblog == null ? status.account.acct : status.reblog.account.acct}"
+                    android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:ellipsize="end"
+                    tools:text="UserName@example.com"
+                    />
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/text_display_name"
+                android:id="@+id/text_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:ellipsize="end"
-                android:text="@{status.reblog == null ? status.account.displayName : status.reblog.account.displayName}"
-                tools:text="DisplayName"
+                app:created_at="@{status.reblog == null ? status.createdAt : status.reblog.createdAt}"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="5s"
                 />
 
             <TextView
-                android:id="@+id/text_acct"
+                android:id="@+id/text_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:content="@{status.reblog == null ? status.content : status.reblog.content}"
+                app:layout_constraintStart_toStartOf="@id/container_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/container_name"
+                tools:text="content_content_content"
+                />
+
+            <TextView
+                android:id="@+id/text_boosted_by"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@{status.reblog == null ? status.account.acct : status.reblog.account.acct}"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:ellipsize="end"
-                tools:text="UserName@example.com"
+                android:visibility="@{status.reblog == null ? View.GONE : View.VISIBLE}"
+                app:boosted_by="@{status.account.userName}"
+                app:layout_constraintTop_toBottomOf="@id/text_content"
+                app:layout_constraintStart_toStartOf="@id/text_content"
                 />
-        </LinearLayout>
 
-        <TextView
-            android:id="@+id/text_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:created_at="@{status.reblog == null ? status.createdAt : status.reblog.createdAt}"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="5s"
-            />
+            <net.yuzumone.tootrus.ui.common.ThumbnailView
+                android:id="@+id/view_thumbnail"
+                android:layout_width="0dp"
+                android:layout_height="96dp"
+                android:layout_marginTop="8dp"
+                app:thumbnail_visibility="@{status}"
+                app:media_attachments="@{status.reblog == null ? status.mediaAttachments : status.reblog.mediaAttachments}"
+                app:layout_constraintTop_toBottomOf="@id/text_boosted_by"
+                app:layout_constraintStart_toStartOf="@id/text_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+        </android.support.constraint.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/text_content"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/view_quick"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:content="@{status.reblog == null ? status.content : status.reblog.content}"
-            app:layout_constraintStart_toStartOf="@id/container_name"
+            android:layout_height="56dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/view_item"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/container_name"
-            tools:text="content_content_content"
-            />
+            >
 
-        <TextView
-            android:id="@+id/text_boosted_by"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{status.reblog == null ? View.GONE : View.VISIBLE}"
-            app:boosted_by="@{status.account.userName}"
-            app:layout_constraintTop_toBottomOf="@id/text_content"
-            app:layout_constraintStart_toStartOf="@id/text_content"
-            />
+            <ImageButton
+                android:id="@+id/button_detail"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_quick_detail"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/button_reply"
+                app:layout_constraintHorizontal_weight="0.2"
+                />
 
-        <net.yuzumone.tootrus.ui.common.ThumbnailView
-            android:id="@+id/view_thumbnail"
-            android:layout_width="0dp"
-            android:layout_height="96dp"
-            android:layout_marginTop="8dp"
-            app:thumbnail_visibility="@{status}"
-            app:media_attachments="@{status.reblog == null ? status.mediaAttachments : status.reblog.mediaAttachments}"
-            app:layout_constraintTop_toBottomOf="@id/text_boosted_by"
-            app:layout_constraintStart_toStartOf="@id/text_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            <ImageButton
+                android:id="@+id/button_reply"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_quick_reply"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/button_detail"
+                app:layout_constraintEnd_toStartOf="@id/button_fav"
+                app:layout_constraintHorizontal_weight="0.2"
+                />
+
+            <ImageButton
+                android:id="@+id/button_fav"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_quick_fav"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/button_reply"
+                app:layout_constraintEnd_toStartOf="@id/button_reblog"
+                app:layout_constraintHorizontal_weight="0.2"
+                />
+
+            <ImageButton
+                android:id="@+id/button_reblog"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_quick_reblog"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/button_fav"
+                app:layout_constraintEnd_toStartOf="@id/button_menu"
+                app:layout_constraintHorizontal_weight="0.2"
+                />
+
+            <ImageButton
+                android:id="@+id/button_menu"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_quick_menu"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/button_reblog"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="0.2"
+                />
+        </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>
