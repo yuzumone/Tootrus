@@ -14,6 +14,7 @@ interface StatusRepository {
                    spoilerText: String?,
                    visibility: Status.Visibility
     ): Status
+    fun postFavorite(id: Long): Status
 }
 
 class DefaultStatusRepository @Inject constructor(
@@ -33,5 +34,9 @@ class DefaultStatusRepository @Inject constructor(
                 spoilerText = spoilerText,
                 visibility = visibility
         ).execute()
+    }
+
+    override fun postFavorite(id: Long): Status {
+        return Statuses(client).postFavourite(id).execute()
     }
 }

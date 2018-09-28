@@ -8,7 +8,9 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ItemStatusBinding
 
-class StatusBindingAdapter : BindingRecyclerAdapter<Status, ItemStatusBinding>() {
+class StatusBindingAdapter(
+        private val favoriteButtonClickCallback: ((Status) -> Unit)?
+) : BindingRecyclerAdapter<Status, ItemStatusBinding>() {
     override fun createBinding(parent: ViewGroup): ItemStatusBinding {
         val binding = ItemStatusBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,6 +28,10 @@ class StatusBindingAdapter : BindingRecyclerAdapter<Status, ItemStatusBinding>()
             } else {
                 binding.viewQuick.visibility = View.GONE
             }
+        }
+        binding.buttonFav.setOnClickListener {
+            binding.status?.let { favoriteButtonClickCallback?.invoke(it) }
+            binding.viewQuick.visibility = View.GONE
         }
         binding.status = item
     }
