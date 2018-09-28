@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTimelineBinding
@@ -36,7 +37,7 @@ class TimelineFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(TopViewModel::class.java)
-        adapter = StatusBindingAdapter()
+        adapter = StatusBindingAdapter(handleFavorite())
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
@@ -53,8 +54,15 @@ class TimelineFragment : Fragment() {
         topViewModel.statuses.observe(this, Observer {
             adapter.update(it)
         })
+        topViewModel.favoritedStatus.observe(this, Observer {
+            Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
+        })
         topViewModel.error.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
+    }
+
+    private fun handleFavorite(): (Status) -> Unit = {
+        topViewModel.postFavorite(it)
     }
 }
