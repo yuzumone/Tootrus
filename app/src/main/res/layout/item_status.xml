@@ -8,7 +8,7 @@
     <data>
         <variable
             name="status"
-            type="com.sys1yagi.mastodon4j.api.entity.Status"/>
+            type="net.yuzumone.tootrus.vo.TootrusStatus"/>
         <import type="android.view.View"/>
     </data>
 
@@ -34,7 +34,7 @@
                 android:id="@+id/image_icon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                app:image_url="@{status.reblog == null ? status.account.avatar : status.reblog.account.avatar}"
+                app:image_url="@{status.hasReblog ? status.reblog.account.avatar : status.account.avatar}"
                 />
 
             <LinearLayout
@@ -55,7 +55,7 @@
                     android:maxLines="1"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
-                    android:text="@{status.reblog == null ? status.account.displayName : status.reblog.account.displayName}"
+                    android:text="@{status.hasReblog ? status.reblog.account.displayName : status.account.displayName}"
                     tools:text="DisplayName"
                     />
 
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:text="@{status.reblog == null ? status.account.acct : status.reblog.account.acct}"
+                    android:text="@{status.hasReblog ? status.reblog.account.acct : status.account.acct}"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
@@ -76,7 +76,7 @@
                 android:id="@+id/text_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:created_at="@{status.reblog == null ? status.createdAt : status.reblog.createdAt}"
+                app:created_at="@{status.hasReblog ? status.reblog.createdAt : status.createdAt}"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="5s"
                 />
@@ -85,7 +85,7 @@
                 android:id="@+id/text_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:content="@{status.reblog == null ? status.content : status.reblog.content}"
+                app:content="@{status.hasReblog ? status.reblog.content : status.content}"
                 app:layout_constraintStart_toStartOf="@id/container_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/container_name"
@@ -96,7 +96,7 @@
                 android:id="@+id/text_boosted_by"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{status.reblog == null ? View.GONE : View.VISIBLE}"
+                android:visibility="@{status.hasReblog ? View.VISIBLE : View.GONE}"
                 app:boosted_by="@{status.account.userName}"
                 app:layout_constraintTop_toBottomOf="@id/text_content"
                 app:layout_constraintStart_toStartOf="@id/text_content"
@@ -108,7 +108,7 @@
                 android:layout_height="96dp"
                 android:layout_marginTop="8dp"
                 app:thumbnail_visibility="@{status}"
-                app:media_attachments="@{status.reblog == null ? status.mediaAttachments : status.reblog.mediaAttachments}"
+                app:media_attachments="@{status.hasReblog ? status.reblog.mediaAttachments : status.mediaAttachments}"
                 app:layout_constraintTop_toBottomOf="@id/text_boosted_by"
                 app:layout_constraintStart_toStartOf="@id/text_content"
                 app:layout_constraintEnd_toEndOf="parent"

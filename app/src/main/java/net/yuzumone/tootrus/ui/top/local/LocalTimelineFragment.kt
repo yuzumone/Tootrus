@@ -18,6 +18,7 @@ import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentLocalTimelineBinding
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
+import net.yuzumone.tootrus.vo.TootrusStatus
 import javax.inject.Inject
 
 class LocalTimelineFragment : Fragment() {
@@ -64,7 +65,7 @@ class LocalTimelineFragment : Fragment() {
         })
     }
 
-    private fun handleFavorite(): (Status) -> Unit = {
+    private fun handleFavorite(): (TootrusStatus) -> Unit = {
         localTimelineViewModel.postFavorite(it)
     }
 }
