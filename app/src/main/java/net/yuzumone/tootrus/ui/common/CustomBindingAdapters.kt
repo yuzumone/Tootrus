@@ -7,8 +7,8 @@ import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.sys1yagi.mastodon4j.api.entity.Attachment
 import com.sys1yagi.mastodon4j.api.entity.Notification
-import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
+import net.yuzumone.tootrus.vo.TootrusStatus
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,7 +28,7 @@ object CustomBindingAdapters {
 
     @BindingAdapter("thumbnail_visibility")
     @JvmStatic
-    fun setThumbnailViewVisibility(view: ThumbnailView, status: Status) {
+    fun setThumbnailViewVisibility(view: ThumbnailView, status: TootrusStatus) {
         if (status.reblog == null) {
             if (status.mediaAttachments.isEmpty()) {
                 view.visibility = View.GONE
