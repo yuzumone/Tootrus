@@ -14,6 +14,7 @@ import net.yuzumone.tootrus.domain.mastodon.stream.ShutdownUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.StartUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
 import net.yuzumone.tootrus.util.postInsertValue
+import net.yuzumone.tootrus.vo.TootrusStatus
 import javax.inject.Inject
 
 class TopViewModel @Inject constructor(
@@ -24,8 +25,8 @@ class TopViewModel @Inject constructor(
         getNotificationsUseCase: getNotificationsUseCase
 ): ViewModel() {
 
-    val statuses = MutableLiveData<List<Status>>()
-    val favoritedStatus = MutableLiveData<Status>()
+    val statuses = MutableLiveData<List<TootrusStatus>>()
+    val favoritedStatus = MutableLiveData<TootrusStatus>()
     val notifications = MutableLiveData<List<Notification>>()
     val error = MutableLiveData<Exception>()
 
@@ -48,7 +49,7 @@ class TopViewModel @Inject constructor(
     fun startUserStream() {
         val handler = object : Handler {
             override fun onStatus(status: Status) {
-                statuses.postInsertValue(status)
+                statuses.postInsertValue(TootrusStatus(status))
             }
 
             override fun onNotification(notification: Notification) {
@@ -66,7 +67,7 @@ class TopViewModel @Inject constructor(
         shutdownUserStreamUseCase(Unit)
     }
 
-    fun postFavorite(target: Status) {
+    fun postFavorite(target: TootrusStatus) {
         postFavoriteUseCase(target.id) {
             when (it) {
                 is Success -> favoritedStatus.value = it.value
