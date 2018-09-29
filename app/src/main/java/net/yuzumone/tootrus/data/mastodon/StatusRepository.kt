@@ -3,6 +3,7 @@ package net.yuzumone.tootrus.data.mastodon
 import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.api.entity.Status
 import com.sys1yagi.mastodon4j.api.method.Statuses
+import net.yuzumone.tootrus.vo.TootrusStatus
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -13,8 +14,8 @@ interface StatusRepository {
                    sensitive: Boolean,
                    spoilerText: String?,
                    visibility: Status.Visibility
-    ): Status
-    fun postFavorite(id: Long): Status
+    ): TootrusStatus
+    fun postFavorite(id: Long): TootrusStatus
 }
 
 class DefaultStatusRepository @Inject constructor(
@@ -25,8 +26,8 @@ class DefaultStatusRepository @Inject constructor(
                             mediaIds: List<Long>?,
                             sensitive: Boolean,
                             spoilerText: String?,
-                            visibility: Status.Visibility): Status {
-        return Statuses(client).postStatus(
+                            visibility: Status.Visibility): TootrusStatus {
+        val s = Statuses(client).postStatus(
                 status = status,
                 inReplyToId = inReplyToId,
                 mediaIds = mediaIds,
@@ -34,9 +35,10 @@ class DefaultStatusRepository @Inject constructor(
                 spoilerText = spoilerText,
                 visibility = visibility
         ).execute()
+        return TootrusStatus(s)
     }
 
-    override fun postFavorite(id: Long): Status {
-        return Statuses(client).postFavourite(id).execute()
+    override fun postFavorite(id: Long): TootrusStatus {
+        return TootrusStatus(Statuses(client).postFavourite(id).execute())
     }
 }
