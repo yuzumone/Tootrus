@@ -8,7 +8,7 @@
     <data>
         <variable
             name="notification"
-            type="com.sys1yagi.mastodon4j.api.entity.Notification"/>
+            type="net.yuzumone.tootrus.vo.TootrusNotification"/>
         <import type="android.view.View"/>
     </data>
 
