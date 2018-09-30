@@ -8,7 +8,7 @@ import com.sys1yagi.mastodon4j.api.entity.Notification
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
-import net.yuzumone.tootrus.domain.mastodon.notification.getNotificationsUseCase
+import net.yuzumone.tootrus.domain.mastodon.notification.GetNotificationsUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostFavoriteUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.ShutdownUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.StartUserStreamUseCase
@@ -23,7 +23,7 @@ class TopViewModel @Inject constructor(
         private val shutdownUserStreamUseCase: ShutdownUserStreamUseCase,
         private val postFavoriteUseCase: PostFavoriteUseCase,
         getTimelineUseCase: GetTimelineUseCase,
-        getNotificationsUseCase: getNotificationsUseCase
+        getNotificationsUseCase: GetNotificationsUseCase
 ): ViewModel() {
 
     val statuses = MutableLiveData<List<TootrusStatus>>()

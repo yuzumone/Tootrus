@@ -6,7 +6,7 @@ import net.yuzumone.tootrus.domain.UseCase
 import net.yuzumone.tootrus.vo.TootrusNotification
 import javax.inject.Inject
 
-class getNotificationsUseCase @Inject constructor(
+class GetNotificationsUseCase @Inject constructor(
         private val repository: NotificationRepository
 ) : UseCase<Range, List<TootrusNotification>>() {
     override suspend fun run(params: Range) = repository.getNotifications(params)
