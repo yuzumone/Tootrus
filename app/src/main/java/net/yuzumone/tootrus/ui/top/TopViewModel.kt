@@ -14,6 +14,7 @@ import net.yuzumone.tootrus.domain.mastodon.stream.ShutdownUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.StartUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
 import net.yuzumone.tootrus.util.postInsertValue
+import net.yuzumone.tootrus.vo.TootrusNotification
 import net.yuzumone.tootrus.vo.TootrusStatus
 import javax.inject.Inject
 
@@ -27,7 +28,7 @@ class TopViewModel @Inject constructor(
 
     val statuses = MutableLiveData<List<TootrusStatus>>()
     val favoritedStatus = MutableLiveData<TootrusStatus>()
-    val notifications = MutableLiveData<List<Notification>>()
+    val notifications = MutableLiveData<List<TootrusNotification>>()
     val error = MutableLiveData<Exception>()
 
     init {
@@ -53,7 +54,7 @@ class TopViewModel @Inject constructor(
             }
 
             override fun onNotification(notification: Notification) {
-                notifications.postInsertValue(notification)
+                notifications.postInsertValue(TootrusNotification(notification))
             }
 
             override fun onDelete(id: Long) {

@@ -8,6 +8,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.sys1yagi.mastodon4j.api.entity.Attachment
 import com.sys1yagi.mastodon4j.api.entity.Notification
 import net.yuzumone.tootrus.R
+import net.yuzumone.tootrus.vo.TootrusNotification
 import net.yuzumone.tootrus.vo.TootrusStatus
 import java.text.SimpleDateFormat
 import java.util.*
@@ -84,7 +85,7 @@ object CustomBindingAdapters {
 
     @BindingAdapter("notification_label")
     @JvmStatic
-    fun setNotificationLabel(view: TextView, notification: Notification) {
+    fun setNotificationLabel(view: TextView, notification: TootrusNotification) {
         val name = notification.account?.displayName
         when (notification.type) {
             Notification.Type.Mention.value -> {
