@@ -11,7 +11,7 @@ import net.yuzumone.tootrus.ui.top.TopFragment
 import net.yuzumone.tootrus.ui.top.TopViewModel
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
-import net.yuzumone.tootrus.ui.top.timeline.TimelineFragment
+import net.yuzumone.tootrus.ui.top.timeline.HomeTimelineFragment
 
 @Module
 abstract class MainActivityModule {
@@ -23,7 +23,7 @@ abstract class MainActivityModule {
     abstract fun contributesTopFragment(): TopFragment
 
     @ContributesAndroidInjector
-    abstract fun contributesTimelineFragment(): TimelineFragment
+    abstract fun contributesTimelineFragment(): HomeTimelineFragment
 
     @ContributesAndroidInjector
     abstract fun contributesNotificationFragment(): NotificationFragment
