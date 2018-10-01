@@ -10,7 +10,6 @@ import net.yuzumone.tootrus.ui.oauth.OAuthViewModel
 import net.yuzumone.tootrus.ui.top.TopFragment
 import net.yuzumone.tootrus.ui.top.TopViewModel
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
-import net.yuzumone.tootrus.ui.top.local.LocalTimelineViewModel
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
 import net.yuzumone.tootrus.ui.top.timeline.TimelineFragment
 
@@ -41,9 +40,4 @@ abstract class MainActivityModule {
     @IntoMap
     @ViewModelKey(TopViewModel::class)
     abstract fun bindTopViewModel(viewModel: TopViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(LocalTimelineViewModel::class)
-    abstract fun bindLocalTimelineViewModel(viewModel: LocalTimelineViewModel): ViewModel
 }
