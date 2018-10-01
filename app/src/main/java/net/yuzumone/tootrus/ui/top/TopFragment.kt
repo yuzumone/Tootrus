@@ -19,7 +19,7 @@ import net.yuzumone.tootrus.databinding.FragmentTopBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
-import net.yuzumone.tootrus.ui.top.timeline.TimelineFragment
+import net.yuzumone.tootrus.ui.top.timeline.HomeTimelineFragment
 import net.yuzumone.tootrus.util.addOnPageChangeListener
 import javax.inject.Inject
 
@@ -40,7 +40,7 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
                 .get(TopViewModel::class.java)
         topViewModel.startUserStream()
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
-            add(getString(R.string.section_home), TimelineFragment())
+            add(getString(R.string.section_home), HomeTimelineFragment())
             add(getString(R.string.section_notification), NotificationFragment())
             add(getString(R.string.section_local_timeline), LocalTimelineFragment())
         }

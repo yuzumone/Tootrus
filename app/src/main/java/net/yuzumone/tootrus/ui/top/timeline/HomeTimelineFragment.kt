@@ -21,7 +21,7 @@ import net.yuzumone.tootrus.ui.top.TopViewModel
 import net.yuzumone.tootrus.vo.TootrusStatus
 import javax.inject.Inject
 
-class TimelineFragment : Fragment() {
+class HomeTimelineFragment : Fragment() {
 
     private lateinit var binding: FragmentTimelineBinding
     private lateinit var topViewModel: TopViewModel
