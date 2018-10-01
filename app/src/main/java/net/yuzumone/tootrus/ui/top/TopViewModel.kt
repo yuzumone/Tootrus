@@ -12,7 +12,9 @@ import net.yuzumone.tootrus.domain.mastodon.notification.GetNotificationsUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostFavoriteUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.ShutdownUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.StartUserStreamUseCase
+import net.yuzumone.tootrus.domain.mastodon.timeline.GetLocalPublicUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
+import net.yuzumone.tootrus.util.insertValues
 import net.yuzumone.tootrus.util.postInsertValue
 import net.yuzumone.tootrus.vo.TootrusNotification
 import net.yuzumone.tootrus.vo.TootrusStatus
@@ -22,11 +24,13 @@ class TopViewModel @Inject constructor(
         private val startUserStreamUseCase: StartUserStreamUseCase,
         private val shutdownUserStreamUseCase: ShutdownUserStreamUseCase,
         private val postFavoriteUseCase: PostFavoriteUseCase,
+        private val getLocalPublicUseCase: GetLocalPublicUseCase,
         getTimelineUseCase: GetTimelineUseCase,
         getNotificationsUseCase: GetNotificationsUseCase
 ): ViewModel() {
 
-    val statuses = MutableLiveData<List<TootrusStatus>>()
+    val homeStatuses = MutableLiveData<List<TootrusStatus>>()
+    val localStatuses = MutableLiveData<List<TootrusStatus>>()
     val favoritedStatus = MutableLiveData<TootrusStatus>()
     val notifications = MutableLiveData<List<TootrusNotification>>()
     val error = MutableLiveData<Exception>()
@@ -35,7 +39,7 @@ class TopViewModel @Inject constructor(
         val range = Range()
         getTimelineUseCase(range) {
             when (it) {
-                is Success -> statuses.value = it.value
+                is Success -> homeStatuses.value = it.value
                 is Failure -> error.value = it.reason
             }
         }
@@ -45,12 +49,18 @@ class TopViewModel @Inject constructor(
                 is Failure -> error.value = it.reason
             }
         }
+        getLocalPublicUseCase(range) {
+            when (it) {
+                is Success -> localStatuses.value = it.value
+                is Failure -> error.value = it.reason
+            }
+        }
     }
 
     fun startUserStream() {
         val handler = object : Handler {
             override fun onStatus(status: Status) {
-                statuses.postInsertValue(TootrusStatus(status))
+                homeStatuses.postInsertValue(TootrusStatus(status))
             }
 
             override fun onNotification(notification: Notification) {
@@ -66,6 +76,21 @@ class TopViewModel @Inject constructor(
 
     fun shutdownUserStream() {
         shutdownUserStreamUseCase(Unit)
+    }
+
+    fun updateLocalTimeline() {
+        val id = localStatuses.value?.get(0)?.id
+        if (id == null) {
+            error.value = NullPointerException()
+        } else {
+            val range = Range(sinceId = id)
+            getLocalPublicUseCase(range) {
+                when (it) {
+                    is Success -> localStatuses.insertValues(it.value)
+                    is Failure -> error.value = it.reason
+                }
+            }
+        }
     }
 
     fun postFavorite(target: TootrusStatus) {
