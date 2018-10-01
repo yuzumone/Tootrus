@@ -51,7 +51,7 @@ class TimelineFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topViewModel.statuses.observe(this, Observer {
+        topViewModel.homeStatuses.observe(this, Observer {
             adapter.update(it)
         })
         topViewModel.favoritedStatus.observe(this, Observer {
