@@ -96,9 +96,31 @@ class TopViewModel @Inject constructor(
     fun postFavorite(target: TootrusStatus) {
         postFavoriteUseCase(target.id) {
             when (it) {
-                is Success -> favoritedStatus.value = it.value
+                is Success -> {
+                    changeIsFavoriteValue(target, true)
+                    favoritedStatus.value = it.value
+                }
                 is Failure -> error.value = it.reason
             }
         }
+    }
+
+    private fun changeIsFavoriteValue(target: TootrusStatus, state: Boolean) {
+        val homeArray = arrayListOf<TootrusStatus>()
+        homeStatuses.value?.forEach {
+            if (it.id == target.id) {
+                it.isFavorited = state
+            }
+            homeArray.add(it)
+        }
+        homeStatuses.postValue(homeArray)
+        val localArray = arrayListOf<TootrusStatus>()
+        localStatuses.value?.forEach {
+            if (it.id == target.id) {
+                it.isFavorited = state
+            }
+            localArray.add(it)
+        }
+        localStatuses.postValue(localArray)
     }
 }
