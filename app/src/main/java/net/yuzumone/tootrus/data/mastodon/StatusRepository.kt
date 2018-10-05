@@ -16,6 +16,7 @@ interface StatusRepository {
                    visibility: Status.Visibility
     ): TootrusStatus
     fun postFavorite(id: Long): TootrusStatus
+    fun postUnfavorite(id: Long): TootrusStatus
 }
 
 class DefaultStatusRepository @Inject constructor(
@@ -40,5 +41,9 @@ class DefaultStatusRepository @Inject constructor(
 
     override fun postFavorite(id: Long): TootrusStatus {
         return TootrusStatus(Statuses(client).postFavourite(id).execute())
+    }
+
+    override fun postUnfavorite(id: Long): TootrusStatus {
+        return TootrusStatus(Statuses(client).postUnfavourite(id).execute())
     }
 }
