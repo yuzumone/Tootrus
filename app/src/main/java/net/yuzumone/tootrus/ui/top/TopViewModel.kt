@@ -10,6 +10,7 @@ import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.notification.GetNotificationsUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostFavoriteUseCase
+import net.yuzumone.tootrus.domain.mastodon.status.PostUnfavoriteUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.ShutdownUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.StartUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetLocalPublicUseCase
@@ -24,6 +25,7 @@ class TopViewModel @Inject constructor(
         private val startUserStreamUseCase: StartUserStreamUseCase,
         private val shutdownUserStreamUseCase: ShutdownUserStreamUseCase,
         private val postFavoriteUseCase: PostFavoriteUseCase,
+        private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
         private val getLocalPublicUseCase: GetLocalPublicUseCase,
         getTimelineUseCase: GetTimelineUseCase,
         getNotificationsUseCase: GetNotificationsUseCase
@@ -32,6 +34,7 @@ class TopViewModel @Inject constructor(
     val homeStatuses = MutableLiveData<List<TootrusStatus>>()
     val localStatuses = MutableLiveData<List<TootrusStatus>>()
     val favoritedStatus = MutableLiveData<TootrusStatus>()
+    val unfavoriteStatus = MutableLiveData<TootrusStatus>()
     val notifications = MutableLiveData<List<TootrusNotification>>()
     val error = MutableLiveData<Exception>()
 
@@ -99,6 +102,18 @@ class TopViewModel @Inject constructor(
                 is Success -> {
                     changeIsFavoriteValue(target, true)
                     favoritedStatus.value = it.value
+                }
+                is Failure -> error.value = it.reason
+            }
+        }
+    }
+
+    fun postUnfavorite(target: TootrusStatus) {
+        postUnfavoriteUseCase(target.id) {
+            when (it) {
+                is Success -> {
+                    changeIsFavoriteValue(target, false)
+                    unfavoriteStatus.value = it.value
                 }
                 is Failure -> error.value = it.reason
             }
