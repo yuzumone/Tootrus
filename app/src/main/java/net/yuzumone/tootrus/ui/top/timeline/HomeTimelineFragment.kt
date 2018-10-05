@@ -58,12 +58,20 @@ class HomeTimelineFragment : Fragment() {
             adapter.notifyDataSetChanged()
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
         })
+        topViewModel.unfavoriteStatus.observe(this, Observer {
+            adapter.notifyDataSetChanged()
+            Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
+        })
         topViewModel.error.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
     }
 
     private fun handleFavorite(): (TootrusStatus) -> Unit = {
-        topViewModel.postFavorite(it)
+        if (it.isFavorited) {
+            topViewModel.postUnfavorite(it)
+        } else {
+            topViewModel.postFavorite(it)
+        }
     }
 }
