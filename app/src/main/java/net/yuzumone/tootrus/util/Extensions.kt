@@ -37,6 +37,18 @@ fun <T> MutableLiveData<List<T>>.postInsertValues(values: List<T>) {
     this.postValue(list)
 }
 
+fun <T> MutableLiveData<List<T>>.replaceValue(old: T, new: T) {
+    val list = arrayListOf<T>()
+    this.value?.forEach {
+        if (it == old) {
+            list.add(new)
+        } else {
+            list.add(it)
+        }
+    }
+    this.value = list
+}
+
 fun ViewPager.addOnPageChangeListener(
         onPageScrollStateChanged: (Int) -> Unit,
         onPageScrolled: (Int, Float, Int) -> Unit,

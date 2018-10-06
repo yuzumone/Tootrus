@@ -45,6 +45,7 @@ class HomeTimelineFragment : Fragment() {
             recyclerTimeline.adapter = adapter
             recyclerTimeline.layoutManager = layoutManager
             recyclerTimeline.addItemDecoration(divider)
+            recyclerTimeline.itemAnimator = null
         }
         return binding.root
     }
@@ -55,11 +56,9 @@ class HomeTimelineFragment : Fragment() {
             adapter.update(it)
         })
         topViewModel.favoritedStatus.observe(this, Observer {
-            adapter.notifyDataSetChanged()
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
         })
         topViewModel.unfavoriteStatus.observe(this, Observer {
-            adapter.notifyDataSetChanged()
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
         })
         topViewModel.error.observe(this, Observer {

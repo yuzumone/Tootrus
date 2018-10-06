@@ -17,6 +17,7 @@ import net.yuzumone.tootrus.domain.mastodon.timeline.GetLocalPublicUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
 import net.yuzumone.tootrus.util.insertValues
 import net.yuzumone.tootrus.util.postInsertValue
+import net.yuzumone.tootrus.util.replaceValue
 import net.yuzumone.tootrus.vo.TootrusNotification
 import net.yuzumone.tootrus.vo.TootrusStatus
 import javax.inject.Inject
@@ -100,7 +101,8 @@ class TopViewModel @Inject constructor(
         postFavoriteUseCase(target.id) {
             when (it) {
                 is Success -> {
-                    changeIsFavoriteValue(target, true)
+                    homeStatuses.replaceValue(target, it.value)
+                    localStatuses.replaceValue(target, it.value)
                     favoritedStatus.value = it.value
                 }
                 is Failure -> error.value = it.reason
@@ -112,30 +114,12 @@ class TopViewModel @Inject constructor(
         postUnfavoriteUseCase(target.id) {
             when (it) {
                 is Success -> {
-                    changeIsFavoriteValue(target, false)
+                    homeStatuses.replaceValue(target, it.value)
+                    localStatuses.replaceValue(target, it.value)
                     unfavoriteStatus.value = it.value
                 }
                 is Failure -> error.value = it.reason
             }
         }
-    }
-
-    private fun changeIsFavoriteValue(target: TootrusStatus, state: Boolean) {
-        val homeArray = arrayListOf<TootrusStatus>()
-        homeStatuses.value?.forEach {
-            if (it.id == target.id) {
-                it.isFavorited = state
-            }
-            homeArray.add(it)
-        }
-        homeStatuses.postValue(homeArray)
-        val localArray = arrayListOf<TootrusStatus>()
-        localStatuses.value?.forEach {
-            if (it.id == target.id) {
-                it.isFavorited = state
-            }
-            localArray.add(it)
-        }
-        localStatuses.postValue(localArray)
     }
 }
