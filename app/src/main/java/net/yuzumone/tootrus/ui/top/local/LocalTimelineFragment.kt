@@ -45,6 +45,7 @@ class LocalTimelineFragment : Fragment() {
             recyclerLocalTimeline.adapter = adapter
             recyclerLocalTimeline.layoutManager = layoutManager
             recyclerLocalTimeline.addItemDecoration(divider)
+            recyclerLocalTimeline.itemAnimator = null
             swipeRefresh.setColorSchemeResources(R.color.colorPrimary)
             swipeRefresh.setOnRefreshListener { topViewModel.updateLocalTimeline() }
         }

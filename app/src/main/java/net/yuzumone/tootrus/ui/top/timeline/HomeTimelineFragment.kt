@@ -45,6 +45,7 @@ class HomeTimelineFragment : Fragment() {
             recyclerTimeline.adapter = adapter
             recyclerTimeline.layoutManager = layoutManager
             recyclerTimeline.addItemDecoration(divider)
+            recyclerTimeline.itemAnimator = null
         }
         return binding.root
     }
