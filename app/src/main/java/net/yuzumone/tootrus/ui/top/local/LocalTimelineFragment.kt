@@ -59,11 +59,9 @@ class LocalTimelineFragment : Fragment() {
             adapter.update(it)
         })
         topViewModel.favoritedStatus.observe(this, Observer {
-            adapter.notifyDataSetChanged()
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
         })
         topViewModel.unfavoriteStatus.observe(this, Observer {
-            adapter.notifyDataSetChanged()
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
         })
         topViewModel.error.observe(this, Observer {
