@@ -3,13 +3,12 @@ package net.yuzumone.tootrus.domain.mastodon.status
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.data.mastodon.StatusRepository
 import net.yuzumone.tootrus.domain.UseCase
-import net.yuzumone.tootrus.vo.TootrusStatus
 import java.io.Serializable
 import javax.inject.Inject
 
 class PostStatusUseCase @Inject constructor(
         private val repository: StatusRepository
-) : UseCase<PostStatusParams, TootrusStatus>() {
+) : UseCase<PostStatusParams, Status>() {
     override suspend fun run(params: PostStatusParams) =
             repository.postStatus(
                     params.status,

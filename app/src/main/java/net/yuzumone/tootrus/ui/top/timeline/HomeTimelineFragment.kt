@@ -13,12 +13,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTimelineBinding
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import net.yuzumone.tootrus.ui.top.TopViewModel
-import net.yuzumone.tootrus.vo.TootrusStatus
 import javax.inject.Inject
 
 class HomeTimelineFragment : Fragment() {
@@ -66,8 +66,8 @@ class HomeTimelineFragment : Fragment() {
         })
     }
 
-    private fun handleFavorite(): (TootrusStatus) -> Unit = {
-        if (it.isFavorited) {
+    private fun handleFavorite(): (Status) -> Unit = {
+        if (it.isFavourited) {
             topViewModel.postUnfavorite(it)
         } else {
             topViewModel.postFavorite(it)
