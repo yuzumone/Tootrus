@@ -10,6 +10,7 @@ import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.notification.GetNotificationsUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostFavoriteUseCase
+import net.yuzumone.tootrus.domain.mastodon.status.PostReblogUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostUnfavoriteUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.ShutdownUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.StartUserStreamUseCase
@@ -25,6 +26,7 @@ class TopViewModel @Inject constructor(
         private val shutdownUserStreamUseCase: ShutdownUserStreamUseCase,
         private val postFavoriteUseCase: PostFavoriteUseCase,
         private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
+        private val postReblogUseCase: PostReblogUseCase,
         private val getLocalPublicUseCase: GetLocalPublicUseCase,
         getTimelineUseCase: GetTimelineUseCase,
         getNotificationsUseCase: GetNotificationsUseCase
@@ -34,6 +36,7 @@ class TopViewModel @Inject constructor(
     val localStatuses = MutableLiveData<List<Status>>()
     val favoritedStatus = MutableLiveData<Status>()
     val unfavoriteStatus = MutableLiveData<Status>()
+    val rebloggedStatus = MutableLiveData<Status>()
     val notifications = MutableLiveData<List<Notification>>()
     val error = MutableLiveData<Exception>()
 
@@ -115,6 +118,19 @@ class TopViewModel @Inject constructor(
                     homeStatuses.replaceValue(target, it.value)
                     localStatuses.replaceValue(target, it.value)
                     unfavoriteStatus.value = it.value
+                }
+                is Failure -> error.value = it.reason
+            }
+        }
+    }
+
+    fun postReblog(target: Status) {
+        postReblogUseCase(target.id) {
+            when (it) {
+                is Success -> {
+                    homeStatuses.replaceValue(target, it.value)
+                    localStatuses.replaceValue(target, it.value)
+                    rebloggedStatus.value = it.value
                 }
                 is Failure -> error.value = it.reason
             }

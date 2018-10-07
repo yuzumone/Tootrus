@@ -16,6 +16,7 @@ interface StatusRepository {
     ): Status
     fun postFavorite(id: Long): Status
     fun postUnfavorite(id: Long): Status
+    fun postReblog(id: Long): Status
 }
 
 class DefaultStatusRepository @Inject constructor(
@@ -43,5 +44,9 @@ class DefaultStatusRepository @Inject constructor(
 
     override fun postUnfavorite(id: Long): Status {
         return Statuses(client).postUnfavourite(id).execute()
+    }
+
+    override fun postReblog(id: Long): Status {
+        return Statuses(client).postReblog(id).execute()
     }
 }
