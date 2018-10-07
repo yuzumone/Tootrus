@@ -18,8 +18,6 @@ import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
 import net.yuzumone.tootrus.util.insertValues
 import net.yuzumone.tootrus.util.postInsertValue
 import net.yuzumone.tootrus.util.replaceValue
-import net.yuzumone.tootrus.vo.TootrusNotification
-import net.yuzumone.tootrus.vo.TootrusStatus
 import javax.inject.Inject
 
 class TopViewModel @Inject constructor(
@@ -32,11 +30,11 @@ class TopViewModel @Inject constructor(
         getNotificationsUseCase: GetNotificationsUseCase
 ): ViewModel() {
 
-    val homeStatuses = MutableLiveData<List<TootrusStatus>>()
-    val localStatuses = MutableLiveData<List<TootrusStatus>>()
-    val favoritedStatus = MutableLiveData<TootrusStatus>()
-    val unfavoriteStatus = MutableLiveData<TootrusStatus>()
-    val notifications = MutableLiveData<List<TootrusNotification>>()
+    val homeStatuses = MutableLiveData<List<Status>>()
+    val localStatuses = MutableLiveData<List<Status>>()
+    val favoritedStatus = MutableLiveData<Status>()
+    val unfavoriteStatus = MutableLiveData<Status>()
+    val notifications = MutableLiveData<List<Notification>>()
     val error = MutableLiveData<Exception>()
 
     init {
@@ -64,11 +62,11 @@ class TopViewModel @Inject constructor(
     fun startUserStream() {
         val handler = object : Handler {
             override fun onStatus(status: Status) {
-                homeStatuses.postInsertValue(TootrusStatus(status))
+                homeStatuses.postInsertValue(status)
             }
 
             override fun onNotification(notification: Notification) {
-                notifications.postInsertValue(TootrusNotification(notification))
+                notifications.postInsertValue(notification)
             }
 
             override fun onDelete(id: Long) {
@@ -97,7 +95,7 @@ class TopViewModel @Inject constructor(
         }
     }
 
-    fun postFavorite(target: TootrusStatus) {
+    fun postFavorite(target: Status) {
         postFavoriteUseCase(target.id) {
             when (it) {
                 is Success -> {
@@ -110,7 +108,7 @@ class TopViewModel @Inject constructor(
         }
     }
 
-    fun postUnfavorite(target: TootrusStatus) {
+    fun postUnfavorite(target: Status) {
         postUnfavoriteUseCase(target.id) {
             when (it) {
                 is Success -> {
