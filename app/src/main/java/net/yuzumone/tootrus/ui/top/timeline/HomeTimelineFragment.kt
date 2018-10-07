@@ -37,7 +37,7 @@ class HomeTimelineFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(TopViewModel::class.java)
-        adapter = StatusBindingAdapter(handleFavorite())
+        adapter = StatusBindingAdapter(handleFavorite(), handleReblog())
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
@@ -61,6 +61,9 @@ class HomeTimelineFragment : Fragment() {
         topViewModel.unfavoriteStatus.observe(this, Observer {
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
         })
+        topViewModel.rebloggedStatus.observe(this, Observer {
+            Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
+        })
         topViewModel.error.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
@@ -71,6 +74,12 @@ class HomeTimelineFragment : Fragment() {
             topViewModel.postUnfavorite(it)
         } else {
             topViewModel.postFavorite(it)
+        }
+    }
+
+    private fun handleReblog(): (Status) -> Unit = {
+        if (it.isReblogged) {
+            topViewModel.postReblog(it)
         }
     }
 }

@@ -9,7 +9,8 @@ import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ItemStatusBinding
 
 class StatusBindingAdapter(
-        private val favoriteButtonClickCallback: ((Status) -> Unit)?
+        private val favoriteButtonClickCallback: ((Status) -> Unit)?,
+        private val reblogButtonClickCallback: ((Status) -> Unit)?
 ) : BindingRecyclerAdapter<Status, ItemStatusBinding>() {
     override fun createBinding(parent: ViewGroup): ItemStatusBinding {
         val binding = ItemStatusBinding
@@ -31,6 +32,10 @@ class StatusBindingAdapter(
         }
         binding.buttonFav.setOnClickListener {
             binding.status?.let { favoriteButtonClickCallback?.invoke(it) }
+            binding.viewQuick.visibility = View.GONE
+        }
+        binding.buttonReblog.setOnClickListener {
+            binding.status?.let { reblogButtonClickCallback?.invoke(it) }
             binding.viewQuick.visibility = View.GONE
         }
         binding.status = item
