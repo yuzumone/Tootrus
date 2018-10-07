@@ -4,20 +4,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ItemStatusBinding
-import net.yuzumone.tootrus.vo.TootrusStatus
 
 class StatusBindingAdapter(
-        private val favoriteButtonClickCallback: ((TootrusStatus) -> Unit)?
-) : BindingRecyclerAdapter<TootrusStatus, ItemStatusBinding>() {
+        private val favoriteButtonClickCallback: ((Status) -> Unit)?
+) : BindingRecyclerAdapter<Status, ItemStatusBinding>() {
     override fun createBinding(parent: ViewGroup): ItemStatusBinding {
         val binding = ItemStatusBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
         return binding
     }
 
-    override fun bind(binding: ItemStatusBinding, item: TootrusStatus) {
+    override fun bind(binding: ItemStatusBinding, item: Status) {
         binding.viewQuick.visibility = View.GONE
         binding.viewThumbnail.clearThumbnail()
         val anim = AnimationUtils.loadAnimation(binding.root.context, R.anim.anim_view_quick)
