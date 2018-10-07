@@ -7,9 +7,8 @@ import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.sys1yagi.mastodon4j.api.entity.Attachment
 import com.sys1yagi.mastodon4j.api.entity.Notification
+import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
-import net.yuzumone.tootrus.vo.TootrusNotification
-import net.yuzumone.tootrus.vo.TootrusStatus
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,7 +28,7 @@ object CustomBindingAdapters {
 
     @BindingAdapter("thumbnail_visibility")
     @JvmStatic
-    fun setThumbnailViewVisibility(view: ThumbnailView, status: TootrusStatus) {
+    fun setThumbnailViewVisibility(view: ThumbnailView, status: Status) {
         if (status.reblog == null) {
             if (status.mediaAttachments.isEmpty()) {
                 view.visibility = View.GONE
@@ -85,7 +84,7 @@ object CustomBindingAdapters {
 
     @BindingAdapter("notification_label")
     @JvmStatic
-    fun setNotificationLabel(view: TextView, notification: TootrusNotification) {
+    fun setNotificationLabel(view: TextView, notification: Notification) {
         val name = notification.account?.displayName
         when (notification.type) {
             Notification.Type.Mention.value -> {
