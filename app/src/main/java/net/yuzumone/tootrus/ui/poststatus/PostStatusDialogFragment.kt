@@ -17,6 +17,21 @@ import net.yuzumone.tootrus.service.PostStatusService
 class PostStatusDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentPostStatusBinding
+    private val inReplyToAcct: String? by lazy { arguments?.getString(ARG_IN_REPLY_TO_ACCT) }
+    private val inReplyToId: Long? by lazy { arguments?.getLong(ARG_IN_REPLY_TO_ID) }
+
+    companion object {
+        private const val ARG_IN_REPLY_TO_ACCT = "in_reply_to_acct"
+        private const val ARG_IN_REPLY_TO_ID = "in_reply_to_id"
+        fun newReplyInstance(inReplyToAcct: String, inReplyToStatusId: Long): PostStatusDialogFragment {
+            return PostStatusDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_IN_REPLY_TO_ACCT, inReplyToAcct)
+                    putLong(ARG_IN_REPLY_TO_ID, inReplyToStatusId)
+                }
+            }
+        }
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(activity!!)
@@ -28,6 +43,11 @@ class PostStatusDialogFragment : DialogFragment() {
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
         initializeToolbar()
+        if (inReplyToAcct != null) {
+            val s = "@$inReplyToAcct "
+            binding.inputText.setText(s)
+            binding.inputText.setSelection(s.length)
+        }
         return dialog
     }
 
@@ -41,7 +61,7 @@ class PostStatusDialogFragment : DialogFragment() {
             when (it.itemId) {
                 R.id.menu_post_status -> {
                     val text = binding.inputText.text.toString()
-                    postStatus(text, null, null, false, null)
+                    postStatus(text, inReplyToId, null, false, null)
                     dismiss()
                 }
             }
