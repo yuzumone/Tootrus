@@ -17,6 +17,7 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTimelineBinding
+import net.yuzumone.tootrus.ui.PostStatusActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import net.yuzumone.tootrus.ui.top.TopViewModel
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class HomeTimelineFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(TopViewModel::class.java)
-        adapter = StatusBindingAdapter(handleFavorite(), handleReblog())
+        adapter = StatusBindingAdapter(handleReply(), handleFavorite(), handleReblog())
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
@@ -67,6 +68,13 @@ class HomeTimelineFragment : Fragment() {
         topViewModel.error.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
+    }
+
+    private fun handleReply(): (Status) -> Unit = { status ->
+        requireActivity().run {
+            val intent = PostStatusActivity.createReplyIntent(this, status.account!!.acct, status.id)
+            startActivity(intent)
+        }
     }
 
     private fun handleFavorite(): (Status) -> Unit = {
