@@ -19,7 +19,7 @@ import net.yuzumone.tootrus.databinding.FragmentTopBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
-import net.yuzumone.tootrus.ui.top.timeline.HomeTimelineFragment
+import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
 import net.yuzumone.tootrus.util.addOnPageChangeListener
 import javax.inject.Inject
 

@@ -11,7 +11,7 @@ import net.yuzumone.tootrus.ui.top.TopFragment
 import net.yuzumone.tootrus.ui.top.TopViewModel
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
-import net.yuzumone.tootrus.ui.top.timeline.HomeTimelineFragment
+import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
 
 @Module
 abstract class MainActivityModule {

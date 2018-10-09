@@ -1,4 +1,4 @@
-package net.yuzumone.tootrus.ui.top.timeline
+package net.yuzumone.tootrus.ui.top.home
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
