@@ -54,6 +54,9 @@ class HomeTimelineFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         topViewModel.homeStatuses.observe(this, Observer {
+            if (binding.progress.visibility == View.VISIBLE) {
+                binding.progress.visibility = View.GONE
+            }
             adapter.update(it)
         })
         topViewModel.favoritedStatus.observe(this, Observer {
@@ -66,6 +69,9 @@ class HomeTimelineFragment : Fragment() {
             Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
         })
         topViewModel.error.observe(this, Observer {
+            if (binding.progress.visibility == View.VISIBLE) {
+                binding.progress.visibility = View.GONE
+            }
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
     }
