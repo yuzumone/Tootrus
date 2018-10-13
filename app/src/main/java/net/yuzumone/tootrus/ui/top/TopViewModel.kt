@@ -18,7 +18,7 @@ import net.yuzumone.tootrus.domain.mastodon.timeline.GetLocalPublicUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
 import net.yuzumone.tootrus.util.insertValues
 import net.yuzumone.tootrus.util.postInsertValue
-import net.yuzumone.tootrus.util.replaceValue
+import net.yuzumone.tootrus.util.replaceStatus
 import javax.inject.Inject
 
 class TopViewModel @Inject constructor(
@@ -38,26 +38,30 @@ class TopViewModel @Inject constructor(
     val unfavoriteStatus = MutableLiveData<Status>()
     val rebloggedStatus = MutableLiveData<Status>()
     val notifications = MutableLiveData<List<Notification>>()
-    val error = MutableLiveData<Exception>()
+    val homeError = MutableLiveData<Exception>()
+    val notificationError = MutableLiveData<Exception>()
+    val localError = MutableLiveData<Exception>()
+    val favoriteError = MutableLiveData<Exception>()
+    val reblogError = MutableLiveData<Exception>()
 
     init {
         val range = Range()
         getTimelineUseCase(range) {
             when (it) {
                 is Success -> homeStatuses.value = it.value
-                is Failure -> error.value = it.reason
+                is Failure -> homeError.value = it.reason
             }
         }
         getNotificationsUseCase(range) {
             when (it) {
                 is Success -> notifications.value = it.value
-                is Failure -> error.value = it.reason
+                is Failure -> notificationError.value = it.reason
             }
         }
         getLocalPublicUseCase(range) {
             when (it) {
                 is Success -> localStatuses.value = it.value
-                is Failure -> error.value = it.reason
+                is Failure -> localError.value = it.reason
             }
         }
     }
@@ -86,13 +90,13 @@ class TopViewModel @Inject constructor(
     fun updateLocalTimeline() {
         val id = localStatuses.value?.get(0)?.id
         if (id == null) {
-            error.value = NullPointerException()
+            localError.value = NullPointerException()
         } else {
             val range = Range(sinceId = id)
             getLocalPublicUseCase(range) {
                 when (it) {
                     is Success -> localStatuses.insertValues(it.value)
-                    is Failure -> error.value = it.reason
+                    is Failure -> localError.value = it.reason
                 }
             }
         }
@@ -102,11 +106,11 @@ class TopViewModel @Inject constructor(
         postFavoriteUseCase(target.id) {
             when (it) {
                 is Success -> {
-                    homeStatuses.replaceValue(target, it.value)
-                    localStatuses.replaceValue(target, it.value)
+                    homeStatuses.replaceStatus(target, it.value)
+                    localStatuses.replaceStatus(target, it.value)
                     favoritedStatus.value = it.value
                 }
-                is Failure -> error.value = it.reason
+                is Failure -> favoriteError.value = it.reason
             }
         }
     }
@@ -115,11 +119,11 @@ class TopViewModel @Inject constructor(
         postUnfavoriteUseCase(target.id) {
             when (it) {
                 is Success -> {
-                    homeStatuses.replaceValue(target, it.value)
-                    localStatuses.replaceValue(target, it.value)
+                    homeStatuses.replaceStatus(target, it.value)
+                    localStatuses.replaceStatus(target, it.value)
                     unfavoriteStatus.value = it.value
                 }
-                is Failure -> error.value = it.reason
+                is Failure -> favoriteError.value = it.reason
             }
         }
     }
@@ -128,11 +132,11 @@ class TopViewModel @Inject constructor(
         postReblogUseCase(target.id) {
             when (it) {
                 is Success -> {
-                    homeStatuses.replaceValue(target, it.value)
-                    localStatuses.replaceValue(target, it.value)
+                    homeStatuses.replaceStatus(target, it.value)
+                    localStatuses.replaceStatus(target, it.value)
                     rebloggedStatus.value = it.value
                 }
-                is Failure -> error.value = it.reason
+                is Failure -> favoriteError.value = it.reason
             }
         }
     }

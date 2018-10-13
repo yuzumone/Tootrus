@@ -53,7 +53,7 @@ class NotificationFragment : Fragment() {
         topViewModel.notifications.observe(this, Observer {
             adapter.update(it)
         })
-        topViewModel.error.observe(this, Observer {
+        topViewModel.notificationError.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
     }
