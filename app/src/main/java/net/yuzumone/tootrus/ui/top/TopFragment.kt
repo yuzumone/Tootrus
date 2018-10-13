@@ -1,5 +1,6 @@
 package net.yuzumone.tootrus.ui.top
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -13,13 +14,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTopBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
+import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
-import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
 import net.yuzumone.tootrus.util.addOnPageChangeListener
 import javax.inject.Inject
 
@@ -55,6 +57,25 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
         }
         binding.postStatusButtonListener = getPostStatusButtonListener()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        topViewModel.favoritedStatus.observe(this, Observer {
+            Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
+        })
+        topViewModel.unfavoriteStatus.observe(this, Observer {
+            Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
+        })
+        topViewModel.rebloggedStatus.observe(this, Observer {
+            Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
+        })
+        topViewModel.favoriteError.observe(this, Observer {
+            Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
+        })
+        topViewModel.reblogError.observe(this, Observer {
+            Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private fun getPostStatusButtonListener(): View.OnClickListener {
