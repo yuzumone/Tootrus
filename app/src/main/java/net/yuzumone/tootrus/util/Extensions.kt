@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.support.v4.view.ViewPager
+import com.sys1yagi.mastodon4j.api.entity.Status
 
 fun <X, Y> LiveData<X>.map(body: (X) -> Y): LiveData<Y> {
     return Transformations.map(this, body)
@@ -41,6 +42,18 @@ fun <T> MutableLiveData<List<T>>.replaceValue(old: T, new: T) {
     val list = arrayListOf<T>()
     this.value?.forEach {
         if (it == old) {
+            list.add(new)
+        } else {
+            list.add(it)
+        }
+    }
+    this.value = list
+}
+
+fun MutableLiveData<List<Status>>.replaceStatus(old: Status, new: Status) {
+    val list = arrayListOf<Status>()
+    this.value?.forEach {
+        if (it.id == old.id) {
             list.add(new)
         } else {
             list.add(it)
