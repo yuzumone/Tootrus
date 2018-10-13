@@ -36,7 +36,7 @@ class LocalTimelineFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        topViewModel = ViewModelProviders.of(this, viewModelFactory)
+        topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(TopViewModel::class.java)
         adapter = StatusBindingAdapter(handleReply(), handleFavorite(), handleReblog())
         val layoutManager = LinearLayoutManager(activity)
