@@ -59,16 +59,7 @@ class HomeTimelineFragment : Fragment() {
             }
             adapter.update(it)
         })
-        topViewModel.favoritedStatus.observe(this, Observer {
-            Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.unfavoriteStatus.observe(this, Observer {
-            Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.rebloggedStatus.observe(this, Observer {
-            Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.error.observe(this, Observer {
+        topViewModel.homeError.observe(this, Observer {
             if (binding.progress.visibility == View.VISIBLE) {
                 binding.progress.visibility = View.GONE
             }

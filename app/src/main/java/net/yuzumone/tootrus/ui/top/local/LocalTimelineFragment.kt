@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
@@ -36,7 +35,7 @@ class LocalTimelineFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        topViewModel = ViewModelProviders.of(this, viewModelFactory)
+        topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(TopViewModel::class.java)
         adapter = StatusBindingAdapter(handleReply(), handleFavorite(), handleReblog())
         val layoutManager = LinearLayoutManager(activity)
@@ -59,16 +58,7 @@ class LocalTimelineFragment : Fragment() {
             binding.swipeRefresh.isRefreshing = false
             adapter.update(it)
         })
-        topViewModel.favoritedStatus.observe(this, Observer {
-            Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.unfavoriteStatus.observe(this, Observer {
-            Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.rebloggedStatus.observe(this, Observer {
-            Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.error.observe(this, Observer {
+        topViewModel.localError.observe(this, Observer {
             if (binding.swipeRefresh.isRefreshing) {
                 binding.swipeRefresh.isRefreshing = false
             }
