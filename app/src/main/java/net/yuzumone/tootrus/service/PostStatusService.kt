@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
 import android.os.Build
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
@@ -68,17 +67,17 @@ class PostStatusService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(id, name, importance)
-            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            channel.enableVibration(true)
-            channel.enableLights(true)
+            channel.enableLights(false)
+            channel.enableVibration(false)
+            channel.setSound(null, null)
             manager.createNotificationChannel(channel)
         }
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, id)
                 .setSmallIcon(android.R.drawable.ic_menu_send)
                 .setContentText(getString(R.string.toot_now))
                 .setAutoCancel(true)
-                .setSound(defaultSoundUri)
+                .setSound(null)
+                .setVibrate(null)
         return notificationBuilder.build()
     }
 
