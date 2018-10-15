@@ -16,7 +16,7 @@ import android.widget.Toast
 import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
-import net.yuzumone.tootrus.databinding.FragmentTimelineBinding
+import net.yuzumone.tootrus.databinding.FragmentHomeTimelineBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import net.yuzumone.tootrus.ui.top.TopViewModel
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class HomeTimelineFragment : Fragment() {
 
-    private lateinit var binding: FragmentTimelineBinding
+    private lateinit var binding: FragmentHomeTimelineBinding
     private lateinit var topViewModel: TopViewModel
     private lateinit var adapter: StatusBindingAdapter
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -42,7 +42,7 @@ class HomeTimelineFragment : Fragment() {
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
-        binding = FragmentTimelineBinding.inflate(inflater, container, false).apply {
+        binding = FragmentHomeTimelineBinding.inflate(inflater, container, false).apply {
             recyclerTimeline.adapter = adapter
             recyclerTimeline.layoutManager = layoutManager
             recyclerTimeline.addItemDecoration(divider)
