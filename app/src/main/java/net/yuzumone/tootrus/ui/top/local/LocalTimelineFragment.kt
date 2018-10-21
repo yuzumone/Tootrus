@@ -17,6 +17,7 @@ import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentLocalTimelineBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
+import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import net.yuzumone.tootrus.ui.top.TopViewModel
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class LocalTimelineFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(TopViewModel::class.java)
-        adapter = StatusBindingAdapter(handleReply(), handleFavorite(), handleReblog())
+        adapter = StatusBindingAdapter(handleDetail(), handleReply(), handleFavorite(), handleReblog())
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
@@ -68,6 +69,13 @@ class LocalTimelineFragment : Fragment() {
     private fun handleReply(): (Status) -> Unit = { status ->
         requireActivity().run {
             val intent = PostStatusActivity.createReplyIntent(this, status.account!!.acct, status.id)
+            startActivity(intent)
+        }
+    }
+
+    private fun handleDetail(): (Status) -> Unit = {
+        requireActivity().run {
+            val intent = StatusDetailActivity.createIntent(this, it.id)
             startActivity(intent)
         }
     }
