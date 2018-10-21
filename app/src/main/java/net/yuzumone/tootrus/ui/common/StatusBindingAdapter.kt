@@ -10,7 +10,7 @@ import net.yuzumone.tootrus.databinding.ItemStatusBinding
 
 class StatusBindingAdapter(
         private val detailButtonCallback: ((Status) -> Unit)?,
-        private val replyBUttonClickCallBack: ((Status) -> Unit)?,
+        private val replyButtonClickCallBack: ((Status) -> Unit)?,
         private val favoriteButtonClickCallback: ((Status) -> Unit)?,
         private val reblogButtonClickCallback: ((Status) -> Unit)?
 ) : BindingRecyclerAdapter<Status, ItemStatusBinding>() {
@@ -37,7 +37,7 @@ class StatusBindingAdapter(
             binding.viewQuick.visibility = View.GONE
         }
         binding.buttonReply.setOnClickListener {
-            binding.status?.let { replyBUttonClickCallBack?.invoke(it) }
+            binding.status?.let { replyButtonClickCallBack?.invoke(it) }
             binding.viewQuick.visibility = View.GONE
         }
         binding.buttonFav.setOnClickListener {
