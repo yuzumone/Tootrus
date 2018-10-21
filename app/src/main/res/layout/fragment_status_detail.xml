@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+        <variable
+            name="status"
+            type="com.sys1yagi.mastodon4j.api.entity.Status"/>
+        <import type="android.view.View"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            >
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_main"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="4dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    >
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/image_icon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        app:image_url="@{status.account.avatar}"
+                        />
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/container_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        app:layout_constraintStart_toEndOf="@id/image_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        >
+
+                        <TextView
+                            android:id="@+id/text_display_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:scrollHorizontally="true"
+                            android:ellipsize="end"
+                            android:text="@{status.account.displayName}"
+                            android:visibility="@{status.account.displayName == null ? View.GONE : View.VISIBLE}"
+                            tools:text="DisplayName"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_acct"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="@{status.account.acct}"
+                            android:maxLines="1"
+                            android:scrollHorizontally="true"
+                            android:ellipsize="end"
+                            app:layout_constraintStart_toEndOf="@id/text_display_name"
+                            app:layout_goneMarginStart="0dp"
+                            tools:text="UserName@example.com"
+                            />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/text_content"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:content="@{status.content}"
+                        app:layout_constraintStart_toStartOf="@id/container_name"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/container_name"
+                        tools:text="content_content_content"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        app:absolute="@{status.createdAt}"
+                        app:layout_constraintTop_toBottomOf="@id/text_content"
+                        app:layout_constraintStart_toStartOf="@id/text_content"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_via"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{status.application.name}"
+                        app:layout_constraintTop_toBottomOf="@+id/text_time"
+                        app:layout_constraintStart_toStartOf="@id/text_time"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_favorite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.format(@string/favorite_count, status.favouritesCount)}"
+                        app:layout_constraintTop_toTopOf="@id/text_time"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_boost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.format(@string/boost_count, status.reblogsCount)}"
+                        app:layout_constraintTop_toTopOf="@+id/text_via"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        />
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_quick"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/card_main"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    >
+
+                    <ImageButton
+                        android:id="@+id/button_reply"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/ic_quick_reply"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/button_fav"
+                        app:layout_constraintHorizontal_weight="0.25"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/button_fav"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@{status.isFavourited ? @drawable/ic_quick_favorited : @drawable/ic_quick_fav}"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/button_reply"
+                        app:layout_constraintEnd_toStartOf="@id/button_reblog"
+                        app:layout_constraintHorizontal_weight="0.25"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/button_reblog"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@{status.isReblogged ? @drawable/ic_quick_reblogged : @drawable/ic_quick_reblog}"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/button_fav"
+                        app:layout_constraintEnd_toStartOf="@id/button_menu"
+                        app:layout_constraintHorizontal_weight="0.25"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/button_menu"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/ic_quick_menu"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/button_reblog"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="0.25"
+                        />
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</layout>

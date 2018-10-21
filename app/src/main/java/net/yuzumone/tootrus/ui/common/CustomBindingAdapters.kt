@@ -16,7 +16,7 @@ object CustomBindingAdapters {
 
     @BindingAdapter("image_url")
     @JvmStatic
-    fun setIcon(view: SimpleDraweeView, imageUrl: String) {
+    fun setIcon(view: SimpleDraweeView, imageUrl: String?) {
         view.setImageURI(imageUrl)
     }
 
@@ -68,6 +68,15 @@ object CustomBindingAdapters {
             relative = time.toString() + "d"
         }
         view.text = relative
+    }
+
+    @BindingAdapter("absolute")
+    @JvmStatic
+    fun setAbsoluteDate(view: TextView, createAt: String?) {
+        createAt ?: return
+        val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
+                .parse(createAt)
+        view.text = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US).format(date)
     }
 
     @BindingAdapter("content")
