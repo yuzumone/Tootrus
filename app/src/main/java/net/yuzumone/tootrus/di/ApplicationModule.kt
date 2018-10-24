@@ -94,4 +94,9 @@ class ApplicationModule {
     @Provides
     fun providesPublicRepository(repository: DefaultPublicRepository): PublicRepository =
             repository
+
+    @Singleton
+    @Provides
+    fun providesAccountRepository(repository: AccountRepository): AccountRepository =
+            repository
 }
