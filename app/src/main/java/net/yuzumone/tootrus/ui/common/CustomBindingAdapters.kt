@@ -7,6 +7,7 @@ import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.sys1yagi.mastodon4j.api.entity.Attachment
 import com.sys1yagi.mastodon4j.api.entity.Notification
+import com.sys1yagi.mastodon4j.api.entity.Relationship
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
 import java.text.SimpleDateFormat
@@ -109,5 +110,13 @@ object CustomBindingAdapters {
                 view.text = view.context.getString(R.string.followed_you, name)
             }
         }
+    }
+
+    @BindingAdapter("relationship")
+    @JvmStatic
+    fun setRelationship(view: TextView, relationship: Relationship?) {
+        relationship ?: return
+        val text = if (relationship.isFollowedBy) "This user is following you." else "This user is not following you."
+        view.text = text
     }
 }
