@@ -18,6 +18,7 @@ import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentHomeTimelineBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
+import net.yuzumone.tootrus.ui.ProfileActivity
 import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import net.yuzumone.tootrus.ui.top.TopViewModel
@@ -39,7 +40,7 @@ class HomeTimelineFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(TopViewModel::class.java)
-        adapter = StatusBindingAdapter(handleDetail(), handleReply(), handleFavorite(), handleReblog())
+        adapter = StatusBindingAdapter(handleDetail(), handleReply(), handleFavorite(), handleReblog(), handleMenu())
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
@@ -93,6 +94,13 @@ class HomeTimelineFragment : Fragment() {
     private fun handleReblog(): (Status) -> Unit = {
         if (it.isReblogged) {
             topViewModel.postReblog(it)
+        }
+    }
+
+    private fun handleMenu(): (Status) -> Unit = {
+        requireActivity().run {
+            val intent = ProfileActivity.createIntent(this, it.account!!.id)
+            startActivity(intent)
         }
     }
 }
