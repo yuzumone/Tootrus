@@ -25,6 +25,9 @@
         <activity
             android:name=".ui.StatusDetailActivity"
             />
+        <activity
+            android:name=".ui.ProfileActivity"
+            />
         <service
             android:name=".service.PostStatusService"
             />
