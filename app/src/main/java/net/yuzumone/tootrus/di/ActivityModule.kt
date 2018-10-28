@@ -8,6 +8,7 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import net.yuzumone.tootrus.ui.MainActivity
 import net.yuzumone.tootrus.ui.MainViewModel
+import net.yuzumone.tootrus.ui.ProfileActivity
 import net.yuzumone.tootrus.ui.StatusDetailActivity
 
 @Module
@@ -21,6 +22,9 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [StatusDetailActivityModule::class])
     abstract fun contributeStatusDetailActivity(): StatusDetailActivity
+
+    @ContributesAndroidInjector(modules = [ProfileActivityModule::class])
+    abstract fun contributeProfileActivity(): ProfileActivity
 
     @Binds
     @IntoMap
