@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+        <variable
+            name="account"
+            type="com.sys1yagi.mastodon4j.api.entity.Account"/>
+        <import type="android.view.View"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="10dp"
+        >
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:image_url="@{account.avatar}"
+            />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/container_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            app:layout_constraintStart_toEndOf="@id/image_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+            <TextView
+                android:id="@+id/text_display_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:text="@{account.displayName}"
+                android:visibility="@{account.displayName.isEmpty() ? View.GONE : View.VISIBLE}"
+                tools:text="DisplayName"
+                />
+
+            <TextView
+                android:id="@+id/text_acct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@{account.acct}"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/text_display_name"
+                app:layout_goneMarginStart="0dp"
+                tools:text="UserName@example.com"
+                />
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/text_note"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:content="@{account.note}"
+            app:layout_constraintStart_toStartOf="@id/container_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/container_name"
+            tools:text="content_content_content"
+            />
+    </android.support.constraint.ConstraintLayout>
+</layout>
