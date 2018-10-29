@@ -5,14 +5,22 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import net.yuzumone.tootrus.ui.profile.ProfileFragment
-import net.yuzumone.tootrus.ui.profile.ProfileViewModel
+import net.yuzumone.tootrus.ui.profile.*
 
 @Module
 abstract class ProfileActivityModule {
 
     @ContributesAndroidInjector
     abstract fun contributesProfileFragment(): ProfileFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributesProfileStatusesFragment(): ProfileStatusesFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributesProfileFollowingsFragment(): ProfileFollowingsFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributesProfileFollowersFragment(): ProfileFollowersFragment
 
     @Binds
     @IntoMap
