@@ -22,4 +22,9 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="RaisedButton" parent="AppTheme">
+        <item name="android:colorControlHighlight">@color/colorPrimary</item>
+        <item name="android:colorButtonNormal">@color/blue_300</item>
+    </style>
 </resources>

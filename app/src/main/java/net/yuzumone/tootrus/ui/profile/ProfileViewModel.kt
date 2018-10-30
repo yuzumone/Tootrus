@@ -15,7 +15,9 @@ class ProfileViewModel @Inject constructor(
         private val getAccountAndRelationShipsUseCase: GetAccountAndRelationShipUseCase,
         private val getStatusesUseCase: GetStatusesUseCase,
         private val getFollowingUseCase: GetFollowingUseCase,
-        private val getFollowersUseCase: GetFollowersUseCase
+        private val getFollowersUseCase: GetFollowersUseCase,
+        private val postFollowUseCase: PostFollowUseCase,
+        private val postUnFollowUseCase: PostUnFollowUseCase
 ) : ViewModel() {
 
     val account = MutableLiveData<Account>()
@@ -66,6 +68,34 @@ class ProfileViewModel @Inject constructor(
         getFollowersUseCase(Pair(id, range)) {
             when (it) {
                 is Success -> followers.value = it.value
+                is Failure -> error.value = it.reason
+            }
+        }
+    }
+
+    fun handleFollowButton(isFollow: Boolean) {
+        account.value?.let {
+            if (isFollow) {
+                postUnFollow(it.id)
+            } else {
+                postFollow(it.id)
+            }
+        }
+    }
+
+    fun postFollow(id: Long) {
+        postFollowUseCase(id) {
+            when (it) {
+                is Success -> relationship.value = it.value
+                is Failure -> error.value = it.reason
+            }
+        }
+    }
+
+    fun postUnFollow(id: Long) {
+        postUnFollowUseCase(id) {
+            when (it) {
+                is Success -> relationship.value = it.value
                 is Failure -> error.value = it.reason
             }
         }

@@ -52,6 +52,7 @@ class ProfileFragment : Fragment() {
         binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
             pager.adapter = adapter
             pager.offscreenPageLimit = 2
+            viewModel = profileViewModel
         }
         binding.tab.setupWithViewPager(binding.pager)
         return binding.root
