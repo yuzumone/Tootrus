@@ -19,6 +19,8 @@ interface AccountRepository {
                     range: Range): List<Status>
     fun getFollowers(id: Long, range: Range): List<Account>
     fun getFollowing(id: Long, range: Range): List<Account>
+    fun postFollow(id: Long): Relationship
+    fun postUnFollow(id: Long): Relationship
 }
 
 class DefaultAccountRepository @Inject constructor(
@@ -46,5 +48,13 @@ class DefaultAccountRepository @Inject constructor(
 
     override fun getFollowing(id: Long, range: Range): List<Account> {
         return Accounts(client).getFollowing(id, range).execute().part
+    }
+
+    override fun postFollow(id: Long): Relationship {
+        return Accounts(client).postFollow(id).execute()
+    }
+
+    override fun postUnFollow(id: Long): Relationship {
+        return Accounts(client).postUnFollow(id).execute()
     }
 }
