@@ -12,6 +12,9 @@
         <variable
             name="relationship"
             type="com.sys1yagi.mastodon4j.api.entity.Relationship"/>
+        <variable
+            name="viewModel"
+            type="net.yuzumone.tootrus.ui.profile.ProfileViewModel"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -111,10 +114,14 @@
                     <Button
                         android:id="@+id/button_follow"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
+                        android:layout_height="48dp"
                         android:minWidth="88dp"
+                        android:textColor="@android:color/white"
+                        android:text="@{relationship.following ? `Unfollow` : `follow`}"
+                        android:onClick="@{(v) -> viewModel.handleFollowButton(relationship.following)}"
                         app:layout_constraintEnd_toEndOf="@id/guide_end"
                         app:layout_constraintBaseline_toBaselineOf="@+id/text_relationship"
+                        android:theme="@style/RaisedButton"
                         />
 
                     <android.support.constraint.Guideline
