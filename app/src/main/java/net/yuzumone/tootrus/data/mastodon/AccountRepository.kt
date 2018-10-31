@@ -11,6 +11,7 @@ import javax.inject.Named
 
 interface AccountRepository {
     fun getAccount(id: Long): Account
+    fun getVerifyCredentials(): Account
     fun getRelationShips(ids: List<Long>): List<Relationship>
     fun getStatuses(id: Long,
                     onlyMedia: Boolean,
@@ -28,6 +29,10 @@ class DefaultAccountRepository @Inject constructor(
 ) : AccountRepository{
     override fun getAccount(id: Long): Account {
         return Accounts(client).getAccount(id).execute()
+    }
+
+    override fun getVerifyCredentials(): Account {
+        return Accounts(client).getVerifyCredentials().execute()
     }
 
     override fun getRelationShips(ids: List<Long>): List<Relationship> {
