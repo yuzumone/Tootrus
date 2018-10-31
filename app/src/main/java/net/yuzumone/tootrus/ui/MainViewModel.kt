@@ -4,12 +4,18 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import net.yuzumone.tootrus.domain.Success
+import net.yuzumone.tootrus.domain.mastodon.account.GetVerifyCredentialsUseCase
 import net.yuzumone.tootrus.domain.prefs.GetAccessTokenPrefUseCase
+import net.yuzumone.tootrus.domain.prefs.GetUserIdPrefUseCase
+import net.yuzumone.tootrus.domain.prefs.StoreUserIdPrefUseCase
 import net.yuzumone.tootrus.util.map
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-        getAccessTokenUseCase: GetAccessTokenPrefUseCase
+        private val getVerifyCredentialsUseCase: GetVerifyCredentialsUseCase,
+        private val storeUserIdPrefUseCase: StoreUserIdPrefUseCase,
+        getAccessTokenUseCase: GetAccessTokenPrefUseCase,
+        getUserIdPrefUseCase: GetUserIdPrefUseCase
 ) : ViewModel() {
 
     private val accessToken = MutableLiveData<String>()
@@ -26,6 +32,23 @@ class MainViewModel @Inject constructor(
                 SetFragment.OAUTH
             } else {
                 SetFragment.TOP
+            }
+        }
+        getUserIdPrefUseCase(Unit) {
+            when (it) {
+                is Success -> {
+                    if (it.value == 0L) {
+                        getVerifyCredentials()
+                    }
+                }
+            }
+        }
+    }
+
+    fun getVerifyCredentials() {
+        getVerifyCredentialsUseCase(Unit) {
+            when (it) {
+                is Success -> storeUserIdPrefUseCase(it.value.id)
             }
         }
     }
