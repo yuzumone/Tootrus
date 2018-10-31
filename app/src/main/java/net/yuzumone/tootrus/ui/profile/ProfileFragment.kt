@@ -64,6 +64,9 @@ class ProfileFragment : Fragment() {
         profileViewModel.getStatuses(id)
         profileViewModel.getFollowing(id)
         profileViewModel.getFollowers(id)
+        profileViewModel.userId.observe(this, Observer {
+            binding.userId = it
+        })
         profileViewModel.account.observe(this, Observer {
             binding.account = it
         })
