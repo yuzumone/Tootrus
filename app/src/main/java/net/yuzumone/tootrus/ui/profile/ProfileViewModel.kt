@@ -9,6 +9,7 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.account.*
+import net.yuzumone.tootrus.domain.prefs.GetUserIdPrefUseCase
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
@@ -17,15 +18,25 @@ class ProfileViewModel @Inject constructor(
         private val getFollowingUseCase: GetFollowingUseCase,
         private val getFollowersUseCase: GetFollowersUseCase,
         private val postFollowUseCase: PostFollowUseCase,
-        private val postUnFollowUseCase: PostUnFollowUseCase
+        private val postUnFollowUseCase: PostUnFollowUseCase,
+        getUserIdPrefUseCase: GetUserIdPrefUseCase
 ) : ViewModel() {
 
+    val userId = MutableLiveData<Long>()
     val account = MutableLiveData<Account>()
     val relationship = MutableLiveData<Relationship>()
     val statuses = MutableLiveData<List<Status>>()
     val followings = MutableLiveData<List<Account>>()
     val followers = MutableLiveData<List<Account>>()
     val error = MutableLiveData<Exception>()
+
+    init {
+        getUserIdPrefUseCase(Unit) {
+            when (it) {
+                is Success -> userId.value = it.value
+            }
+        }
+    }
 
     fun getAccountAndRelationShip(id: Long) {
         getAccountAndRelationShipsUseCase(id) {
