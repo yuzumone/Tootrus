@@ -52,6 +52,10 @@ class ProfileFragment : Fragment() {
         binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
             pager.adapter = adapter
             pager.offscreenPageLimit = 2
+            toolbar.setNavigationIcon(R.drawable.ic_action_back)
+            toolbar.setNavigationOnClickListener {
+                activity?.finish()
+            }
             viewModel = profileViewModel
         }
         binding.tab.setupWithViewPager(binding.pager)
@@ -69,6 +73,7 @@ class ProfileFragment : Fragment() {
         })
         profileViewModel.account.observe(this, Observer {
             binding.account = it
+            binding.toolbar.title = it?.userName
         })
         profileViewModel.relationship.observe(this, Observer {
             binding.relationship = it
