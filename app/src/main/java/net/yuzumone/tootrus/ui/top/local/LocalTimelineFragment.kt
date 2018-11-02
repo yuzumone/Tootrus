@@ -17,9 +17,9 @@ import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentLocalTimelineBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
-import net.yuzumone.tootrus.ui.ProfileActivity
 import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
+import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
 import net.yuzumone.tootrus.ui.top.TopViewModel
 import javax.inject.Inject
 
@@ -96,9 +96,7 @@ class LocalTimelineFragment : Fragment() {
     }
 
     private fun handleMenu(): (Status) -> Unit = {
-        requireActivity().run {
-            val intent = ProfileActivity.createIntent(this, it.account!!.id)
-            startActivity(intent)
-        }
+        val fragment = MenuDialogFragment.newInstance(it)
+        fragment.show(fragmentManager, "menu")
     }
 }
