@@ -9,23 +9,18 @@ import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ItemStatusBinding
 
 class StatusBindingAdapter(
-        private val detailButtonCallback: ((Status) -> Unit)?,
-        private val replyButtonClickCallBack: ((Status) -> Unit)?,
-        private val favoriteButtonClickCallback: ((Status) -> Unit)?,
-        private val reblogButtonClickCallback: ((Status) -> Unit)?,
-        private val menuButtonClickCallback: ((Status) -> Unit)?
+        private val listener: OnStatusAdapterClickListener
 ) : BindingRecyclerAdapter<Status, ItemStatusBinding>() {
     override fun createBinding(parent: ViewGroup): ItemStatusBinding {
-        val binding = ItemStatusBinding
+        return ItemStatusBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
-        return binding
     }
 
     override fun bind(binding: ItemStatusBinding, item: Status) {
         binding.viewQuick.visibility = View.GONE
         binding.viewThumbnail.clearThumbnail()
         val anim = AnimationUtils.loadAnimation(binding.root.context, R.anim.anim_view_quick)
-        binding.viewItem.setOnClickListener {
+        binding.root.setOnClickListener {
             if (binding.viewQuick.visibility == View.GONE) {
                 binding.viewQuick.visibility = View.VISIBLE
                 binding.viewQuick.startAnimation(anim)
@@ -33,26 +28,7 @@ class StatusBindingAdapter(
                 binding.viewQuick.visibility = View.GONE
             }
         }
-        binding.buttonDetail.setOnClickListener {
-            binding.status?.let { detailButtonCallback?.invoke(it) }
-            binding.viewQuick.visibility = View.GONE
-        }
-        binding.buttonReply.setOnClickListener {
-            binding.status?.let { replyButtonClickCallBack?.invoke(it) }
-            binding.viewQuick.visibility = View.GONE
-        }
-        binding.buttonFav.setOnClickListener {
-            binding.status?.let { favoriteButtonClickCallback?.invoke(it) }
-            binding.viewQuick.visibility = View.GONE
-        }
-        binding.buttonReblog.setOnClickListener {
-            binding.status?.let { reblogButtonClickCallback?.invoke(it) }
-            binding.viewQuick.visibility = View.GONE
-        }
-        binding.buttonMenu.setOnClickListener {
-            binding.status?.let { menuButtonClickCallback?.invoke(it) }
-            binding.viewQuick.visibility = View.GONE
-        }
         binding.status = item
+        binding.listener = listener
     }
 }
