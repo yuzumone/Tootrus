@@ -123,7 +123,7 @@
                         android:minWidth="88dp"
                         android:textColor="@android:color/white"
                         android:text="@{relationship.following ? `Unfollow` : `follow`}"
-                        android:onClick="@{(v) -> viewModel.handleFollowButton(relationship.following)}"
+                        android:onClick="@{(v) -> viewModel.actionFollow(relationship.following)}"
                         android:visibility="@{userId == account.id ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="@id/guide_end"
                         app:layout_constraintBaseline_toBaselineOf="@+id/text_relationship"

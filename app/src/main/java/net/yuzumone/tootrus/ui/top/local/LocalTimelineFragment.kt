@@ -12,14 +12,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentLocalTimelineBinding
-import net.yuzumone.tootrus.ui.PostStatusActivity
-import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
-import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
 import net.yuzumone.tootrus.ui.top.TopViewModel
 import javax.inject.Inject
 
@@ -39,7 +35,7 @@ class LocalTimelineFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(TopViewModel::class.java)
-        adapter = StatusBindingAdapter(handleDetail(), handleReply(), handleFavorite(), handleReblog(), handleMenu())
+        adapter = StatusBindingAdapter(topViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
@@ -65,38 +61,5 @@ class LocalTimelineFragment : Fragment() {
                 binding.swipeRefresh.isRefreshing = false
             }
         })
-    }
-
-    private fun handleReply(): (Status) -> Unit = { status ->
-        requireActivity().run {
-            val intent = PostStatusActivity.createReplyIntent(this, status.account!!.acct, status.id)
-            startActivity(intent)
-        }
-    }
-
-    private fun handleDetail(): (Status) -> Unit = {
-        requireActivity().run {
-            val intent = StatusDetailActivity.createIntent(this, it.id)
-            startActivity(intent)
-        }
-    }
-
-    private fun handleFavorite(): (Status) -> Unit = {
-        if (it.isFavourited) {
-            topViewModel.postUnfavorite(it)
-        } else {
-            topViewModel.postFavorite(it)
-        }
-    }
-
-    private fun handleReblog(): (Status) -> Unit = {
-        if (it.isReblogged) {
-            topViewModel.postReblog(it)
-        }
-    }
-
-    private fun handleMenu(): (Status) -> Unit = {
-        val fragment = MenuDialogFragment.newInstance(it)
-        fragment.show(fragmentManager, "menu")
     }
 }

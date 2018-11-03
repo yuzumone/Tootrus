@@ -12,13 +12,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentProfileStatusesBinding
-import net.yuzumone.tootrus.ui.PostStatusActivity
-import net.yuzumone.tootrus.ui.ProfileActivity
-import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import javax.inject.Inject
 
@@ -38,7 +34,7 @@ class ProfileStatusesFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         profileViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(ProfileViewModel::class.java)
-        adapter = StatusBindingAdapter(handleDetail(), handleReply(), handleFavorite(), handleReblog(), handleMenu())
+        adapter = StatusBindingAdapter(profileViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
@@ -56,34 +52,5 @@ class ProfileStatusesFragment : Fragment() {
         profileViewModel.statuses.observe(this, Observer {
             adapter.update(it)
         })
-    }
-
-    private fun handleReply(): (Status) -> Unit = { status ->
-        requireActivity().run {
-            val intent = PostStatusActivity.createReplyIntent(this, status.account!!.acct, status.id)
-            startActivity(intent)
-        }
-    }
-
-    private fun handleDetail(): (Status) -> Unit = {
-        requireActivity().run {
-            val intent = StatusDetailActivity.createIntent(this, it.id)
-            startActivity(intent)
-        }
-    }
-
-    private fun handleFavorite(): (Status) -> Unit = {
-
-    }
-
-    private fun handleReblog(): (Status) -> Unit = {
-
-    }
-
-    private fun handleMenu(): (Status) -> Unit = {
-        requireActivity().run {
-            val intent = ProfileActivity.createIntent(this, it.account!!.id)
-            startActivity(intent)
-        }
     }
 }
