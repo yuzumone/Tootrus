@@ -16,6 +16,7 @@ import net.yuzumone.tootrus.domain.mastodon.stream.ShutdownUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.StartUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetLocalPublicUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
+import net.yuzumone.tootrus.ui.common.OnStatusAdapterClickListener
 import net.yuzumone.tootrus.util.insertValues
 import net.yuzumone.tootrus.util.postInsertValue
 import net.yuzumone.tootrus.util.replaceStatus
@@ -30,17 +31,20 @@ class TopViewModel @Inject constructor(
         private val getLocalPublicUseCase: GetLocalPublicUseCase,
         getTimelineUseCase: GetTimelineUseCase,
         getNotificationsUseCase: GetNotificationsUseCase
-): ViewModel() {
+): ViewModel(), OnStatusAdapterClickListener {
 
     val homeStatuses = MutableLiveData<List<Status>>()
     val localStatuses = MutableLiveData<List<Status>>()
-    val favoritedStatus = MutableLiveData<Status>()
-    val unfavoriteStatus = MutableLiveData<Status>()
-    val rebloggedStatus = MutableLiveData<Status>()
     val notifications = MutableLiveData<List<Notification>>()
     val homeError = MutableLiveData<Exception>()
     val notificationError = MutableLiveData<Exception>()
     val localError = MutableLiveData<Exception>()
+    val detailActionEvent = MutableLiveData<Status>()
+    val replyActionEvent = MutableLiveData<Status>()
+    val favoriteActionEvent = MutableLiveData<Status>()
+    val unfavoriteActionEvent = MutableLiveData<Status>()
+    val reblogActionEvent = MutableLiveData<Status>()
+    val menuActionEvent = MutableLiveData<Status>()
     val favoriteError = MutableLiveData<Exception>()
     val reblogError = MutableLiveData<Exception>()
 
@@ -102,42 +106,68 @@ class TopViewModel @Inject constructor(
         }
     }
 
-    fun postFavorite(target: Status) {
+    private fun postFavorite(target: Status) {
         postFavoriteUseCase(target.id) {
             when (it) {
                 is Success -> {
                     homeStatuses.replaceStatus(target, it.value)
                     localStatuses.replaceStatus(target, it.value)
-                    favoritedStatus.value = it.value
+                    favoriteActionEvent.value = it.value
                 }
                 is Failure -> favoriteError.value = it.reason
             }
         }
     }
 
-    fun postUnfavorite(target: Status) {
+    private fun postUnfavorite(target: Status) {
         postUnfavoriteUseCase(target.id) {
             when (it) {
                 is Success -> {
                     homeStatuses.replaceStatus(target, it.value)
                     localStatuses.replaceStatus(target, it.value)
-                    unfavoriteStatus.value = it.value
+                    unfavoriteActionEvent.value = it.value
                 }
                 is Failure -> favoriteError.value = it.reason
             }
         }
     }
 
-    fun postReblog(target: Status) {
+   private fun postReblog(target: Status) {
         postReblogUseCase(target.id) {
             when (it) {
                 is Success -> {
                     homeStatuses.replaceStatus(target, it.value)
                     localStatuses.replaceStatus(target, it.value)
-                    rebloggedStatus.value = it.value
+                    reblogActionEvent.value = it.value
                 }
-                is Failure -> favoriteError.value = it.reason
+                is Failure -> reblogError.value = it.reason
             }
         }
+    }
+
+    override fun actionDetail(status: Status) {
+        detailActionEvent.value = status
+    }
+
+    override fun actionReply(status: Status) {
+        replyActionEvent.value = status
+    }
+
+    override fun actionFavorite(status: Status) {
+        if (status.isFavourited) {
+            postUnfavorite(status)
+        } else {
+            postFavorite(status)
+        }
+    }
+
+    override fun actionReblog(status: Status) {
+        if (!status.isReblogged) {
+            postReblog(status)
+        }
+    }
+
+    override fun actionMenu(status: Status) {
+        menuActionEvent.value = status
     }
 }
