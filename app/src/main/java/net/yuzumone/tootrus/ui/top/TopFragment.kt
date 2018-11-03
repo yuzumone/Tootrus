@@ -19,6 +19,8 @@ import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTopBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
+import net.yuzumone.tootrus.ui.StatusDetailActivity
+import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
 import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
@@ -61,14 +63,34 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topViewModel.favoritedStatus.observe(this, Observer {
+        topViewModel.detailActionEvent.observe(this, Observer {
+            it ?: return@Observer
+            requireActivity().run {
+                val intent = StatusDetailActivity.createIntent(this, it.id)
+                startActivity(intent)
+            }
+        })
+        topViewModel.replyActionEvent.observe(this, Observer {
+            it ?: return@Observer
+            requireActivity().run {
+                val intent = PostStatusActivity
+                        .createReplyIntent(this, it.account!!.acct, it.id)
+                startActivity(intent)
+            }
+        })
+        topViewModel.favoriteActionEvent.observe(this, Observer {
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
         })
-        topViewModel.unfavoriteStatus.observe(this, Observer {
+        topViewModel.unfavoriteActionEvent.observe(this, Observer {
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
         })
-        topViewModel.rebloggedStatus.observe(this, Observer {
+        topViewModel.reblogActionEvent.observe(this, Observer {
             Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
+        })
+        topViewModel.menuActionEvent.observe(this, Observer {
+            it ?: return@Observer
+            val fragment = MenuDialogFragment.newInstance(it)
+            fragment.show(fragmentManager, "menu")
         })
         topViewModel.favoriteError.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()

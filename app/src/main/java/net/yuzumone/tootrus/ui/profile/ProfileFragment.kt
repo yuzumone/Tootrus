@@ -15,6 +15,9 @@ import android.widget.Toast
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentProfileBinding
+import net.yuzumone.tootrus.ui.PostStatusActivity
+import net.yuzumone.tootrus.ui.StatusDetailActivity
+import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
 import javax.inject.Inject
 
 class ProfileFragment : Fragment() {
@@ -77,6 +80,35 @@ class ProfileFragment : Fragment() {
         })
         profileViewModel.relationship.observe(this, Observer {
             binding.relationship = it
+        })
+        profileViewModel.detailActionEvent.observe(this, Observer {
+            it ?: return@Observer
+            requireActivity().run {
+                val intent = StatusDetailActivity.createIntent(this, it.id)
+                startActivity(intent)
+            }
+        })
+        profileViewModel.replyActionEvent.observe(this, Observer {
+            it ?: return@Observer
+            requireActivity().run {
+                val intent = PostStatusActivity
+                        .createReplyIntent(this, it.account!!.acct, it.id)
+                startActivity(intent)
+            }
+        })
+        profileViewModel.favoriteActionEvent.observe(this, Observer {
+            Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
+        })
+        profileViewModel.unfavoriteActionEvent.observe(this, Observer {
+            Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
+        })
+        profileViewModel.reblogActionEvent.observe(this, Observer {
+            Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
+        })
+        profileViewModel.menuActionEvent.observe(this, Observer {
+            it ?: return@Observer
+            val fragment = MenuDialogFragment.newInstance(it)
+            fragment.show(fragmentManager, "menu")
         })
         profileViewModel.error.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
