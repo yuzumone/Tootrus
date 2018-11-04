@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+        <variable
+            name="attachment"
+            type="com.sys1yagi.mastodon4j.api.entity.Attachment"/>
+    </data>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/image_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        app:image_url="@{attachment.url}"
+        fresco:actualImageScaleType="fitCenter"
+        fresco:placeholderImage="@drawable/ic_refresh"
+        fresco:placeholderImageScaleType="centerInside"
+        />
+</layout>
