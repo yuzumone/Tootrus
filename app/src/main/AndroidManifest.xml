@@ -28,6 +28,10 @@
         <activity
             android:name=".ui.ProfileActivity"
             />
+        <activity
+            android:name=".ui.MediaPreviewActivity"
+            android:theme="@style/SemiTransparentTheme"
+            />
         <service
             android:name=".service.PostStatusService"
             />
