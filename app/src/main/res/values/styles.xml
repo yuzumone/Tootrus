@@ -23,6 +23,14 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
+    <drawable name="semi_transparent_background">#99000000</drawable>
+    <style name="SemiTransparentTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/semi_transparent_background</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
+    </style>
+
     <style name="RaisedButton" parent="AppTheme">
         <item name="android:colorControlHighlight">@color/colorPrimary</item>
         <item name="android:colorButtonNormal">@color/blue_300</item>
