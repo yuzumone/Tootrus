@@ -12,8 +12,6 @@
             android:id="@+id/recycler_profile_statuses"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:paddingBottom="88dp"
             android:scrollbars="vertical"
             android:scrollbarStyle="outsideOverlay"
             app:layout_constraintTop_toTopOf="parent"
