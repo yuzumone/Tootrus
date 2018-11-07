@@ -3,23 +3,23 @@ package net.yuzumone.tootrus.ui
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.sys1yagi.mastodon4j.api.entity.Account
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.account.GetVerifyCredentialsUseCase
 import net.yuzumone.tootrus.domain.prefs.GetAccessTokenPrefUseCase
-import net.yuzumone.tootrus.domain.prefs.GetUserIdPrefUseCase
 import net.yuzumone.tootrus.domain.prefs.StoreUserIdPrefUseCase
 import net.yuzumone.tootrus.util.map
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-        private val getVerifyCredentialsUseCase: GetVerifyCredentialsUseCase,
         private val storeUserIdPrefUseCase: StoreUserIdPrefUseCase,
-        getAccessTokenUseCase: GetAccessTokenPrefUseCase,
-        getUserIdPrefUseCase: GetUserIdPrefUseCase
+        private val getVerifyCredentialsUseCase: GetVerifyCredentialsUseCase,
+        getAccessTokenUseCase: GetAccessTokenPrefUseCase
 ) : ViewModel() {
 
     private val accessToken = MutableLiveData<String>()
     val setFragment: LiveData<SetFragment>
+    val account =  MutableLiveData<Account>()
 
     init {
         getAccessTokenUseCase(Unit) {
@@ -34,21 +34,15 @@ class MainViewModel @Inject constructor(
                 SetFragment.TOP
             }
         }
-        getUserIdPrefUseCase(Unit) {
-            when (it) {
-                is Success -> {
-                    if (it.value == 0L) {
-                        getVerifyCredentials()
-                    }
-                }
-            }
-        }
     }
 
-    fun getVerifyCredentials() {
+    fun getCredentials() {
         getVerifyCredentialsUseCase(Unit) {
             when (it) {
-                is Success -> storeUserIdPrefUseCase(it.value.id)
+                is Success -> {
+                    storeUserIdPrefUseCase(it.value.id)
+                    account.value = it.value
+                }
             }
         }
     }
