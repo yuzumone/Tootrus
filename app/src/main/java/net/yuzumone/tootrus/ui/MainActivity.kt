@@ -16,6 +16,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ActivityMainBinding
+import net.yuzumone.tootrus.databinding.NavigationHeaderBinding
 import net.yuzumone.tootrus.ui.oauth.OAuthFragment
 import net.yuzumone.tootrus.ui.top.TopFragment
 import javax.inject.Inject
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var headerBinding: NavigationHeaderBinding
     private lateinit var mainViewModel: MainViewModel
     @Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -31,9 +33,15 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        headerBinding = DataBindingUtil.inflate(layoutInflater, R.layout.navigation_header,
+                binding.navigation, false)
+        binding.navigation.addHeaderView(headerBinding.root)
         setSupportActionBar(binding.toolbar)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(MainViewModel::class.java)
+        mainViewModel.account.observe(this, Observer {
+            headerBinding.account = it
+        })
         if (savedInstanceState == null) {
             mainViewModel.setFragment.observe(this, Observer {
                 when (it) {
@@ -53,6 +61,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun initializeDrawer(listener: NavigationView.OnNavigationItemSelectedListener) {
+        mainViewModel.getCredentials()
         val drawerToggle = ActionBarDrawerToggle(this, binding.drawer, binding.toolbar,
                 R.string.open_drawer_content, R.string.close_drawer_content)
         binding.drawer.addDrawerListener(drawerToggle)
