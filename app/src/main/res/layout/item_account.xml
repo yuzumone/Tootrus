@@ -52,7 +52,7 @@
 
             <TextView
                 android:id="@+id/text_acct"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="@{account.acct}"
@@ -60,6 +60,7 @@
                 android:scrollHorizontally="true"
                 android:ellipsize="end"
                 app:layout_constraintStart_toEndOf="@id/text_display_name"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_goneMarginStart="0dp"
                 tools:text="UserName@example.com"
                 />

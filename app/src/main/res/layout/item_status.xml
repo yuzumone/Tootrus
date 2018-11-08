@@ -40,12 +40,11 @@
                 app:image_url="@{status.reblog == null ? status.account.avatar : status.reblog.account.avatar}"
                 />
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/container_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:orientation="horizontal"
                 app:layout_constraintStart_toEndOf="@id/image_icon"
                 app:layout_constraintEnd_toStartOf="@id/text_time"
                 >
@@ -59,21 +58,25 @@
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
                     android:text="@{status.reblog == null ? status.account.displayName : status.reblog.account.displayName}"
+                    android:visibility="@{status.account.displayName.isEmpty() || status.reblog.account.displayName.isEmpty() ? View.GONE : View.VISIBLE}"
                     tools:text="DisplayName"
                     />
 
                 <TextView
                     android:id="@+id/text_acct"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:text="@{status.reblog == null ? status.account.acct : status.reblog.account.acct}"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
+                    app:layout_constraintStart_toEndOf="@id/text_display_name"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_goneMarginStart="0dp"
                     tools:text="UserName@example.com"
                     />
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
 
             <TextView
                 android:id="@+id/text_time"
