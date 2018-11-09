@@ -95,7 +95,8 @@ object CustomBindingAdapters {
     @BindingAdapter("notification_label")
     @JvmStatic
     fun setNotificationLabel(view: TextView, notification: Notification) {
-        val name = notification.account?.displayName
+        val name = if (notification.account?.displayName!!.isEmpty())
+            notification.account?.userName else notification.account?.displayName
         when (notification.type) {
             Notification.Type.Mention.value -> {
                 view.text = ""
