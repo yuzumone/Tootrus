@@ -1,7 +1,6 @@
 package net.yuzumone.tootrus.ui.common
 
 import android.databinding.BindingAdapter
-import android.text.Html
 import android.view.View
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
@@ -10,6 +9,7 @@ import com.sys1yagi.mastodon4j.api.entity.Notification
 import com.sys1yagi.mastodon4j.api.entity.Relationship
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
+import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -83,7 +83,8 @@ object CustomBindingAdapters {
     @BindingAdapter("content")
     @JvmStatic
     fun setContent(view: TextView, content: String?) {
-        view.text = Html.fromHtml(content ?: "", Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL)
+        val doc = Jsoup.parse(content ?: "")
+        view.text = doc.text()
     }
 
     @BindingAdapter("boosted_by")

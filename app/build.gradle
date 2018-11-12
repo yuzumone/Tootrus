@@ -65,6 +65,8 @@ dependencies {
     implementation 'com.github.sys1yagi.mastodon4j:mastodon4j:1.7.0'
     // image
     implementation 'com.facebook.fresco:fresco:1.10.0'
+    // parser
+    implementation 'org.jsoup:jsoup:1.11.3'
     // Test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
