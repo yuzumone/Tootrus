@@ -12,6 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.gson.Gson
+import com.sys1yagi.mastodon4j.api.entity.Account
+import com.sys1yagi.mastodon4j.api.entity.Relationship
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentProfileBinding
@@ -24,15 +27,22 @@ class ProfileFragment : Fragment() {
 
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentProfileBinding
-    private val id by lazy { arguments!!.getLong(ARG_ID) }
+    private val account by lazy {
+        Gson().fromJson(arguments!!.getString(ARG_ACCOUNT), Account::class.java)
+    }
+    private val relationship by lazy {
+        Gson().fromJson(arguments!!.getString(ARG_RELATIONSHIP), Relationship::class.java)
+    }
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     companion object {
-        private const val ARG_ID = "id"
-        fun newInstance(id: Long): ProfileFragment {
+        private const val ARG_ACCOUNT = "account"
+        private const val ARG_RELATIONSHIP = "relationship"
+        fun newInstance(account: Account, relationship: Relationship): ProfileFragment {
             return ProfileFragment().apply {
                 arguments = Bundle().apply {
-                    putLong(ARG_ID, id)
+                    putString(ARG_ACCOUNT, Gson().toJson(account))
+                    putString(ARG_RELATIONSHIP, Gson().toJson(relationship))
                 }
             }
         }
@@ -48,18 +58,20 @@ class ProfileFragment : Fragment() {
         profileViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(ProfileViewModel::class.java)
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
-            add("Toots", ProfileStatusesFragment())
-            add("Follows", ProfileFollowingsFragment())
-            add("Followers", ProfileFollowersFragment())
+            add(getString(R.string.profile_toot, account.statusesCount), ProfileStatusesFragment())
+            add(getString(R.string.profile_follows, account.followingCount), ProfileFollowingsFragment())
+            add(getString(R.string.profile_followers, account.followersCount), ProfileFollowersFragment())
         }
-        binding = FragmentProfileBinding.inflate(inflater, container, false).apply {
-            pager.adapter = adapter
-            pager.offscreenPageLimit = 2
-            toolbar.setNavigationIcon(R.drawable.ic_action_back)
-            toolbar.setNavigationOnClickListener {
+        binding = FragmentProfileBinding.inflate(inflater, container, false).also {
+            it.account = account
+            it.relationship = relationship
+            it.pager.adapter = adapter
+            it.pager.offscreenPageLimit = 2
+            it.toolbar.setNavigationIcon(R.drawable.ic_action_back)
+            it.toolbar.setNavigationOnClickListener { _ ->
                 activity?.finish()
             }
-            viewModel = profileViewModel
+            it.viewModel = profileViewModel
         }
         binding.tab.setupWithViewPager(binding.pager)
         return binding.root
@@ -67,10 +79,9 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        profileViewModel.getAccountAndRelationShip(id)
-        profileViewModel.getStatuses(id)
-        profileViewModel.getFollowing(id)
-        profileViewModel.getFollowers(id)
+        profileViewModel.getStatuses(account.id)
+        profileViewModel.getFollowing(account.id)
+        profileViewModel.getFollowers(account.id)
         profileViewModel.userId.observe(this, Observer {
             binding.userId = it
         })
