@@ -33,6 +33,7 @@ class ProfileViewModel @Inject constructor(
     val userId = MutableLiveData<Long>()
     val account = MutableLiveData<Account>()
     val relationship = MutableLiveData<Relationship>()
+    val accountAndRelationship = MutableLiveData<Pair<Account, Relationship>>()
     val statuses = MutableLiveData<List<Status>>()
     val followings = MutableLiveData<List<Account>>()
     val followers = MutableLiveData<List<Account>>()
@@ -58,6 +59,7 @@ class ProfileViewModel @Inject constructor(
                 is Success -> {
                     account.value = it.value.first
                     relationship.value = it.value.second
+                    accountAndRelationship.value = it.value
                 }
                 is Failure -> error.value = it.reason
             }
