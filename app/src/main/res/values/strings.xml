@@ -25,4 +25,7 @@
     <string name="reblogged">Reblogged</string>
     <string name="favorite_count">Favorite: %1$d</string>
     <string name="boost_count">Boost: %1$d</string>
+    <string name="profile_toot">Toot: %1$d</string>
+    <string name="profile_follows">Follows: %1$d</string>
+    <string name="profile_followers">Followers: %1$d</string>
 </resources>
