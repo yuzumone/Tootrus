@@ -19,6 +19,7 @@ class StatusBindingAdapter(
     override fun bind(binding: ItemStatusBinding, item: Status) {
         binding.viewQuick.visibility = View.GONE
         binding.viewThumbnail.clearThumbnail()
+        binding.viewWebCard.clearCard()
         val anim = AnimationUtils.loadAnimation(binding.root.context, R.anim.anim_view_quick)
         binding.root.setOnClickListener {
             if (binding.viewQuick.visibility == View.GONE) {
