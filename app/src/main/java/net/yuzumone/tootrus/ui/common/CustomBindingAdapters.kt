@@ -87,6 +87,22 @@ object CustomBindingAdapters {
         view.text = doc.text()
     }
 
+    @BindingAdapter("web_card")
+    @JvmStatic
+    fun setWebCard(view: WebCardView, content: String?) {
+        view.setContent(content)
+    }
+
+    @BindingAdapter("web_card_visibility")
+    @JvmStatic
+    fun setWebCardViewVisibility(view: WebCardView, content: String?) {
+        if (content.isNullOrBlank() || Jsoup.parse(content).select("a").size == 0) {
+            view.visibility = View.GONE
+        } else {
+            view.visibility = View.VISIBLE
+        }
+    }
+
     @BindingAdapter("boosted_by")
     @JvmStatic
     fun setBoostedBy(view: TextView, userName: String) {
