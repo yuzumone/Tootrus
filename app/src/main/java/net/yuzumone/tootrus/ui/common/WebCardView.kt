@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.LinearLayout
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ViewWebCardBinding
+import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.UnsupportedMimeTypeException
 
@@ -121,7 +122,11 @@ class WebCardTask(private val listener: WebCardListener) : AsyncTask<String, Uni
             WebCardCache.getInstance().putCard(params[0]!!, card)
             card
         } catch (e: UnsupportedMimeTypeException) {
-            val card = WebCard(params[0]!!, params[0]!!)
+            val card = WebCard(params[0]!!, "")
+            WebCardCache.getInstance().putCard(params[0]!!, card)
+            card
+        } catch (e: HttpStatusException) {
+            val card = WebCard(params[0]!!, "")
             WebCardCache.getInstance().putCard(params[0]!!, card)
             card
         }
