@@ -55,7 +55,7 @@ class WebCardView : LinearLayout {
         val binding = DataBindingUtil.inflate<ViewWebCardBinding>(
                 LayoutInflater.from(context), R.layout.view_web_card, this, false
         ).also {
-            it.textTitle.text = url
+            it.card = WebCard(url, "")
         }
         val card = WebCardCache.getInstance().getCard(url)
         if (card != null) {
