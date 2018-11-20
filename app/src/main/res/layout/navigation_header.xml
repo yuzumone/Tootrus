@@ -19,6 +19,7 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
             app:image_url="@{account.header}"
             fresco:viewAspectRatio="2"
             app:layout_constraintTop_toTopOf="parent"
