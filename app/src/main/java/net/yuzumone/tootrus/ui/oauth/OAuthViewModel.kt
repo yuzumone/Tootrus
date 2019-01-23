@@ -2,27 +2,24 @@ package net.yuzumone.tootrus.ui.oauth
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.sys1yagi.mastodon4j.api.entity.auth.AccessToken
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.oauth.GetAccessTokenUseCase
 import net.yuzumone.tootrus.domain.mastodon.oauth.GetOAuthParameterUseCase
 import net.yuzumone.tootrus.domain.mastodon.oauth.Params
-import net.yuzumone.tootrus.domain.prefs.StoreAccessTokenPrefUseCase
-import net.yuzumone.tootrus.domain.prefs.StoreInstanceNamePrefUseCase
+import net.yuzumone.tootrus.domain.prefs.StoreInstanceNameAndTokenUseCase
 import net.yuzumone.tootrus.vo.OAuthParameter
 import javax.inject.Inject
 
 class OAuthViewModel @Inject constructor(
         private val getOAuthParameterUseCase: GetOAuthParameterUseCase,
         private val getAccessTokenUseCase: GetAccessTokenUseCase,
-        private val storeInstanceNamePrefUseCase: StoreInstanceNamePrefUseCase,
-        private val storeAccessTokenPrefUseCase: StoreAccessTokenPrefUseCase
+        private val storeInstanceNameAndTokenUseCase: StoreInstanceNameAndTokenUseCase
 ) : ViewModel() {
 
     val oauthParameter = MutableLiveData<OAuthParameter>()
     val oauthParameterError = MutableLiveData<Exception>()
-    val accessToken = MutableLiveData<AccessToken>()
+    val transactionMainView = MutableLiveData<Boolean>()
     val accessTokenError = MutableLiveData<Exception>()
 
     fun getOAuthParameter(instanceName: String?) {
@@ -36,17 +33,25 @@ class OAuthViewModel @Inject constructor(
     }
 
     fun getAccessToken(code: String?) {
-        getAccessTokenUseCase(Params(
-                oauthParameter.value!!.instanceName, oauthParameter.value!!.clientId,
-                oauthParameter.value!!.clientSecret, code)) {
-                    when (it) {
-                        is Success -> {
-                            accessToken.value = it.value
-                            storeInstanceNamePrefUseCase(oauthParameter.value!!.instanceName)
-                            storeAccessTokenPrefUseCase(it.value.accessToken)
+        val params = Params(oauthParameter.value!!.instanceName, oauthParameter.value!!.clientId,
+                oauthParameter.value!!.clientSecret, code)
+        getAccessTokenUseCase(params) { token ->
+            when (token) {
+                is Success -> {
+                    val data = Pair(oauthParameter.value!!.instanceName, token.value.accessToken)
+                    storeInstanceNameAndTokenUseCase(data) {
+                        when (it) {
+                            is Success -> {
+                                transactionMainView.value = true
+                            }
+                            is Failure -> {
+                                accessTokenError.value = it.reason
+                            }
                         }
-                        is Failure -> accessTokenError.value = it.reason
                     }
                 }
+                is Failure -> accessTokenError.value = token.reason
+            }
+        }
     }
 }
