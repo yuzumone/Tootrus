@@ -49,7 +49,7 @@ class OAuthFragment : Fragment() {
         viewModel.oauthParameterError.observe(this, Observer {
             binding.inputInstanceName.error = getString(R.string.error)
         })
-        viewModel.accessToken.observe(this, Observer {
+        viewModel.transactionMainView.observe(this, Observer {
             requireFragmentManager().run {
                 beginTransaction().replace(R.id.content, TopFragment()).commit()
             }
