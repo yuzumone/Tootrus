@@ -84,7 +84,9 @@ object CustomBindingAdapters {
     @JvmStatic
     fun setContent(view: TextView, content: String?) {
         val doc = Jsoup.parse(content ?: "")
-        view.text = doc.text()
+        doc.select("span.invisible").remove()
+        val text = doc.text()
+        view.text = text
     }
 
     @BindingAdapter("web_card")
