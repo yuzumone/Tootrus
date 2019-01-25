@@ -85,6 +85,7 @@ object CustomBindingAdapters {
     fun setContent(view: TextView, content: String?) {
         val doc = Jsoup.parse(content ?: "")
         doc.select("span.invisible").remove()
+        doc.select("span.ellipsis").append("…")
         val text = doc.text()
         view.text = text
     }
