@@ -86,8 +86,10 @@ object CustomBindingAdapters {
         val doc = Jsoup.parse(content ?: "")
         doc.select("span.invisible").remove()
         doc.select("span.ellipsis").append("…")
-        val text = doc.text()
-        view.text = text
+        doc.select("p").append("\\n\\n")
+        doc.select("br").append("\\n")
+        val text = doc.text().replace("\\\\n\\\\n$".toRegex(), "")
+        view.text = text.split("\\n").joinToString("\n")
     }
 
     @BindingAdapter("web_card")
