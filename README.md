@@ -2,7 +2,7 @@
 [![platform android](https://img.shields.io/badge/platform-android-green.svg)](#)
 [![language kotlin](https://img.shields.io/badge/language-kotlin-green.svg)](#)
 [![minSdkVersion 24](https://img.shields.io/badge/minSdkVersion-24-red.svg)](#)
-[![version v1.0.0](https://img.shields.io/badge/version-v1.0.0-blue.svg)](#)
+[![version v1.0.1](https://img.shields.io/badge/version-v1.0.1-blue.svg)](#)
 
 ## Libraries
 - Android Support Library
@@ -11,7 +11,7 @@
 - [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/)
 - [Firebase](https://firebase.google.com/)
 - [dagger](https://github.com/google/dagger)
-- [Freso](https://frescolib.org/)
+- [Fresco](https://frescolib.org/)
 - [mastodon4j](https://github.com/sys1yagi/mastodon4j)
 - [jsoup](https://jsoup.org/)
 
