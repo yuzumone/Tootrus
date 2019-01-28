@@ -1,7 +1,7 @@
 package net.yuzumone.tootrus.ui.detail
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success

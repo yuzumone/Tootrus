@@ -1,7 +1,7 @@
 package net.yuzumone.tootrus.ui.common
 
 import android.content.Context
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View

@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         >
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="16dp"
@@ -25,7 +25,7 @@
             android:paddingEnd="16dp"
             >
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_main"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 >
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
@@ -49,7 +49,7 @@
                         app:image_url="@{status.account.avatar}"
                         />
 
-                    <android.support.constraint.ConstraintLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/container_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                             app:layout_goneMarginStart="0dp"
                             tools:text="UserName@example.com"
                             />
-                    </android.support.constraint.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
                         android:id="@+id/text_content"
@@ -133,10 +133,10 @@
                         app:layout_constraintTop_toTopOf="@+id/text_via"
                         app:layout_constraintEnd_toEndOf="parent"
                         />
-                </android.support.constraint.ConstraintLayout>
-            </android.support.v7.widget.CardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_quick"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 >
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     >
@@ -204,8 +204,8 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_weight="0.25"
                         />
-                </android.support.constraint.ConstraintLayout>
-            </android.support.v7.widget.CardView>
-        </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

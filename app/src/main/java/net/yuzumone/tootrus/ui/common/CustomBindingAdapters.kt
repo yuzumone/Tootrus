@@ -1,8 +1,8 @@
 package net.yuzumone.tootrus.ui.common
 
-import android.databinding.BindingAdapter
 import android.view.View
 import android.widget.TextView
+import androidx.databinding.BindingAdapter
 import com.facebook.drawee.view.SimpleDraweeView
 import com.sys1yagi.mastodon4j.api.entity.Attachment
 import com.sys1yagi.mastodon4j.api.entity.Notification

@@ -1,9 +1,9 @@
 package net.yuzumone.tootrus.util
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.support.v4.view.ViewPager
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.viewpager.widget.ViewPager
 import com.sys1yagi.mastodon4j.api.entity.Status
 
 fun <X, Y> LiveData<X>.map(body: (X) -> Y): LiveData<Y> {

@@ -2,7 +2,7 @@ package net.yuzumone.tootrus.ui.common
 
 import android.content.Context
 import android.content.Intent
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.AttributeSet
