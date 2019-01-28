@@ -9,7 +9,7 @@
             name="card"
             type="net.yuzumone.tootrus.ui.common.WebCard"/>
     </data>
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="2dp"
@@ -33,5 +33,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="text"
             />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

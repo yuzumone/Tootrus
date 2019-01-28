@@ -1,10 +1,10 @@
 package net.yuzumone.tootrus.ui.common
 
-import android.databinding.ViewDataBinding
-import android.support.annotation.UiThread
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.annotation.UiThread
+import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 
 abstract class BindingRecyclerAdapter<T, V : ViewDataBinding> :
         RecyclerView.Adapter<BindingHolder<V>>(), Iterable<T> {

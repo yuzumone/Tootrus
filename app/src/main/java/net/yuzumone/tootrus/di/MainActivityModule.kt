@@ -1,6 +1,6 @@
 package net.yuzumone.tootrus.di
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -9,9 +9,9 @@ import net.yuzumone.tootrus.ui.oauth.OAuthFragment
 import net.yuzumone.tootrus.ui.oauth.OAuthViewModel
 import net.yuzumone.tootrus.ui.top.TopFragment
 import net.yuzumone.tootrus.ui.top.TopViewModel
+import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
-import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
 
 @Module
 abstract class MainActivityModule {

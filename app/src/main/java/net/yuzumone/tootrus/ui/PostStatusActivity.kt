@@ -3,7 +3,7 @@ package net.yuzumone.tootrus.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import net.yuzumone.tootrus.ui.poststatus.PostStatusDialogFragment
 
 class PostStatusActivity : AppCompatActivity() {
