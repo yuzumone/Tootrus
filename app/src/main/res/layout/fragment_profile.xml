@@ -17,7 +17,7 @@
             type="net.yuzumone.tootrus.ui.profile.ProfileViewModel"/>
         <variable
             name="userId"
-            type="Long"/>
+            type="long"/>
         <import type="android.view.View"/>
     </data>
 
