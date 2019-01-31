@@ -39,6 +39,12 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         setSupportActionBar(binding.toolbar)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(MainViewModel::class.java)
+        mainViewModel.eventTransactionToTop.observe(this, Observer {
+            val topFragment = TopFragment()
+            supportFragmentManager.beginTransaction().replace(R.id.content, topFragment).commit()
+            initializeDrawer(topFragment)
+            mainViewModel.getCredentials()
+        })
         mainViewModel.account.observe(this, Observer {
             headerBinding.account = it
         })
@@ -54,6 +60,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                         supportFragmentManager.beginTransaction()
                                 .add(R.id.content, topFragment).commit()
                         initializeDrawer(topFragment)
+                        mainViewModel.getCredentials()
                     }
                 }
             })
@@ -61,7 +68,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun initializeDrawer(listener: NavigationView.OnNavigationItemSelectedListener) {
-        mainViewModel.getCredentials()
         val drawerToggle = ActionBarDrawerToggle(this, binding.drawer, binding.toolbar,
                 R.string.open_drawer_content, R.string.close_drawer_content)
         binding.drawer.addDrawerListener(drawerToggle)

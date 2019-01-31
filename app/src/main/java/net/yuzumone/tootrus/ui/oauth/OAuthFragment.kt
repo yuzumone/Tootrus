@@ -1,27 +1,27 @@
 package net.yuzumone.tootrus.ui.oauth
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentOauthBinding
-import net.yuzumone.tootrus.ui.top.TopFragment
+import net.yuzumone.tootrus.ui.MainViewModel
 import javax.inject.Inject
 
 class OAuthFragment : Fragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var binding: FragmentOauthBinding
-    private lateinit var viewModel: OAuthViewModel
+    private lateinit var oauthViewModel: OAuthViewModel
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -30,32 +30,29 @@ class OAuthFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        binding = FragmentOauthBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        oauthViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(OAuthViewModel::class.java)
-        binding.viewModel = viewModel
-        viewModel.oauthParameter.observe(this, Observer {
+        binding = FragmentOauthBinding.inflate(inflater, container, false).apply {
+            viewModel = this@OAuthFragment.oauthViewModel
+        }
+        oauthViewModel.oauthParameter.observe(this, Observer {
             it?.url.let { url ->
                 requireActivity().run {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                 }
             }
         })
-        viewModel.oauthParameterError.observe(this, Observer {
+        oauthViewModel.oauthParameterError.observe(this, Observer {
             binding.inputInstanceName.error = getString(R.string.error)
         })
-        viewModel.transactionMainView.observe(this, Observer {
-            requireFragmentManager().run {
-                beginTransaction().replace(R.id.content, TopFragment()).commit()
-            }
+        oauthViewModel.transactionMainView.observe(this, Observer {
+            val mainViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                    .get(MainViewModel::class.java)
+            mainViewModel.eventTransactionToTop.value = Unit
         })
-        viewModel.accessTokenError.observe(this, Observer {
+        oauthViewModel.accessTokenError.observe(this, Observer {
             binding.inputOauthCode.error = getString(R.string.error)
         })
+        return binding.root
     }
 }
