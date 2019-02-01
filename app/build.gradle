@@ -28,12 +28,6 @@ android {
     }
 }
 
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}
-
 ext.lifecycle_version = '2.0.0'
 ext.room_version = "1.1.1"
 ext.dagger_version = "2.16"
