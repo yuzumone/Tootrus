@@ -2,7 +2,6 @@ package net.yuzumone.tootrus.ui.common
 
 import android.content.Context
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.AttributeSet
@@ -10,11 +9,10 @@ import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import androidx.databinding.DataBindingUtil
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ViewWebCardBinding
-import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
-import org.jsoup.UnsupportedMimeTypeException
 
 class WebCardView : LinearLayout {
 
@@ -38,7 +36,7 @@ class WebCardView : LinearLayout {
             if (!it.attr("class").contains("mention")) {
                 val url = it.attr("href")
                 val v = bind(url)
-                v.setOnClickListener { _ ->
+                v.setOnClickListener {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     context.startActivity(intent)
                 }
@@ -55,7 +53,7 @@ class WebCardView : LinearLayout {
         val binding = DataBindingUtil.inflate<ViewWebCardBinding>(
                 LayoutInflater.from(context), R.layout.view_web_card, this, false
         ).also {
-            it.card = WebCard(url, "")
+            it.card = WebCard(url, "", "")
         }
         val card = WebCardCache.getInstance().getCard(url)
         if (card != null) {
@@ -72,6 +70,7 @@ class WebCardView : LinearLayout {
 }
 
 data class WebCard(
+        val url: String,
         val title: String,
         val imageUrl: String
 )
@@ -111,22 +110,19 @@ class WebCardTask(private val listener: WebCardListener) : AsyncTask<String, Uni
     }
 
     override fun doInBackground(vararg params: String?): WebCard {
+        val url = params[0] ?: return WebCard("", "", "")
         return try {
-            val doc = Jsoup.connect(params[0]).followRedirects(true).get()
+            val doc = Jsoup.connect(url).followRedirects(true).get()
             val title = doc.title()
             val imageUrl =
                     if (doc.select("meta[name=twitter:image]").attr("content").isBlank())
                         doc.select("meta[property=og:image]").attr("content") else
                         doc.select("meta[name=twitter:image]").attr("content")
-            val card = WebCard(title, imageUrl)
-            WebCardCache.getInstance().putCard(params[0]!!, card)
+            val card = WebCard(url, title, imageUrl)
+            WebCardCache.getInstance().putCard(url, card)
             card
-        } catch (e: UnsupportedMimeTypeException) {
-            val card = WebCard(params[0]!!, "")
-            WebCardCache.getInstance().putCard(params[0]!!, card)
-            card
-        } catch (e: HttpStatusException) {
-            val card = WebCard(params[0]!!, "")
+        } catch (e: Exception) {
+            val card = WebCard(url, "", "")
             WebCardCache.getInstance().putCard(params[0]!!, card)
             card
         }
