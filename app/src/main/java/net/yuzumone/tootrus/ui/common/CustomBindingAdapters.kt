@@ -88,7 +88,8 @@ object CustomBindingAdapters {
         doc.select("span.ellipsis").append("…")
         doc.select("p").append("\\n\\n")
         doc.select("br").append("\\n")
-        val text = doc.text().replace("\\\\n\\\\n$".toRegex(), "")
+        val text = doc.text().replace("\\\\n\\s".toRegex(), "\\\\n")
+                .replace("\\\\n\\\\n$".toRegex(), "")
         view.text = text.split("\\n").joinToString("\n")
     }
 
