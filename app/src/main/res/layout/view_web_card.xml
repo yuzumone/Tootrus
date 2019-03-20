@@ -17,6 +17,22 @@
         android:background="@drawable/background_web_card"
         android:foreground="?android:selectableItemBackground"
         >
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_thumbnail"
+            android:layout_width="72dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:placeholderImage="@drawable/ic_link"
+            app:roundedCornerRadius="10dp"
+            app:roundTopLeft="true"
+            app:roundTopRight="false"
+            app:roundBottomLeft="true"
+            app:roundBottomRight="false"
+            app:image_url="@{card.imageUrl}"
+            />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -29,7 +45,7 @@
             android:ellipsize="end"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_thumbnail"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="text"
             />
