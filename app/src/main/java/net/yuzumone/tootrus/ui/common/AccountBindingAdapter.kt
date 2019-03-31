@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import com.sys1yagi.mastodon4j.api.entity.Account
 import net.yuzumone.tootrus.databinding.ItemAccountBinding
 
-class AccountBindingAdapter() : BindingRecyclerAdapter<Account, ItemAccountBinding>() {
+class AccountBindingAdapter(
+        private val listener: OnAccountAdapterClickListener
+) : BindingRecyclerAdapter<Account, ItemAccountBinding>() {
 
     override fun createBinding(parent: ViewGroup): ItemAccountBinding {
         return ItemAccountBinding
@@ -14,5 +16,6 @@ class AccountBindingAdapter() : BindingRecyclerAdapter<Account, ItemAccountBindi
 
     override fun bind(binding: ItemAccountBinding, item: Account) {
         binding.account = item
+        binding.listener = listener
     }
 }
