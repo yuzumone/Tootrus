@@ -13,6 +13,7 @@ import net.yuzumone.tootrus.domain.mastodon.status.PostFavoriteUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostReblogUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostUnfavoriteUseCase
 import net.yuzumone.tootrus.domain.prefs.GetUserIdPrefUseCase
+import net.yuzumone.tootrus.ui.common.OnAccountAdapterClickListener
 import net.yuzumone.tootrus.ui.common.OnStatusAdapterClickListener
 import net.yuzumone.tootrus.util.replaceStatus
 import javax.inject.Inject
@@ -28,7 +29,7 @@ class ProfileViewModel @Inject constructor(
         private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
         private val postReblogUseCase: PostReblogUseCase,
         getUserIdPrefUseCase: GetUserIdPrefUseCase
-) : ViewModel(), OnStatusAdapterClickListener {
+) : ViewModel(), OnStatusAdapterClickListener, OnAccountAdapterClickListener {
 
     val userId = MutableLiveData<Long>()
     val account = MutableLiveData<Account>()
@@ -43,6 +44,7 @@ class ProfileViewModel @Inject constructor(
     val unfavoriteActionEvent = MutableLiveData<Status>()
     val reblogActionEvent = MutableLiveData<Status>()
     val menuActionEvent = MutableLiveData<Status>()
+    val openAccount = MutableLiveData<Account>()
     val error = MutableLiveData<Exception>()
 
     init {
@@ -188,5 +190,9 @@ class ProfileViewModel @Inject constructor(
 
     override fun actionMenu(status: Status) {
         menuActionEvent.value = status
+    }
+
+    override fun actionOpenAccount(account: Account) {
+        openAccount.value = account
     }
 }

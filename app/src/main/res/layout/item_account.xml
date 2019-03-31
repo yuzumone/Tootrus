@@ -9,6 +9,9 @@
         <variable
             name="account"
             type="com.sys1yagi.mastodon4j.api.entity.Account"/>
+        <variable
+            name="listener"
+            type="net.yuzumone.tootrus.ui.common.OnAccountAdapterClickListener"/>
         <import type="android.view.View"/>
     </data>
 
@@ -19,6 +22,7 @@
         android:clickable="true"
         android:focusable="true"
         android:padding="10dp"
+        android:onClick="@{(v) -> listener.actionOpenAccount(account)}"
         >
 
         <com.facebook.drawee.view.SimpleDraweeView

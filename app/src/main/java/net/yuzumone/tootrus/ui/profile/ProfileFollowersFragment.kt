@@ -34,7 +34,7 @@ class ProfileFollowersFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         profileViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(ProfileViewModel::class.java)
-        adapter = AccountBindingAdapter()
+        adapter = AccountBindingAdapter(profileViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)

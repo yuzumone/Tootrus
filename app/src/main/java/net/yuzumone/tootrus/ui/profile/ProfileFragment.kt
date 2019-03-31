@@ -19,6 +19,7 @@ import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentProfileBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
+import net.yuzumone.tootrus.ui.ProfileActivity
 import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
 import javax.inject.Inject
@@ -120,6 +121,12 @@ class ProfileFragment : Fragment() {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
             fragment.show(fragmentManager, "menu")
+        })
+        profileViewModel.openAccount.observe(this, Observer {
+            requireActivity().run {
+                val intent = ProfileActivity.createIntent(this, it.id)
+                startActivity(intent)
+            }
         })
         profileViewModel.error.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
