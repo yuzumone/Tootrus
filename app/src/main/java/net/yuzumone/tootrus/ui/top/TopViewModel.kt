@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sys1yagi.mastodon4j.api.Handler
 import com.sys1yagi.mastodon4j.api.Range
+import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Notification
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.domain.Failure
@@ -16,6 +17,7 @@ import net.yuzumone.tootrus.domain.mastodon.stream.ShutdownUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.stream.StartUserStreamUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetLocalPublicUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
+import net.yuzumone.tootrus.ui.common.OnNotificationAdapterClickListener
 import net.yuzumone.tootrus.ui.common.OnStatusAdapterClickListener
 import net.yuzumone.tootrus.util.insertValues
 import net.yuzumone.tootrus.util.postInsertValue
@@ -31,7 +33,7 @@ class TopViewModel @Inject constructor(
         private val getLocalPublicUseCase: GetLocalPublicUseCase,
         getTimelineUseCase: GetTimelineUseCase,
         getNotificationsUseCase: GetNotificationsUseCase
-): ViewModel(), OnStatusAdapterClickListener {
+): ViewModel(), OnStatusAdapterClickListener, OnNotificationAdapterClickListener {
 
     val homeStatuses = MutableLiveData<List<Status>>()
     val localStatuses = MutableLiveData<List<Status>>()
@@ -47,6 +49,8 @@ class TopViewModel @Inject constructor(
     val menuActionEvent = MutableLiveData<Status>()
     val favoriteError = MutableLiveData<Exception>()
     val reblogError = MutableLiveData<Exception>()
+    val openAccountEvent = MutableLiveData<Account>()
+    val openStatusEvent = MutableLiveData<Status>()
 
     init {
         val range = Range()
@@ -132,7 +136,7 @@ class TopViewModel @Inject constructor(
         }
     }
 
-   private fun postReblog(target: Status) {
+    private fun postReblog(target: Status) {
         postReblogUseCase(target.id) {
             when (it) {
                 is Success -> {
@@ -169,5 +173,17 @@ class TopViewModel @Inject constructor(
 
     override fun actionMenu(status: Status) {
         menuActionEvent.value = status
+    }
+
+    override fun onSingleClick(notification: Notification) {
+        when (notification.type) {
+            Notification.Type.Follow.value -> {
+                openAccountEvent.value = notification.account
+            }
+            Notification.Type.Favourite.value, Notification.Type.Mention.value,
+                Notification.Type.Reblog.value -> {
+                openStatusEvent.value = notification.status
+            }
+        }
     }
 }

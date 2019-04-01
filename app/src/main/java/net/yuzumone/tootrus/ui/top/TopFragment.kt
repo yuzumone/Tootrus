@@ -19,6 +19,7 @@ import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTopBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
+import net.yuzumone.tootrus.ui.ProfileActivity
 import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
 import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
@@ -97,6 +98,18 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
         })
         topViewModel.reblogError.observe(this, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
+        })
+        topViewModel.openAccountEvent.observe(this, Observer {
+            requireActivity().run {
+                val intent = ProfileActivity.createIntent(this, it.id)
+                startActivity(intent)
+            }
+        })
+        topViewModel.openStatusEvent.observe(this, Observer {
+            requireActivity().run {
+                val intent = StatusDetailActivity.createIntent(this, it.id)
+                startActivity(intent)
+            }
         })
     }
 
