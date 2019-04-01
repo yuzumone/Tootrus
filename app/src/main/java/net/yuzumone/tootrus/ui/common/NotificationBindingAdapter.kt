@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import com.sys1yagi.mastodon4j.api.entity.Notification
 import net.yuzumone.tootrus.databinding.ItemNotificationBinding
 
-class NotificationBindingAdapter : BindingRecyclerAdapter<Notification, ItemNotificationBinding>() {
+class NotificationBindingAdapter(
+        val listener: OnNotificationAdapterClickListener
+) : BindingRecyclerAdapter<Notification, ItemNotificationBinding>() {
     override fun createBinding(parent: ViewGroup): ItemNotificationBinding {
         val binding = ItemNotificationBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
@@ -14,5 +16,6 @@ class NotificationBindingAdapter : BindingRecyclerAdapter<Notification, ItemNoti
 
     override fun bind(binding: ItemNotificationBinding, item: Notification) {
         binding.notification = item
+        binding.listener = listener
     }
 }
