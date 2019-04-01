@@ -36,7 +36,7 @@ class NotificationFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(TopViewModel::class.java)
-        adapter = NotificationBindingAdapter()
+        adapter = NotificationBindingAdapter(topViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
         divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
