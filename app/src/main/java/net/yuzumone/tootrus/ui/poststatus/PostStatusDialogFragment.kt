@@ -83,7 +83,7 @@ class PostStatusDialogFragment : DialogFragment() {
                 }
                 R.id.menu_visibility_public, R.id.menu_visibility_unlisted,
                 R.id.menu_visibility_private, R.id.menu_visibility_direct -> {
-                    val anim = AnimationUtils.loadAnimation(activity, R.anim.anim_view_quick)
+                    val anim = AnimationUtils.loadAnimation(activity, R.anim.anim_toolbar_optinal_view_open)
                     if (binding.viewVisibility.visibility == View.GONE) {
                         binding.viewVisibility.visibility = View.VISIBLE
                         binding.viewVisibility.startAnimation(anim)
