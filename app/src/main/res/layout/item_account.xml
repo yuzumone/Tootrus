@@ -30,6 +30,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:image_url="@{account.avatar}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,6 +41,7 @@
             android:layout_marginStart="12dp"
             app:layout_constraintStart_toEndOf="@id/image_icon"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             >
 
             <TextView
@@ -52,6 +55,8 @@
                 android:text="@{account.displayName}"
                 android:visibility="@{account.displayName.isEmpty() ? View.GONE : View.VISIBLE}"
                 tools:text="DisplayName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 />
 
             <TextView
@@ -65,6 +70,7 @@
                 android:ellipsize="end"
                 app:layout_constraintStart_toEndOf="@id/text_display_name"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_goneMarginStart="0dp"
                 tools:text="UserName@example.com"
                 />

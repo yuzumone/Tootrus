@@ -38,6 +38,8 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 app:image_url="@{status.reblog == null ? status.account.avatar : status.reblog.account.avatar}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,6 +49,7 @@
                 android:layout_marginStart="12dp"
                 app:layout_constraintStart_toEndOf="@id/image_icon"
                 app:layout_constraintEnd_toStartOf="@id/text_time"
+                app:layout_constraintTop_toTopOf="parent"
                 >
 
                 <TextView
@@ -60,6 +63,8 @@
                     android:text="@{status.reblog == null ? status.account.displayName : status.reblog.account.displayName}"
                     android:visibility="@{status.account.displayName.isEmpty() || status.reblog.account.displayName.isEmpty() ? View.GONE : View.VISIBLE}"
                     tools:text="DisplayName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     />
 
                 <TextView
@@ -73,6 +78,7 @@
                     android:ellipsize="end"
                     app:layout_constraintStart_toEndOf="@id/text_display_name"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_goneMarginStart="0dp"
                     tools:text="UserName@example.com"
                     />
@@ -84,6 +90,7 @@
                 android:layout_height="wrap_content"
                 app:created_at="@{status.reblog == null ? status.createdAt : status.reblog.createdAt}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="5s"
                 />
 
