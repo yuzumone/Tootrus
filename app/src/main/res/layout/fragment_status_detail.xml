@@ -9,6 +9,9 @@
         <variable
             name="status"
             type="com.sys1yagi.mastodon4j.api.entity.Status"/>
+        <variable
+            name="listener"
+            type="net.yuzumone.tootrus.ui.detail.OnStatusDetailClickListener"/>
         <import type="android.view.View"/>
     </data>
 
@@ -159,6 +162,7 @@
                         android:layout_height="0dp"
                         android:src="@drawable/ic_quick_reply"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:onClick="@{(v) -> listener.actionReply(status)}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -172,6 +176,7 @@
                         android:layout_height="0dp"
                         android:src="@{status.isFavourited ? @drawable/ic_quick_favorited : @drawable/ic_quick_fav}"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:onClick="@{(v) -> listener.actionFavorite(status)}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/button_reply"
@@ -185,6 +190,7 @@
                         android:layout_height="0dp"
                         android:src="@{status.isReblogged ? @drawable/ic_quick_reblogged : @drawable/ic_quick_reblog}"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:onClick="@{(v) -> listener.actionReblog(status)}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/button_fav"
@@ -198,6 +204,7 @@
                         android:layout_height="0dp"
                         android:src="@drawable/ic_quick_menu"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:onClick="@{(v) -> listener.actionMenu(status)}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/button_reblog"
