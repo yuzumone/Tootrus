@@ -43,6 +43,10 @@ class StatusDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_status_detail)
         setSupportActionBar(binding.toolbar)
+        binding.toolbar.setNavigationIcon(R.drawable.ic_action_back)
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
         statusDetailViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(StatusDetailViewModel::class.java)
         statusDetailViewModel.status.observe(this, Observer { status ->
