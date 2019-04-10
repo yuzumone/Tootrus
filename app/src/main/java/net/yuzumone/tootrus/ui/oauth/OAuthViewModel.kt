@@ -23,7 +23,7 @@ class OAuthViewModel @Inject constructor(
     val accessTokenError = MutableLiveData<Exception>()
 
     fun getOAuthParameter(instanceName: String?) {
-        val name = if (instanceName.isNullOrBlank()) "social.mikutter.hachune.net" else instanceName!!
+        val name = if (instanceName.isNullOrBlank()) "social.mikutter.hachune.net" else instanceName
         getOAuthParameterUseCase(name) {
             when (it) {
                 is Success -> oauthParameter.value = it.value
