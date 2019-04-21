@@ -20,4 +20,10 @@
         android:icon="@drawable/ic_drawer_local_timeline"
         android:title="@string/section_local_timeline"
         />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_drawer_profile"
+        android:title="@string/section_profile"
+        />
 </menu>
