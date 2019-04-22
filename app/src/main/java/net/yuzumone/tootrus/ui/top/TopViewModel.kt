@@ -9,6 +9,7 @@ import com.sys1yagi.mastodon4j.api.entity.Notification
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
+import net.yuzumone.tootrus.domain.mastodon.account.GetVerifyCredentialsUseCase
 import net.yuzumone.tootrus.domain.mastodon.notification.GetNotificationsUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostFavoriteUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostReblogUseCase
@@ -31,6 +32,7 @@ class TopViewModel @Inject constructor(
         private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
         private val postReblogUseCase: PostReblogUseCase,
         private val getLocalPublicUseCase: GetLocalPublicUseCase,
+        private val getVerifyCredentialsUseCase: GetVerifyCredentialsUseCase,
         getTimelineUseCase: GetTimelineUseCase,
         getNotificationsUseCase: GetNotificationsUseCase
 ): ViewModel(), OnStatusAdapterClickListener, OnNotificationAdapterClickListener {
@@ -51,6 +53,7 @@ class TopViewModel @Inject constructor(
     val reblogError = MutableLiveData<Exception>()
     val openAccountEvent = MutableLiveData<Account>()
     val openStatusEvent = MutableLiveData<Status>()
+    val openUserAccountEvent = MutableLiveData<Account>()
 
     init {
         val range = Range()
@@ -105,6 +108,16 @@ class TopViewModel @Inject constructor(
                 when (it) {
                     is Success -> localStatuses.insertValues(it.value)
                     is Failure -> localError.value = it.reason
+                }
+            }
+        }
+    }
+
+    fun acitonOpenUserProfile() {
+        getVerifyCredentialsUseCase(Unit) {
+            when (it) {
+                is Success -> {
+                    openUserAccountEvent.value = it.value
                 }
             }
         }

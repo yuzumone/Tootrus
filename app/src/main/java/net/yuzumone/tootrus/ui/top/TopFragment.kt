@@ -111,6 +111,12 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
                 startActivity(intent)
             }
         })
+        topViewModel.openUserAccountEvent.observe(this, Observer {
+            requireActivity().run {
+                val intent = ProfileActivity.createIntent(this, it.id)
+                startActivity(intent)
+            }
+        })
     }
 
     private fun getPostStatusButtonListener(): View.OnClickListener {
@@ -139,6 +145,10 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
             }
             R.id.navigation_local_timeline -> {
                 binding.pager.currentItem = 2
+                return true
+            }
+            R.id.navigation_profile -> {
+                topViewModel.acitonOpenUserProfile()
                 return true
             }
         }
