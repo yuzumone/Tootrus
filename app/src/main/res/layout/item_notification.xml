@@ -107,7 +107,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="@{notification.type.equals(`follow`) ? View.GONE : View.VISIBLE}"
-            app:content="@{notification.status.content}"
+            app:content="@{notification.status}"
             app:layout_constraintStart_toStartOf="@id/container_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/container_name"
