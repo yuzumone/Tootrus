@@ -1,13 +1,21 @@
 package net.yuzumone.tootrus.ui.common
 
+import android.graphics.Bitmap
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ImageSpan
 import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.facebook.common.executors.UiThreadImmediateExecutorService
+import com.facebook.common.references.CloseableReference
+import com.facebook.datasource.DataSource
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
-import com.sys1yagi.mastodon4j.api.entity.Attachment
-import com.sys1yagi.mastodon4j.api.entity.Notification
-import com.sys1yagi.mastodon4j.api.entity.Relationship
-import com.sys1yagi.mastodon4j.api.entity.Status
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
+import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.request.ImageRequest
+import com.sys1yagi.mastodon4j.api.entity.*
 import net.yuzumone.tootrus.R
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
@@ -82,15 +90,74 @@ object CustomBindingAdapters {
 
     @BindingAdapter("content")
     @JvmStatic
-    fun setContent(view: TextView, content: String?) {
-        val doc = Jsoup.parse(content ?: "")
+    fun setContent(view: TextView, status: Status) {
+        val doc = Jsoup.parse(status.content)
         doc.select("span.invisible").remove()
         doc.select("span.ellipsis").append("…")
         doc.select("p").append("\\n\\n")
         doc.select("br").append("\\n")
         val text = doc.text().replace("\\\\n\\s".toRegex(), "\\\\n")
                 .replace("\\\\n\\\\n$".toRegex(), "")
-        view.text = text.split("\\n").joinToString("\n")
+                .split("\\n").joinToString("\n")
+        view.text = text
+        val sb = SpannableStringBuilder(text)
+        status.emojis.forEach { emoji ->
+            val shortCode = ":${emoji.shortcode}:"
+            val request = ImageRequest.fromUri(emoji.url)
+            val imagePipeline = Fresco.getImagePipeline()
+            val dataSource = imagePipeline.fetchDecodedImage(request, null)
+            dataSource.subscribe(object : BaseBitmapDataSubscriber() {
+                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+                    // NOPE
+                }
+
+                override fun onNewResultImpl(bitmap: Bitmap?) {
+                    bitmap ?: return
+                    val imageSpan = ImageSpan(bitmap)
+                    val index = text.indexOf(shortCode)
+                    if (index != -1) {
+                        sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
+                        view.text = sb
+                    }
+                }
+            }, UiThreadImmediateExecutorService.getInstance())
+        }
+    }
+
+    @BindingAdapter("note")
+    @JvmStatic
+    fun setAccountNote(view: TextView, account: Account) {
+        val doc = Jsoup.parse(account.note)
+        doc.select("span.invisible").remove()
+        doc.select("span.ellipsis").append("…")
+        doc.select("p").append("\\n\\n")
+        doc.select("br").append("\\n")
+        val text = doc.text().replace("\\\\n\\s".toRegex(), "\\\\n")
+                .replace("\\\\n\\\\n$".toRegex(), "")
+                .split("\\n").joinToString("\n")
+        view.text = text
+        val sb = SpannableStringBuilder(text)
+        account.emojis.forEach { emoji ->
+            val shortCode = ":${emoji.shortcode}:"
+            val request = ImageRequest.fromUri(emoji.url)
+            val imagePipeline = Fresco.getImagePipeline()
+            val dataSource = imagePipeline.fetchDecodedImage(request, null)
+            dataSource.subscribe(object : BaseBitmapDataSubscriber() {
+                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+                    // NOPE
+                }
+
+                override fun onNewResultImpl(bitmap: Bitmap?) {
+                    bitmap ?: return
+                    val imageSpan = ImageSpan(bitmap)
+                    val index = text.indexOf(shortCode)
+                    if (index != -1) {
+                        sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
+                        view.text = sb
+                    }
+                }
+            }, UiThreadImmediateExecutorService.getInstance())
+        }
     }
 
     @BindingAdapter("web_card")

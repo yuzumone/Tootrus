@@ -94,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:textColor="@android:color/white"
-                        app:content="@{account.note}"
+                        app:note="@{account}"
                         app:layout_constraintTop_toBottomOf="@+id/image_header"
                         app:layout_constraintStart_toStartOf="@id/guide_start"
                         app:layout_constraintEnd_toEndOf="@id/guide_end"
