@@ -1,6 +1,7 @@
 package net.yuzumone.tootrus.ui.common
 
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ImageSpan
@@ -108,12 +109,15 @@ object CustomBindingAdapters {
             val dataSource = imagePipeline.fetchDecodedImage(request, null)
             dataSource.subscribe(object : BaseBitmapDataSubscriber() {
                 override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
-                    // NOPE
+
                 }
 
                 override fun onNewResultImpl(bitmap: Bitmap?) {
                     bitmap ?: return
-                    val imageSpan = ImageSpan(bitmap)
+                    val lineHeight = view.lineHeight
+                    val drawable = BitmapDrawable(view.resources, bitmap)
+                    drawable.setBounds(0, 0, lineHeight, lineHeight)
+                    val imageSpan = ImageSpan(drawable)
                     val index = text.indexOf(shortCode)
                     if (index != -1) {
                         sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
@@ -144,12 +148,15 @@ object CustomBindingAdapters {
             val dataSource = imagePipeline.fetchDecodedImage(request, null)
             dataSource.subscribe(object : BaseBitmapDataSubscriber() {
                 override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
-                    // NOPE
+
                 }
 
                 override fun onNewResultImpl(bitmap: Bitmap?) {
                     bitmap ?: return
-                    val imageSpan = ImageSpan(bitmap)
+                    val lineHeight = view.lineHeight
+                    val drawable = BitmapDrawable(view.resources, bitmap)
+                    drawable.setBounds(0, 0, lineHeight, lineHeight)
+                    val imageSpan = ImageSpan(drawable)
                     val index = text.indexOf(shortCode)
                     if (index != -1) {
                         sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
