@@ -29,4 +29,5 @@
     <string name="profile_follows">Follows: %1$d</string>
     <string name="profile_followers">Followers: %1$d</string>
     <string name="section_profile">Profile</string>
+    <string name="spoiler_text">%1$s (Show more)</string>
 </resources>
