@@ -92,6 +92,10 @@ object CustomBindingAdapters {
     @BindingAdapter("content")
     @JvmStatic
     fun setContent(view: TextView, status: Status) {
+        if (status.spoilerText.isNotEmpty()) {
+            view.text = view.context.getString(R.string.spoiler_text, status.spoilerText)
+            return
+        }
         val doc = Jsoup.parse(status.content)
         doc.select("span.invisible").remove()
         doc.select("span.ellipsis").append("…")
@@ -100,6 +104,48 @@ object CustomBindingAdapters {
         val text = doc.text().replace("\\\\n\\s".toRegex(), "\\\\n")
                 .replace("\\\\n\\\\n$".toRegex(), "")
                 .split("\\n").joinToString("\n")
+        view.text = text
+        val sb = SpannableStringBuilder(text)
+        status.emojis.forEach { emoji ->
+            val shortCode = ":${emoji.shortcode}:"
+            val request = ImageRequest.fromUri(emoji.url)
+            val imagePipeline = Fresco.getImagePipeline()
+            val dataSource = imagePipeline.fetchDecodedImage(request, null)
+            dataSource.subscribe(object : BaseBitmapDataSubscriber() {
+                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+
+                }
+
+                override fun onNewResultImpl(bitmap: Bitmap?) {
+                    bitmap ?: return
+                    val lineHeight = view.lineHeight
+                    val drawable = BitmapDrawable(view.resources, bitmap)
+                    drawable.setBounds(0, 0, lineHeight, lineHeight)
+                    val imageSpan = ImageSpan(drawable)
+                    val index = text.indexOf(shortCode)
+                    if (index != -1) {
+                        sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
+                        view.text = sb
+                    }
+                }
+            }, UiThreadImmediateExecutorService.getInstance())
+        }
+    }
+
+    @BindingAdapter("detail_content")
+    @JvmStatic
+    fun setDetailContent(view: TextView, status: Status) {
+        val doc = Jsoup.parse(status.content)
+        doc.select("span.invisible").remove()
+        doc.select("span.ellipsis").append("…")
+        doc.select("p").append("\\n\\n")
+        doc.select("br").append("\\n")
+        var text = doc.text().replace("\\\\n\\s".toRegex(), "\\\\n")
+                .replace("\\\\n\\\\n$".toRegex(), "")
+                .split("\\n").joinToString("\n")
+        if (status.spoilerText.isNotEmpty()) {
+            text = "${status.spoilerText}\n\n$text"
+        }
         view.text = text
         val sb = SpannableStringBuilder(text)
         status.emojis.forEach { emoji ->
