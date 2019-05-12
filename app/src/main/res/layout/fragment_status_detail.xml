@@ -50,53 +50,55 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         app:image_url="@{status.account.avatar}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/container_name"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/text_display_name"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:scrollHorizontally="true"
+                        android:ellipsize="end"
+                        android:text="@{status.account.displayName}"
+                        android:visibility="@{status.account.displayName == null ? View.GONE : View.VISIBLE}"
                         android:layout_marginStart="12dp"
+                        tools:text="DisplayName"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintHorizontal_bias="0"
                         app:layout_constraintStart_toEndOf="@id/image_icon"
                         app:layout_constraintEnd_toEndOf="parent"
-                        >
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
 
-                        <TextView
-                            android:id="@+id/text_display_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:maxLines="1"
-                            android:scrollHorizontally="true"
-                            android:ellipsize="end"
-                            android:text="@{status.account.displayName}"
-                            android:visibility="@{status.account.displayName == null ? View.GONE : View.VISIBLE}"
-                            tools:text="DisplayName"
-                            />
-
-                        <TextView
-                            android:id="@+id/text_acct"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@{status.account.acct}"
-                            android:maxLines="1"
-                            android:scrollHorizontally="true"
-                            android:ellipsize="end"
-                            app:layout_constraintStart_toEndOf="@id/text_display_name"
-                            app:layout_goneMarginStart="0dp"
-                            tools:text="UserName@example.com"
-                            />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/text_acct"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@{status.account.acct}"
+                        android:maxLines="1"
+                        android:scrollHorizontally="true"
+                        android:ellipsize="end"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintStart_toEndOf="@id/text_display_name"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_goneMarginStart="12dp"
+                        tools:text="UserName@example.com"
+                        />
 
                     <TextView
                         android:id="@+id/text_content"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         app:detail_content="@{status}"
-                        app:layout_constraintStart_toStartOf="@id/container_name"
+                        app:layout_constraintStart_toStartOf="@id/text_display_name"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/container_name"
+                        app:layout_constraintTop_toBottomOf="@id/text_acct"
+                        app:layout_goneMarginStart="12dp"
                         tools:text="content_content_content"
                         />
 
@@ -108,15 +110,23 @@
                         app:absolute="@{status.createdAt}"
                         app:layout_constraintTop_toBottomOf="@id/text_content"
                         app:layout_constraintStart_toStartOf="@id/text_content"
+                        tools:text="2019/01/01 00:00:00"
                         />
 
                     <TextView
                         android:id="@+id/text_via"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:scrollHorizontally="true"
+                        android:ellipsize="end"
                         android:text="@{status.application.name}"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintHorizontal_bias="0"
                         app:layout_constraintTop_toBottomOf="@+id/text_time"
                         app:layout_constraintStart_toStartOf="@id/text_time"
+                        app:layout_constraintEnd_toStartOf="@id/text_boost"
+                        tools:text="Tootrus"
                         />
 
                     <TextView
@@ -126,6 +136,7 @@
                         android:text="@{String.format(@string/favorite_count, status.favouritesCount)}"
                         app:layout_constraintTop_toTopOf="@id/text_time"
                         app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="Favorite: 0"
                         />
 
                     <TextView
@@ -135,6 +146,7 @@
                         android:text="@{String.format(@string/boost_count, status.reblogsCount)}"
                         app:layout_constraintTop_toTopOf="@+id/text_via"
                         app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="Boost: 0"
                         />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
