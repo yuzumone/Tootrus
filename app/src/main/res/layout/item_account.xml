@@ -34,56 +34,51 @@
             app:layout_constraintTop_toTopOf="parent"
             />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container_name"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/text_display_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="end"
+            android:text="@{account.displayName}"
+            android:visibility="@{account.displayName.isEmpty() ? View.GONE : View.VISIBLE}"
             android:layout_marginStart="12dp"
+            tools:text="DisplayName"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/image_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            >
+            />
 
-            <TextView
-                android:id="@+id/text_display_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:ellipsize="end"
-                android:text="@{account.displayName}"
-                android:visibility="@{account.displayName.isEmpty() ? View.GONE : View.VISIBLE}"
-                tools:text="DisplayName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-            <TextView
-                android:id="@+id/text_acct"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@{account.acct}"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:ellipsize="end"
-                app:layout_constraintStart_toEndOf="@id/text_display_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_goneMarginStart="0dp"
-                tools:text="UserName@example.com"
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/text_acct"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@{account.acct}"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="end"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toEndOf="@id/text_display_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginStart="12dp"
+            tools:text="UserName@example.com"
+            />
 
         <TextView
             android:id="@+id/text_note"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:note="@{account}"
-            app:layout_constraintStart_toStartOf="@id/container_name"
+            app:layout_constraintStart_toStartOf="@id/text_display_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/container_name"
+            app:layout_constraintTop_toBottomOf="@id/text_acct"
+            app:layout_goneMarginStart="12dp"
             tools:text="content_content_content"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
