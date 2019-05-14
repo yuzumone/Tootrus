@@ -91,7 +91,8 @@ object CustomBindingAdapters {
 
     @BindingAdapter("content")
     @JvmStatic
-    fun setContent(view: TextView, status: Status) {
+    fun setContent(view: TextView, status: Status?) {
+        status ?: return
         if (status.spoilerText.isNotEmpty()) {
             view.text = view.context.getString(R.string.spoiler_text, status.spoilerText)
             return
@@ -134,7 +135,8 @@ object CustomBindingAdapters {
 
     @BindingAdapter("detail_content")
     @JvmStatic
-    fun setDetailContent(view: TextView, status: Status) {
+    fun setDetailContent(view: TextView, status: Status?) {
+        status ?: return
         val doc = Jsoup.parse(status.content)
         doc.select("span.invisible").remove()
         doc.select("span.ellipsis").append("…")
@@ -176,7 +178,8 @@ object CustomBindingAdapters {
 
     @BindingAdapter("note")
     @JvmStatic
-    fun setAccountNote(view: TextView, account: Account) {
+    fun setAccountNote(view: TextView, account: Account?) {
+        account ?: return
         val doc = Jsoup.parse(account.note)
         doc.select("span.invisible").remove()
         doc.select("span.ellipsis").append("…")
