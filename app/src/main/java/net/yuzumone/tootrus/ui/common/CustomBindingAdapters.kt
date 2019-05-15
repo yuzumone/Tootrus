@@ -7,6 +7,7 @@ import android.text.Spanned
 import android.text.style.ImageSpan
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import com.facebook.common.executors.UiThreadImmediateExecutorService
 import com.facebook.common.references.CloseableReference
@@ -265,5 +266,34 @@ object CustomBindingAdapters {
         relationship ?: return
         val text = if (relationship.isFollowedBy) "This user is following you." else "This user is not following you."
         view.text = text
+    }
+
+    @BindingAdapter("status_visibility")
+    @JvmStatic
+    fun setStatusVisibility(view: TextView, visibility: String) {
+        val lineHeight = view.lineHeight
+        when (visibility) {
+            Status.Visibility.Direct.value -> {
+                ResourcesCompat.getDrawable(view.resources, R.drawable.ic_item_direct, null)?.let {
+                    it.setBounds(0, 0, lineHeight, lineHeight)
+                    view.setCompoundDrawables(it, null, null, null)
+                }
+            }
+            Status.Visibility.Private.value -> {
+                ResourcesCompat.getDrawable(view.resources, R.drawable.ic_item_private, null)?.let {
+                    it.setBounds(0, 0, lineHeight, lineHeight)
+                    view.setCompoundDrawables(it, null, null, null)
+                }
+            }
+            Status.Visibility.Unlisted.value -> {
+                ResourcesCompat.getDrawable(view.resources, R.drawable.ic_item_unlisted, null)?.let {
+                    it.setBounds(0, 0, lineHeight, lineHeight)
+                    view.setCompoundDrawables(it, null, null, null)
+                }
+            }
+            else -> {
+                view.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+            }
+        }
     }
 }
