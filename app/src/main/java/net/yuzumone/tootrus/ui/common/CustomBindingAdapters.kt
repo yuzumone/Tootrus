@@ -123,11 +123,13 @@ object CustomBindingAdapters {
                     val lineHeight = view.lineHeight
                     val drawable = BitmapDrawable(view.resources, bitmap)
                     drawable.setBounds(0, 0, lineHeight, lineHeight)
-                    val imageSpan = ImageSpan(drawable)
-                    val index = text.indexOf(shortCode)
-                    if (index != -1) {
+                    var i = 0
+                    while (text.indexOf(shortCode, i) != -1) {
+                        val index = text.indexOf(shortCode, i)
+                        val imageSpan = ImageSpan(drawable)
                         sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
                         view.text = sb
+                        i += index + 1
                     }
                 }
             }, UiThreadImmediateExecutorService.getInstance())
@@ -166,11 +168,13 @@ object CustomBindingAdapters {
                     val lineHeight = view.lineHeight
                     val drawable = BitmapDrawable(view.resources, bitmap)
                     drawable.setBounds(0, 0, lineHeight, lineHeight)
-                    val imageSpan = ImageSpan(drawable)
-                    val index = text.indexOf(shortCode)
-                    if (index != -1) {
+                    var i = 0
+                    while (text.indexOf(shortCode, i) != -1) {
+                        val index = text.indexOf(shortCode, i)
+                        val imageSpan = ImageSpan(drawable)
                         sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
                         view.text = sb
+                        i += index + 1
                     }
                 }
             }, UiThreadImmediateExecutorService.getInstance())
@@ -206,11 +210,13 @@ object CustomBindingAdapters {
                     val lineHeight = view.lineHeight
                     val drawable = BitmapDrawable(view.resources, bitmap)
                     drawable.setBounds(0, 0, lineHeight, lineHeight)
-                    val imageSpan = ImageSpan(drawable)
-                    val index = text.indexOf(shortCode)
-                    if (index != -1) {
+                    var i = 0
+                    while (text.indexOf(shortCode, i) != -1) {
+                        val index = text.indexOf(shortCode, i)
+                        val imageSpan = ImageSpan(drawable)
                         sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
                         view.text = sb
+                        i += index + 1
                     }
                 }
             }, UiThreadImmediateExecutorService.getInstance())
