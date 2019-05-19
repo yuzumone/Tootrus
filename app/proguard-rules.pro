@@ -79,3 +79,5 @@
 -dontwarn com.facebook.infer.**
 # Jsoup
 -keeppackagenames org.jsoup.nodes
+# mastodon4j
+-keep class com.sys1yagi.mastodon4j.api.entity.Application
