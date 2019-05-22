@@ -102,13 +102,25 @@
                         tools:text="content_content_content"
                         />
 
+                    <net.yuzumone.tootrus.ui.common.ThumbnailView
+                        android:id="@+id/view_thumbnail"
+                        android:layout_width="0dp"
+                        android:layout_height="96dp"
+                        android:layout_marginTop="8dp"
+                        android:visibility="@{status.mediaAttachments.isEmpty() ? View.GONE : View.VISIBLE}"
+                        app:media_attachments="@{status.mediaAttachments}"
+                        app:layout_constraintTop_toBottomOf="@id/text_content"
+                        app:layout_constraintStart_toStartOf="@id/text_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        />
+
                     <TextView
                         android:id="@+id/text_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         app:absolute="@{status.createdAt}"
-                        app:layout_constraintTop_toBottomOf="@id/text_content"
+                        app:layout_constraintTop_toBottomOf="@id/view_thumbnail"
                         app:layout_constraintStart_toStartOf="@id/text_content"
                         tools:text="2019/01/01 00:00:00"
                         />
