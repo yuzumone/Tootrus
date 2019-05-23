@@ -11,4 +11,12 @@
         android:orderInCategory="200"
         app:showAsAction="always"
         />
+
+    <item
+        android:id="@+id/menu_add_image"
+        android:title="@string/add_image"
+        android:icon="@drawable/ic_menu_add_image"
+        android:orderInCategory="190"
+        app:showAsAction="always"
+        />
 </menu>
