@@ -99,4 +99,9 @@ class ApplicationModule {
     @Provides
     fun providesAccountRepository(repository: DefaultAccountRepository): AccountRepository =
             repository
+
+    @Singleton
+    @Provides
+    fun providesMediaRepository(repository: DefaultMediaRepository): MediaRepository =
+            repository
 }
