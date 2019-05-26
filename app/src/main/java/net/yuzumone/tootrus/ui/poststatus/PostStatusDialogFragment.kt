@@ -168,7 +168,10 @@ class PostStatusDialogFragment : DialogFragment() {
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
-        requireActivity().finish()
+        // finish parent activity when attached this fragment
+        if (isAdded) {
+            requireActivity().finish()
+        }
         super.onDismiss(dialog)
     }
 }
