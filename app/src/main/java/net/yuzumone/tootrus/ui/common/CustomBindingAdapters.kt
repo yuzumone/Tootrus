@@ -240,9 +240,10 @@ object CustomBindingAdapters {
     @BindingAdapter("web_card_visibility")
     @JvmStatic
     fun setWebCardViewVisibility(view: WebCardView, content: String?) {
-        if (content.isNullOrBlank() || Jsoup.parse(content).select("a").size == 0) {
-            view.visibility = View.GONE
-        } else {
+        view.visibility = View.GONE
+        val card = Jsoup.parse(content ?: "").select("a")
+                .filter { !it.attr("class").contains("mention") }
+        if (card.isNotEmpty()) {
             view.visibility = View.VISIBLE
         }
     }
