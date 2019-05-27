@@ -48,23 +48,21 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         mainViewModel.account.observe(this, Observer {
             headerBinding.account = it
         })
-        if (savedInstanceState == null) {
-            mainViewModel.setFragment.observe(this, Observer {
-                when (it) {
-                    SetFragment.OAUTH -> {
-                        supportFragmentManager.beginTransaction()
-                                .add(R.id.content, OAuthFragment()).commit()
-                    }
-                    SetFragment.TOP -> {
-                        val topFragment = TopFragment()
-                        supportFragmentManager.beginTransaction()
-                                .add(R.id.content, topFragment).commit()
-                        initializeDrawer(topFragment)
-                        mainViewModel.getCredentials()
-                    }
+        mainViewModel.setFragment.observe(this, Observer {
+            when (it) {
+                SetFragment.OAUTH -> {
+                    supportFragmentManager.beginTransaction()
+                            .replace(R.id.content, OAuthFragment()).commit()
                 }
-            })
-        }
+                SetFragment.TOP -> {
+                    val topFragment = TopFragment()
+                    supportFragmentManager.beginTransaction()
+                            .replace(R.id.content, topFragment).commit()
+                    initializeDrawer(topFragment)
+                    mainViewModel.getCredentials()
+                }
+            }
+        })
     }
 
     private fun initializeDrawer(listener: NavigationView.OnNavigationItemSelectedListener) {
