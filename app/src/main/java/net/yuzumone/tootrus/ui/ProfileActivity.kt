@@ -48,7 +48,7 @@ class ProfileActivity : AppCompatActivity(), HasSupportFragmentInjector {
             binding.progress.visibility = View.GONE
             if (it != null) {
                 val fragment = ProfileFragment.newInstance(it.first, it.second)
-                supportFragmentManager.beginTransaction().add(android.R.id.content, fragment).commit()
+                supportFragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit()
             } else {
                 Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show()
                 finish()
