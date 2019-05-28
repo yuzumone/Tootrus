@@ -2,6 +2,7 @@ package net.yuzumone.tootrus.ui.common
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ImageSpan
@@ -18,6 +19,7 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.request.ImageRequest
 import com.sys1yagi.mastodon4j.api.entity.*
+import me.relex.photodraweeview.PhotoDraweeView
 import net.yuzumone.tootrus.R
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
@@ -29,6 +31,12 @@ object CustomBindingAdapters {
     @JvmStatic
     fun setIcon(view: SimpleDraweeView, imageUrl: String?) {
         view.setImageURI(imageUrl)
+    }
+
+    @BindingAdapter("photo_url")
+    @JvmStatic
+    fun setPhotoView(view: PhotoDraweeView, url: String) {
+        view.setPhotoUri(Uri.parse(url))
     }
 
     @BindingAdapter("media_attachments")

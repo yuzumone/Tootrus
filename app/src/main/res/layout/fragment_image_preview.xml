@@ -11,12 +11,12 @@
             type="com.sys1yagi.mastodon4j.api.entity.Attachment"/>
     </data>
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <me.relex.photodraweeview.PhotoDraweeView
         android:id="@+id/image_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        app:image_url="@{attachment.url}"
+        app:photo_url="@{attachment.url}"
         fresco:actualImageScaleType="fitCenter"
         fresco:placeholderImage="@drawable/ic_refresh"
         fresco:placeholderImageScaleType="centerInside"
