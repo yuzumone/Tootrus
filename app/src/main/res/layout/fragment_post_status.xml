@@ -5,6 +5,7 @@
     >
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="net.yuzumone.tootrus.ui.poststatus.PostStatusDialogViewModel"/>
@@ -107,11 +108,23 @@
             android:backgroundTint="@color/colorPrimary"
             android:hint="@string/toot_hint"
             app:layout_constraintTop_toBottomOf="@+id/view_visibility"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/view_post_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             >
             <requestFocus />
         </EditText>
+
+        <net.yuzumone.tootrus.ui.common.PostImageView
+            android:id="@+id/view_post_image"
+            android:layout_width="0dp"
+            android:layout_height="96dp"
+            android:visibility="@{viewModel.imageUris == null || viewModel.imageUris.isEmpty() ? View.GONE : View.VISIBLE}"
+            app:image_uris="@{viewModel.imageUris}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
