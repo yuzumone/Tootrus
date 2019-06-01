@@ -311,4 +311,10 @@ object CustomBindingAdapters {
             }
         }
     }
+
+    @BindingAdapter("image_uris")
+    @JvmStatic
+    fun setImageUris(view: PostImageView, uris: List<String>?) {
+        view.update(uris)
+    }
 }

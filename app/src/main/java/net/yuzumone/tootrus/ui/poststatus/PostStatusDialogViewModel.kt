@@ -7,6 +7,11 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 class PostStatusDialogViewModel : ViewModel() {
 
     val visibility = MutableLiveData<Status.Visibility>()
+    val imageUris = MutableLiveData<List<String>>()
+
+    fun setImageUris(uris: List<String>) {
+        imageUris.postValue(uris)
+    }
 
     fun updateVisibilityPublic() {
         visibility.value = Status.Visibility.Public

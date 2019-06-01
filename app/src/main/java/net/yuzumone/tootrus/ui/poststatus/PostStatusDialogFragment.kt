@@ -2,7 +2,6 @@ package net.yuzumone.tootrus.ui.poststatus
 
 import android.Manifest
 import android.app.Activity
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -19,6 +17,7 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentPostStatusBinding
 import net.yuzumone.tootrus.service.PostStatusService
+import net.yuzumone.tootrus.ui.common.PostImageView
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -46,16 +45,17 @@ class PostStatusDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProviders.of(this).get(PostStatusDialogViewModel::class.java)
-        val dialog = Dialog(activity!!)
-        binding = DataBindingUtil.inflate(LayoutInflater.from(activity),
-                R.layout.fragment_post_status, null, false)
-        binding.viewModel = viewModel
-        dialog.setContentView(binding.root)
-        dialog.window?.apply {
-            setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        binding = FragmentPostStatusBinding.inflate(inflater, container, false).also {
+            it.viewModel = viewModel
+            it.lifecycleOwner = viewLifecycleOwner
+            it.viewPostImage.setOnImageItemClickListener(object : PostImageView.OnImageItemClickListener {
+                override fun onClick(uri: String) {
+                    imageUris.remove(uri)
+                    viewModel.setImageUris(imageUris)
+                }
+            })
         }
         initializeToolbar()
         if (inReplyToAcct != null) {
@@ -63,7 +63,15 @@ class PostStatusDialogFragment : DialogFragment() {
             binding.inputText.setText(s)
             binding.inputText.setSelection(s.length)
         }
+        return binding.root
+    }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        dialog.window?.also {
+            it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        }
         viewModel.visibility.observe(this, Observer {
             visibility = it
             updateVisibilityMenu()
@@ -71,7 +79,6 @@ class PostStatusDialogFragment : DialogFragment() {
                 binding.viewVisibility.visibility = View.GONE
             }
         })
-        return dialog
     }
 
     private fun initializeToolbar() {
@@ -163,6 +170,7 @@ class PostStatusDialogFragment : DialogFragment() {
             data ?: return
             data.data?.let {
                 imageUris.add(it.toString())
+                viewModel.setImageUris(imageUris)
             }
         }
     }
