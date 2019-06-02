@@ -96,7 +96,9 @@ class PostStatusDialogFragment : DialogFragment() {
                     dismiss()
                 }
                 R.id.menu_add_image -> {
-                    selectImage()
+                    if (imageUris.size < 4) {
+                        selectImage()
+                    }
                 }
                 R.id.menu_visibility_public, R.id.menu_visibility_unlisted,
                 R.id.menu_visibility_private, R.id.menu_visibility_direct -> {
