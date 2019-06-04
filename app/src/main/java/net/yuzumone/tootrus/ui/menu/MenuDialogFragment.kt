@@ -1,9 +1,10 @@
 package net.yuzumone.tootrus.ui.menu
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -31,18 +32,21 @@ class MenuDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = Dialog(activity!!)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         menuViewModel = ViewModelProviders.of(this).get(MenuViewModel::class.java)
         adapter = MenuBindingAdapter(menuViewModel)
-        binding = FragmentMenuDialogBinding.inflate(LayoutInflater.from(activity),
-                null, false).apply {
-            recyclerMenu.adapter = adapter
-            recyclerMenu.layoutManager = LinearLayoutManager(activity)
+        binding = FragmentMenuDialogBinding.inflate(inflater, container, false).also {
+            it.recyclerMenu.adapter = adapter
+            it.recyclerMenu.layoutManager = LinearLayoutManager(activity)
         }
-        dialog.setContentView(binding.root)
         createMenu()
-        menuViewModel.menu.observe(this, Observer {
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        menuViewModel.menu.observe(viewLifecycleOwner, Observer {
             dismiss()
             when (it!!.action) {
                 Menu.Action.Account.value -> {
@@ -62,7 +66,6 @@ class MenuDialogFragment : DialogFragment() {
                 }
             }
         })
-        return dialog
     }
 
     private fun createMenu() {

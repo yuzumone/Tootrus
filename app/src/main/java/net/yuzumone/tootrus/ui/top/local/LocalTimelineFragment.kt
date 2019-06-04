@@ -52,11 +52,11 @@ class LocalTimelineFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topViewModel.localStatuses.observe(this, Observer {
+        topViewModel.localStatuses.observe(viewLifecycleOwner, Observer {
             binding.swipeRefresh.isRefreshing = false
             adapter.update(it)
         })
-        topViewModel.localError.observe(this, Observer {
+        topViewModel.localError.observe(viewLifecycleOwner, Observer {
             if (binding.swipeRefresh.isRefreshing) {
                 binding.swipeRefresh.isRefreshing = false
             }

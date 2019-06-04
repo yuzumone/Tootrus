@@ -83,24 +83,24 @@ class ProfileFragment : Fragment() {
         profileViewModel.getStatuses(account.id)
         profileViewModel.getFollowing(account.id)
         profileViewModel.getFollowers(account.id)
-        profileViewModel.userId.observe(this, Observer {
+        profileViewModel.userId.observe(viewLifecycleOwner, Observer {
             binding.userId = it
         })
-        profileViewModel.account.observe(this, Observer {
+        profileViewModel.account.observe(viewLifecycleOwner, Observer {
             binding.account = it
             binding.toolbar.title = it?.userName
         })
-        profileViewModel.relationship.observe(this, Observer {
+        profileViewModel.relationship.observe(viewLifecycleOwner, Observer {
             binding.relationship = it
         })
-        profileViewModel.detailActionEvent.observe(this, Observer {
+        profileViewModel.detailActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             requireActivity().run {
                 val intent = StatusDetailActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
         })
-        profileViewModel.replyActionEvent.observe(this, Observer {
+        profileViewModel.replyActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             requireActivity().run {
                 val intent = PostStatusActivity
@@ -108,27 +108,27 @@ class ProfileFragment : Fragment() {
                 startActivity(intent)
             }
         })
-        profileViewModel.favoriteActionEvent.observe(this, Observer {
+        profileViewModel.favoriteActionEvent.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
         })
-        profileViewModel.unfavoriteActionEvent.observe(this, Observer {
+        profileViewModel.unfavoriteActionEvent.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
         })
-        profileViewModel.reblogActionEvent.observe(this, Observer {
+        profileViewModel.reblogActionEvent.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
         })
-        profileViewModel.menuActionEvent.observe(this, Observer {
+        profileViewModel.menuActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
             fragment.show(fragmentManager, "menu")
         })
-        profileViewModel.openAccount.observe(this, Observer {
+        profileViewModel.openAccount.observe(viewLifecycleOwner, Observer {
             requireActivity().run {
                 val intent = ProfileActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
         })
-        profileViewModel.error.observe(this, Observer {
+        profileViewModel.error.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
     }

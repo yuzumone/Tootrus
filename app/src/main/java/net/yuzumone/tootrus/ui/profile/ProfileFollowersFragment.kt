@@ -48,7 +48,7 @@ class ProfileFollowersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        profileViewModel.followers.observe(this, Observer {
+        profileViewModel.followers.observe(viewLifecycleOwner, Observer {
             adapter.update(it)
         })
     }
