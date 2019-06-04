@@ -64,14 +64,14 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topViewModel.detailActionEvent.observe(this, Observer {
+        topViewModel.detailActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             requireActivity().run {
                 val intent = StatusDetailActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
         })
-        topViewModel.replyActionEvent.observe(this, Observer {
+        topViewModel.replyActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             requireActivity().run {
                 val intent = PostStatusActivity
@@ -79,39 +79,39 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
                 startActivity(intent)
             }
         })
-        topViewModel.favoriteActionEvent.observe(this, Observer {
+        topViewModel.favoriteActionEvent.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
         })
-        topViewModel.unfavoriteActionEvent.observe(this, Observer {
+        topViewModel.unfavoriteActionEvent.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
         })
-        topViewModel.reblogActionEvent.observe(this, Observer {
+        topViewModel.reblogActionEvent.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
         })
-        topViewModel.menuActionEvent.observe(this, Observer {
+        topViewModel.menuActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
             fragment.show(fragmentManager, "menu")
         })
-        topViewModel.favoriteError.observe(this, Observer {
+        topViewModel.favoriteError.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
-        topViewModel.reblogError.observe(this, Observer {
+        topViewModel.reblogError.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
-        topViewModel.openAccountEvent.observe(this, Observer {
+        topViewModel.openAccountEvent.observe(viewLifecycleOwner, Observer {
             requireActivity().run {
                 val intent = ProfileActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
         })
-        topViewModel.openStatusEvent.observe(this, Observer {
+        topViewModel.openStatusEvent.observe(viewLifecycleOwner, Observer {
             requireActivity().run {
                 val intent = StatusDetailActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
         })
-        topViewModel.openUserAccountEvent.observe(this, Observer {
+        topViewModel.openUserAccountEvent.observe(viewLifecycleOwner, Observer {
             requireActivity().run {
                 val intent = ProfileActivity.createIntent(this, it.id)
                 startActivity(intent)

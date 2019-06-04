@@ -49,7 +49,7 @@ class ProfileStatusesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        profileViewModel.statuses.observe(this, Observer {
+        profileViewModel.statuses.observe(viewLifecycleOwner, Observer {
             adapter.update(it)
         })
     }

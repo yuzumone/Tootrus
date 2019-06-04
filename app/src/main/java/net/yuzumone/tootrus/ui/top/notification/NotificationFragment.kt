@@ -50,10 +50,10 @@ class NotificationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topViewModel.notifications.observe(this, Observer {
+        topViewModel.notifications.observe(viewLifecycleOwner, Observer {
             adapter.update(it)
         })
-        topViewModel.notificationError.observe(this, Observer {
+        topViewModel.notificationError.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
     }

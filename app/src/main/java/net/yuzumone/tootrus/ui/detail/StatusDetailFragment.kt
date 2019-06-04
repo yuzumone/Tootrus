@@ -53,7 +53,7 @@ class StatusDetailFragment : Fragment() {
             it.status = if (status.reblog == null) status else status.reblog
         }
 
-        statusDetailViewModel.replyActionEvent.observe(this, Observer {
+        statusDetailViewModel.replyActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             requireActivity().run {
                 val intent = PostStatusActivity
@@ -61,27 +61,27 @@ class StatusDetailFragment : Fragment() {
                 startActivity(intent)
             }
         })
-        statusDetailViewModel.favoriteActionEvent.observe(this, Observer {
+        statusDetailViewModel.favoriteActionEvent.observe(viewLifecycleOwner, Observer {
             binding.status = it
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
         })
-        statusDetailViewModel.unfavoriteActionEvent.observe(this, Observer {
+        statusDetailViewModel.unfavoriteActionEvent.observe(viewLifecycleOwner, Observer {
             binding.status = it
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
         })
-        statusDetailViewModel.reblogActionEvent.observe(this, Observer {
+        statusDetailViewModel.reblogActionEvent.observe(viewLifecycleOwner, Observer {
             binding.status = it
             Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
         })
-        statusDetailViewModel.openMenuActionEvent.observe(this, Observer {
+        statusDetailViewModel.openMenuActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
             fragment.show(fragmentManager, "menu")
         })
-        statusDetailViewModel.favoriteError.observe(this, Observer {
+        statusDetailViewModel.favoriteError.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
-        statusDetailViewModel.reblogError.observe(this, Observer {
+        statusDetailViewModel.reblogError.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
         return binding.root

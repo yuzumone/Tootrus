@@ -51,13 +51,13 @@ class HomeTimelineFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topViewModel.homeStatuses.observe(this, Observer {
+        topViewModel.homeStatuses.observe(viewLifecycleOwner, Observer {
             if (binding.progress.visibility == View.VISIBLE) {
                 binding.progress.visibility = View.GONE
             }
             adapter.update(it)
         })
-        topViewModel.homeError.observe(this, Observer {
+        topViewModel.homeError.observe(viewLifecycleOwner, Observer {
             if (binding.progress.visibility == View.VISIBLE) {
                 binding.progress.visibility = View.GONE
             }

@@ -35,22 +35,22 @@ class OAuthFragment : Fragment() {
         binding = FragmentOauthBinding.inflate(inflater, container, false).apply {
             viewModel = this@OAuthFragment.oauthViewModel
         }
-        oauthViewModel.oauthParameter.observe(this, Observer {
+        oauthViewModel.oauthParameter.observe(viewLifecycleOwner, Observer {
             it?.url.let { url ->
                 requireActivity().run {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                 }
             }
         })
-        oauthViewModel.oauthParameterError.observe(this, Observer {
+        oauthViewModel.oauthParameterError.observe(viewLifecycleOwner, Observer {
             binding.inputInstanceName.error = getString(R.string.error)
         })
-        oauthViewModel.transactionMainView.observe(this, Observer {
+        oauthViewModel.transactionMainView.observe(viewLifecycleOwner, Observer {
             val mainViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                     .get(MainViewModel::class.java)
             mainViewModel.eventTransactionToTop.value = Unit
         })
-        oauthViewModel.accessTokenError.observe(this, Observer {
+        oauthViewModel.accessTokenError.observe(viewLifecycleOwner, Observer {
             binding.inputOauthCode.error = getString(R.string.error)
         })
         return binding.root
