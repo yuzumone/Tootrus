@@ -52,7 +52,11 @@ class StatusDetailFragment : Fragment() {
             it.listener = statusDetailViewModel
             it.status = if (status.reblog == null) status else status.reblog
         }
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         statusDetailViewModel.replyActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             requireActivity().run {
@@ -84,6 +88,5 @@ class StatusDetailFragment : Fragment() {
         statusDetailViewModel.reblogError.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
         })
-        return binding.root
     }
 }

@@ -35,6 +35,11 @@ class OAuthFragment : Fragment() {
         binding = FragmentOauthBinding.inflate(inflater, container, false).apply {
             viewModel = this@OAuthFragment.oauthViewModel
         }
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         oauthViewModel.oauthParameter.observe(viewLifecycleOwner, Observer {
             it?.url.let { url ->
                 requireActivity().run {
@@ -53,6 +58,5 @@ class OAuthFragment : Fragment() {
         oauthViewModel.accessTokenError.observe(viewLifecycleOwner, Observer {
             binding.inputOauthCode.error = getString(R.string.error)
         })
-        return binding.root
     }
 }
