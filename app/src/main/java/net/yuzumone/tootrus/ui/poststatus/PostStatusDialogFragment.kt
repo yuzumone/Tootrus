@@ -72,6 +72,10 @@ class PostStatusDialogFragment : DialogFragment() {
             it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel.visibility.observe(viewLifecycleOwner, Observer {
             visibility = it
             updateVisibilityMenu()
