@@ -17,8 +17,13 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
 import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
-import com.sys1yagi.mastodon4j.api.entity.*
+import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.sys1yagi.mastodon4j.api.entity.Account
+import com.sys1yagi.mastodon4j.api.entity.Notification
+import com.sys1yagi.mastodon4j.api.entity.Relationship
+import com.sys1yagi.mastodon4j.api.entity.Status
 import me.relex.photodraweeview.PhotoDraweeView
 import net.yuzumone.tootrus.R
 import org.jsoup.Jsoup
@@ -41,8 +46,21 @@ object CustomBindingAdapters {
 
     @BindingAdapter("media_attachments")
     @JvmStatic
-    fun setMediaAttachments(view: ThumbnailView, attachments: List<Attachment>) {
-        view.setAttachments(attachments)
+    fun setMediaAttachments(view: ThumbnailView, status: Status?) {
+        status ?: return
+        view.setAttachments(status.mediaAttachments, status.isSensitive)
+    }
+
+    @BindingAdapter("blur_image_url")
+    @JvmStatic
+    fun setBlurImage(view: SimpleDraweeView, imageUrl: String?) {
+        imageUrl ?: return
+        val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(imageUrl))
+                .setPostprocessor(IterativeBoxBlurPostProcessor(40)).build()
+        val controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .build()
+        view.controller = controller
     }
 
     @BindingAdapter("thumbnail_visibility")

@@ -8,6 +8,9 @@
         <variable
             name="attachment"
             type="com.sys1yagi.mastodon4j.api.entity.Attachment"/>
+        <variable
+            name="isBlurImage"
+            type="boolean"/>
     </data>
 
     <RelativeLayout
@@ -22,7 +25,8 @@
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            app:image_url="@{attachment.previewUrl}"
+            app:image_url="@{isBlurImage ? null : attachment.previewUrl}"
+            app:blur_image_url="@{isBlurImage ? attachment.previewUrl : null}"
             />
     </RelativeLayout>
 </layout>
