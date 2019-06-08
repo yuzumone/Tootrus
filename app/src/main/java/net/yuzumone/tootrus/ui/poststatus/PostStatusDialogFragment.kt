@@ -24,6 +24,7 @@ import pub.devrel.easypermissions.EasyPermissions
 class PostStatusDialogFragment : DialogFragment() {
 
     private var visibility: Status.Visibility = Status.Visibility.Public
+    private var isSensitive = false
     private val imageUris = ArrayList<String>()
     private lateinit var binding: FragmentPostStatusBinding
     private lateinit var viewModel: PostStatusDialogViewModel
@@ -83,6 +84,10 @@ class PostStatusDialogFragment : DialogFragment() {
                 binding.viewVisibility.visibility = View.GONE
             }
         })
+        viewModel.isSensitive.observe(viewLifecycleOwner, Observer {
+            isSensitive = it
+            updateNsfwMenu()
+        })
     }
 
     private fun initializeToolbar() {
@@ -92,11 +97,12 @@ class PostStatusDialogFragment : DialogFragment() {
         }
         binding.toolbar.inflateMenu(R.menu.menu_post_status)
         binding.toolbar.inflateMenu(R.menu.menu_visibility_public)
+        binding.toolbar.inflateMenu(R.menu.menu_nsfw_to_on)
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_post_status -> {
                     val text = binding.inputText.text.toString()
-                    postStatus(text, inReplyToId, imageUris, false, null, visibility)
+                    postStatus(text, inReplyToId, imageUris, isSensitive, null, visibility)
                     dismiss()
                 }
                 R.id.menu_add_image -> {
@@ -113,6 +119,12 @@ class PostStatusDialogFragment : DialogFragment() {
                     } else {
                         binding.viewVisibility.visibility = View.GONE
                     }
+                }
+                R.id.menu_nsfw_to_on -> {
+                    viewModel.setSensitive(true)
+                }
+                R.id.menu_nsfw_to_off -> {
+                    viewModel.setSensitive(false)
                 }
             }
             false
@@ -137,6 +149,16 @@ class PostStatusDialogFragment : DialogFragment() {
             Status.Visibility.Direct -> {
                 binding.toolbar.inflateMenu(R.menu.menu_visibility_direct)
             }
+        }
+    }
+
+    private fun updateNsfwMenu() {
+        binding.toolbar.menu.removeItem(R.id.menu_nsfw_to_on)
+        binding.toolbar.menu.removeItem(R.id.menu_nsfw_to_off)
+        if (isSensitive) {
+            binding.toolbar.inflateMenu(R.menu.menu_nsfw_to_off)
+        } else {
+            binding.toolbar.inflateMenu(R.menu.menu_nsfw_to_on)
         }
     }
 
