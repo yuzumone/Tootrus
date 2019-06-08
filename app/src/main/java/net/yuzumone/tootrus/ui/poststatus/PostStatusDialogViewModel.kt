@@ -8,9 +8,14 @@ class PostStatusDialogViewModel : ViewModel() {
 
     val visibility = MutableLiveData<Status.Visibility>()
     val imageUris = MutableLiveData<List<String>>()
+    val isSensitive = MutableLiveData<Boolean>()
 
     fun setImageUris(uris: List<String>) {
         imageUris.postValue(uris)
+    }
+
+    fun setSensitive(isSensitive: Boolean) {
+        this.isSensitive.postValue(isSensitive)
     }
 
     fun updateVisibilityPublic() {
