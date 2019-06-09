@@ -33,4 +33,6 @@
     <string name="add_image">Add image</string>
     <string name="nsfw">NSFW</string>
     <string name="no_nsfw">No NSFW</string>
+    <string name="write_your_warning_hire">Write your warning hire</string>
+    <string name="cw">CW</string>
 </resources>
