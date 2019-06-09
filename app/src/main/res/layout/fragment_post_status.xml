@@ -99,6 +99,22 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
+            android:id="@+id/input_spoiler"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="start|top"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:backgroundTint="@color/colorPrimary"
+            android:hint="@string/write_your_warning_hire"
+            android:visibility="@{viewModel.spoilerTextVisibility ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@+id/view_visibility"
+            app:layout_constraintBottom_toTopOf="@id/input_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <EditText
             android:id="@+id/input_text"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -107,7 +123,7 @@
             android:inputType="textMultiLine|textNoSuggestions"
             android:backgroundTint="@color/colorPrimary"
             android:hint="@string/toot_hint"
-            app:layout_constraintTop_toBottomOf="@+id/view_visibility"
+            app:layout_constraintTop_toBottomOf="@+id/input_spoiler"
             app:layout_constraintBottom_toTopOf="@id/view_post_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

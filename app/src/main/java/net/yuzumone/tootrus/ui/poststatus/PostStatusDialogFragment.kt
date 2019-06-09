@@ -98,11 +98,13 @@ class PostStatusDialogFragment : DialogFragment() {
         binding.toolbar.inflateMenu(R.menu.menu_post_status)
         binding.toolbar.inflateMenu(R.menu.menu_visibility_public)
         binding.toolbar.inflateMenu(R.menu.menu_nsfw_to_on)
+        binding.toolbar.inflateMenu(R.menu.menu_content_warning)
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_post_status -> {
                     val text = binding.inputText.text.toString()
-                    postStatus(text, inReplyToId, imageUris, isSensitive, null, visibility)
+                    val spoilerText = binding.inputSpoiler.text.toString()
+                    postStatus(text, inReplyToId, imageUris, isSensitive, spoilerText, visibility)
                     dismiss()
                 }
                 R.id.menu_add_image -> {
@@ -125,6 +127,14 @@ class PostStatusDialogFragment : DialogFragment() {
                 }
                 R.id.menu_nsfw_to_off -> {
                     viewModel.setSensitive(false)
+                }
+                R.id.menu_content_warning -> {
+                    if (binding.inputSpoiler.visibility == View.VISIBLE) {
+                        binding.inputSpoiler.setText("")
+                        viewModel.setSpoilerTextVisibility(false)
+                    } else {
+                        viewModel.setSpoilerTextVisibility(true)
+                    }
                 }
             }
             false
