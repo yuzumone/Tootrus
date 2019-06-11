@@ -74,8 +74,7 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
         topViewModel.replyActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             requireActivity().run {
-                val intent = PostStatusActivity
-                        .createReplyIntent(this, it.account!!.acct, it.id)
+                val intent = PostStatusActivity.createReplyIntent(this, it)
                 startActivity(intent)
             }
         })
