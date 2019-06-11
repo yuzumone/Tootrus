@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentPostStatusBinding
@@ -28,19 +29,18 @@ class PostStatusDialogFragment : DialogFragment() {
     private val imageUris = ArrayList<String>()
     private lateinit var binding: FragmentPostStatusBinding
     private lateinit var viewModel: PostStatusDialogViewModel
-    private val inReplyToAcct: String? by lazy { arguments?.getString(ARG_IN_REPLY_TO_ACCT) }
-    private val inReplyToId: Long? by lazy { arguments?.getLong(ARG_IN_REPLY_TO_ID) }
+    private val repliedStatus: Status? by lazy {
+        Gson().fromJson(arguments?.getString(ARG_REPLIED_STATUS), Status::class.java)
+    }
 
     companion object {
-        private const val ARG_IN_REPLY_TO_ACCT = "in_reply_to_acct"
-        private const val ARG_IN_REPLY_TO_ID = "in_reply_to_id"
+        private const val ARG_REPLIED_STATUS = "replied_status"
         private const val RC_READ_EXTERNAL_STORAGE = 1
         private const val PICK_FROM_GALLERY = 10
-        fun newReplyInstance(inReplyToAcct: String, inReplyToStatusId: Long): PostStatusDialogFragment {
+        fun newReplyInstance(status: Status): PostStatusDialogFragment {
             return PostStatusDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_IN_REPLY_TO_ACCT, inReplyToAcct)
-                    putLong(ARG_IN_REPLY_TO_ID, inReplyToStatusId)
+                    putString(ARG_REPLIED_STATUS, Gson().toJson(status))
                 }
             }
         }
@@ -59,8 +59,8 @@ class PostStatusDialogFragment : DialogFragment() {
             })
         }
         initializeToolbar()
-        if (inReplyToAcct != null) {
-            val s = "@$inReplyToAcct "
+        repliedStatus?.let {
+            val s = "@${it.account?.acct} "
             binding.inputText.setText(s)
             binding.inputText.setSelection(s.length)
         }
@@ -104,7 +104,7 @@ class PostStatusDialogFragment : DialogFragment() {
                 R.id.menu_post_status -> {
                     val text = binding.inputText.text.toString()
                     val spoilerText = binding.inputSpoiler.text.toString()
-                    postStatus(text, inReplyToId, imageUris, isSensitive, spoilerText, visibility)
+                    postStatus(text, repliedStatus?.id, imageUris, isSensitive, spoilerText, visibility)
                     dismiss()
                 }
                 R.id.menu_add_image -> {
