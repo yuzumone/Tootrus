@@ -1,45 +1,62 @@
 package net.yuzumone.tootrus.ui.poststatus
 
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sys1yagi.mastodon4j.api.entity.Status
+import net.yuzumone.tootrus.service.PostStatusService
 
 class PostStatusDialogViewModel : ViewModel() {
 
-    val visibility = MutableLiveData<Status.Visibility>()
+    val text = MutableLiveData<String>()
+    val spoilerText = MutableLiveData<String>()
+    val statusVisibility = MutableLiveData<Status.Visibility>()
     val imageUris = MutableLiveData<List<String>>()
     val isSensitive = MutableLiveData<Boolean>()
     val spoilerTextVisibility = MutableLiveData<Boolean>()
+    val draft = MutableLiveData<PostStatusService.Params>()
+    val repliedStatus = MutableLiveData<Status>()
+    val eventNavigationClick = MutableLiveData<Unit>()
 
     init {
+        statusVisibility.value = Status.Visibility.Public
         spoilerTextVisibility.value = false
     }
 
-    fun setImageUris(uris: List<String>) {
-        imageUris.postValue(uris)
+    fun setRepliedStatus(status: Status?) {
+        repliedStatus.value = status
     }
 
-    fun setSensitive(isSensitive: Boolean) {
-        this.isSensitive.postValue(isSensitive)
+    fun setImageUris(uris: List<String>) {
+        imageUris.value = uris
+    }
+
+    fun setSensitive(sensitive: Boolean) {
+        isSensitive.value = sensitive
     }
 
     fun setSpoilerTextVisibility(visibility: Boolean) {
         spoilerTextVisibility.value = visibility
     }
 
-    fun updateVisibilityPublic() {
-        visibility.value = Status.Visibility.Public
+    fun setStatusVisibility(visibility: Status.Visibility) {
+        statusVisibility.value = visibility
     }
 
-    fun updateVisibilityUnlisted() {
-        visibility.value = Status.Visibility.Unlisted
+    fun onNavigationClick(): View.OnClickListener {
+        return View.OnClickListener {
+            eventNavigationClick.value = Unit
+        }
     }
 
-    fun updateVisibilityPrivate() {
-        visibility.value = Status.Visibility.Private
-    }
-
-    fun updateVisibilityDirect() {
-        visibility.value = Status.Visibility.Direct
+    fun postStatus() {
+        val text = text.value ?: ""
+        val inReplyToId = repliedStatus.value?.id
+        val imageUris = imageUris.value
+        val sensitive = isSensitive.value ?: false
+        val spoilerText = spoilerText.value ?: ""
+        val visibility = statusVisibility.value ?: Status.Visibility.Public
+        draft.value =
+                PostStatusService.Params(text, inReplyToId, imageUris, sensitive, spoilerText, visibility)
     }
 }

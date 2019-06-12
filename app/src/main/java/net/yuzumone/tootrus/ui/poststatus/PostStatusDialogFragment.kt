@@ -5,11 +5,9 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -24,8 +22,6 @@ import pub.devrel.easypermissions.EasyPermissions
 
 class PostStatusDialogFragment : DialogFragment() {
 
-    private var visibility: Status.Visibility = Status.Visibility.Public
-    private var isSensitive = false
     private val imageUris = ArrayList<String>()
     private lateinit var binding: FragmentPostStatusBinding
     private lateinit var viewModel: PostStatusDialogViewModel
@@ -48,6 +44,7 @@ class PostStatusDialogFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProviders.of(this).get(PostStatusDialogViewModel::class.java)
+        viewModel.setRepliedStatus(repliedStatus)
         binding = FragmentPostStatusBinding.inflate(inflater, container, false).also {
             it.viewModel = viewModel
             it.lifecycleOwner = viewLifecycleOwner
@@ -58,12 +55,11 @@ class PostStatusDialogFragment : DialogFragment() {
                 }
             })
         }
-        initializeToolbar()
-        repliedStatus?.let {
-            val s = "@${it.account?.acct} "
-            binding.inputText.setText(s)
-            binding.inputText.setSelection(s.length)
+        (requireActivity() as AppCompatActivity).also {
+            it.setSupportActionBar(binding.toolbar)
+            it.title = ""
         }
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -77,71 +73,76 @@ class PostStatusDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.visibility.observe(viewLifecycleOwner, Observer {
-            visibility = it
-            updateVisibilityMenu()
+        viewModel.statusVisibility.observe(viewLifecycleOwner, Observer {
+            updateVisibilityMenu(it)
             if (binding.viewVisibility.visibility == View.VISIBLE) {
                 binding.viewVisibility.visibility = View.GONE
             }
         })
         viewModel.isSensitive.observe(viewLifecycleOwner, Observer {
-            isSensitive = it
-            updateNsfwMenu()
+            updateNsfwMenu(it)
+        })
+        viewModel.eventNavigationClick.observe(viewLifecycleOwner, Observer {
+            dismiss()
+        })
+        viewModel.draft.observe(viewLifecycleOwner, Observer {
+            requireActivity().run {
+                val intent = PostStatusService.createIntent(this, it)
+                startService(intent)
+            }
         })
     }
 
-    private fun initializeToolbar() {
-        binding.toolbar.setNavigationIcon(R.drawable.ic_action_back)
-        binding.toolbar.setNavigationOnClickListener {
-            dismiss()
-        }
-        binding.toolbar.inflateMenu(R.menu.menu_post_status)
-        binding.toolbar.inflateMenu(R.menu.menu_visibility_public)
-        binding.toolbar.inflateMenu(R.menu.menu_nsfw_to_on)
-        binding.toolbar.inflateMenu(R.menu.menu_content_warning)
-        binding.toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.menu_post_status -> {
-                    val text = binding.inputText.text.toString()
-                    val spoilerText = binding.inputSpoiler.text.toString()
-                    postStatus(text, repliedStatus?.id, imageUris, isSensitive, spoilerText, visibility)
-                    dismiss()
-                }
-                R.id.menu_add_image -> {
-                    if (imageUris.size < 4) {
-                        selectImage()
-                    }
-                }
-                R.id.menu_visibility_public, R.id.menu_visibility_unlisted,
-                R.id.menu_visibility_private, R.id.menu_visibility_direct -> {
-                    val anim = AnimationUtils.loadAnimation(activity, R.anim.anim_toolbar_optinal_view_open)
-                    if (binding.viewVisibility.visibility == View.GONE) {
-                        binding.viewVisibility.visibility = View.VISIBLE
-                        binding.viewVisibility.startAnimation(anim)
-                    } else {
-                        binding.viewVisibility.visibility = View.GONE
-                    }
-                }
-                R.id.menu_nsfw_to_on -> {
-                    viewModel.setSensitive(true)
-                }
-                R.id.menu_nsfw_to_off -> {
-                    viewModel.setSensitive(false)
-                }
-                R.id.menu_content_warning -> {
-                    if (binding.inputSpoiler.visibility == View.VISIBLE) {
-                        binding.inputSpoiler.setText("")
-                        viewModel.setSpoilerTextVisibility(false)
-                    } else {
-                        viewModel.setSpoilerTextVisibility(true)
-                    }
-                }
-            }
-            false
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.let {
+            it.inflate(R.menu.menu_post_status, menu)
+            it.inflate(R.menu.menu_visibility_public, menu)
+            it.inflate(R.menu.menu_nsfw_to_on, menu)
+            it.inflate(R.menu.menu_content_warning, menu)
         }
     }
 
-    private fun updateVisibilityMenu() {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.menu_post_status -> {
+                viewModel.postStatus()
+                dismiss()
+            }
+            R.id.menu_add_image -> {
+                if (imageUris.size < 4) {
+                    selectImage()
+                }
+            }
+            R.id.menu_visibility_public, R.id.menu_visibility_unlisted,
+            R.id.menu_visibility_private, R.id.menu_visibility_direct -> {
+                val anim = AnimationUtils.loadAnimation(activity, R.anim.anim_toolbar_optinal_view_open)
+                if (binding.viewVisibility.visibility == View.GONE) {
+                    binding.viewVisibility.visibility = View.VISIBLE
+                    binding.viewVisibility.startAnimation(anim)
+                } else {
+                    binding.viewVisibility.visibility = View.GONE
+                }
+            }
+            R.id.menu_nsfw_to_on -> {
+                viewModel.setSensitive(true)
+            }
+            R.id.menu_nsfw_to_off -> {
+                viewModel.setSensitive(false)
+            }
+            R.id.menu_content_warning -> {
+                if (binding.inputSpoiler.visibility == View.VISIBLE) {
+                    binding.inputSpoiler.setText("")
+                    viewModel.setSpoilerTextVisibility(false)
+                } else {
+                    viewModel.setSpoilerTextVisibility(true)
+                }
+            }
+        }
+        return true
+    }
+
+    private fun updateVisibilityMenu(visibility: Status.Visibility) {
         binding.toolbar.menu.removeItem(R.id.menu_visibility_public)
         binding.toolbar.menu.removeItem(R.id.menu_visibility_unlisted)
         binding.toolbar.menu.removeItem(R.id.menu_visibility_private)
@@ -162,26 +163,13 @@ class PostStatusDialogFragment : DialogFragment() {
         }
     }
 
-    private fun updateNsfwMenu() {
+    private fun updateNsfwMenu(isSensitive: Boolean) {
         binding.toolbar.menu.removeItem(R.id.menu_nsfw_to_on)
         binding.toolbar.menu.removeItem(R.id.menu_nsfw_to_off)
         if (isSensitive) {
             binding.toolbar.inflateMenu(R.menu.menu_nsfw_to_off)
         } else {
             binding.toolbar.inflateMenu(R.menu.menu_nsfw_to_on)
-        }
-    }
-
-    private fun postStatus(text: String,
-                           inReplyToId: Long?,
-                           uris: List<String>?,
-                           sensitive: Boolean,
-                           spoilerText: String?,
-                           visibility: Status.Visibility = Status.Visibility.Public) {
-        val params = PostStatusService.Params(text, inReplyToId, uris, sensitive, spoilerText, visibility)
-        requireActivity().run {
-            val intent = PostStatusService.createIntent(this, params)
-            startService(intent)
         }
     }
 

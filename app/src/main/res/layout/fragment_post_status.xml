@@ -6,6 +6,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="com.sys1yagi.mastodon4j.api.entity.Status.Visibility" />
         <variable
             name="viewModel"
             type="net.yuzumone.tootrus.ui.poststatus.PostStatusDialogViewModel"/>
@@ -33,7 +34,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_visibility_public"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:onClick="@{(v) -> viewModel.updateVisibilityPublic()}"
+                android:onClick="@{(v) -> viewModel.setStatusVisibility(Visibility.Public)}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +48,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_visibility_unlisted"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:onClick="@{(v) -> viewModel.updateVisibilityUnlisted()}"
+                android:onClick="@{(v) -> viewModel.setStatusVisibility(Visibility.Unlisted)}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/button_public"
@@ -61,7 +62,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_visibility_private"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:onClick="@{(v) -> viewModel.updateVisibilityPrivate()}"
+                android:onClick="@{(v) -> viewModel.setStatusVisibility(Visibility.Private)}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/button_unlisted"
@@ -75,7 +76,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_visibility_direct"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:onClick="@{(v) -> viewModel.updateVisibilityDirect()}"
+                android:onClick="@{(v) -> viewModel.setStatusVisibility(Visibility.Direct)}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/button_private"
@@ -92,6 +93,8 @@
             android:elevation="4dp"
             android:background="@color/colorPrimary"
             android:theme="@style/ToolbarTheme"
+            app:navigationIcon="@drawable/ic_action_back"
+            app:navigation_click="@{viewModel.onNavigationClick()}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -107,6 +110,7 @@
             android:backgroundTint="@color/colorPrimary"
             android:hint="@string/write_your_warning_hire"
             android:visibility="@{viewModel.spoilerTextVisibility ? View.VISIBLE : View.GONE}"
+            android:text="@={viewModel.spoilerText}"
             app:layout_constraintTop_toBottomOf="@+id/view_visibility"
             app:layout_constraintBottom_toTopOf="@id/input_text"
             app:layout_constraintStart_toStartOf="parent"
@@ -122,6 +126,8 @@
             android:inputType="textMultiLine|textNoSuggestions"
             android:backgroundTint="@color/colorPrimary"
             android:hint="@string/toot_hint"
+            android:text="@={viewModel.text}"
+            app:initialize_reply="@{viewModel.repliedStatus}"
             app:layout_constraintTop_toBottomOf="@+id/input_spoiler"
             app:layout_constraintBottom_toTopOf="@id/view_post_image"
             app:layout_constraintStart_toStartOf="parent"
