@@ -22,6 +22,8 @@ import pub.devrel.easypermissions.EasyPermissions
 
 class PostStatusDialogFragment : DialogFragment() {
 
+    private var visibility = Status.Visibility.Public
+    private var isSensitive = false
     private val imageUris = ArrayList<String>()
     private lateinit var binding: FragmentPostStatusBinding
     private lateinit var viewModel: PostStatusDialogViewModel
@@ -74,13 +76,15 @@ class PostStatusDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.statusVisibility.observe(viewLifecycleOwner, Observer {
-            updateVisibilityMenu(it)
+            visibility = it
+            requireActivity().invalidateOptionsMenu()
             if (binding.viewVisibility.visibility == View.VISIBLE) {
                 binding.viewVisibility.visibility = View.GONE
             }
         })
         viewModel.isSensitive.observe(viewLifecycleOwner, Observer {
-            updateNsfwMenu(it)
+            isSensitive = it
+            requireActivity().invalidateOptionsMenu()
         })
         viewModel.eventNavigationClick.observe(viewLifecycleOwner, Observer {
             dismiss()
@@ -100,6 +104,39 @@ class PostStatusDialogFragment : DialogFragment() {
             it.inflate(R.menu.menu_visibility_public, menu)
             it.inflate(R.menu.menu_nsfw_to_on, menu)
             it.inflate(R.menu.menu_content_warning, menu)
+        }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        menu?.let {
+            it.removeItem(R.id.menu_visibility_public)
+            it.removeItem(R.id.menu_visibility_unlisted)
+            it.removeItem(R.id.menu_visibility_private)
+            it.removeItem(R.id.menu_visibility_direct)
+            it.removeItem(R.id.menu_nsfw_to_on)
+            it.removeItem(R.id.menu_nsfw_to_off)
+        }
+        requireActivity().menuInflater.let {
+            when (visibility) {
+                Status.Visibility.Public -> {
+                    it.inflate(R.menu.menu_visibility_public, menu)
+                }
+                Status.Visibility.Unlisted -> {
+                    it.inflate(R.menu.menu_visibility_unlisted, menu)
+                }
+                Status.Visibility.Private -> {
+                    it.inflate(R.menu.menu_visibility_private, menu)
+                }
+                Status.Visibility.Direct -> {
+                    it.inflate(R.menu.menu_visibility_direct, menu)
+                }
+            }
+            if (isSensitive) {
+                it.inflate(R.menu.menu_nsfw_to_off, menu)
+            } else {
+                it.inflate(R.menu.menu_nsfw_to_on, menu)
+            }
         }
     }
 
@@ -140,37 +177,6 @@ class PostStatusDialogFragment : DialogFragment() {
             }
         }
         return true
-    }
-
-    private fun updateVisibilityMenu(visibility: Status.Visibility) {
-        binding.toolbar.menu.removeItem(R.id.menu_visibility_public)
-        binding.toolbar.menu.removeItem(R.id.menu_visibility_unlisted)
-        binding.toolbar.menu.removeItem(R.id.menu_visibility_private)
-        binding.toolbar.menu.removeItem(R.id.menu_visibility_direct)
-        when (visibility) {
-            Status.Visibility.Public -> {
-                binding.toolbar.inflateMenu(R.menu.menu_visibility_public)
-            }
-            Status.Visibility.Unlisted -> {
-                binding.toolbar.inflateMenu(R.menu.menu_visibility_unlisted)
-            }
-            Status.Visibility.Private -> {
-                binding.toolbar.inflateMenu(R.menu.menu_visibility_private)
-            }
-            Status.Visibility.Direct -> {
-                binding.toolbar.inflateMenu(R.menu.menu_visibility_direct)
-            }
-        }
-    }
-
-    private fun updateNsfwMenu(isSensitive: Boolean) {
-        binding.toolbar.menu.removeItem(R.id.menu_nsfw_to_on)
-        binding.toolbar.menu.removeItem(R.id.menu_nsfw_to_off)
-        if (isSensitive) {
-            binding.toolbar.inflateMenu(R.menu.menu_nsfw_to_off)
-        } else {
-            binding.toolbar.inflateMenu(R.menu.menu_nsfw_to_on)
-        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
