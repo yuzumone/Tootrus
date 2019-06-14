@@ -24,7 +24,11 @@ class PostStatusDialogViewModel : ViewModel() {
     }
 
     fun setRepliedStatus(status: Status?) {
-        repliedStatus.value = status
+        status?.let { s ->
+            repliedStatus.value = s
+            val v = Status.Visibility.values().first { it.value == s.visibility }
+            statusVisibility.value = v
+        }
     }
 
     fun setImageUris(uris: List<String>) {
