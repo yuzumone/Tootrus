@@ -104,4 +104,9 @@ class ApplicationModule {
     @Provides
     fun providesMediaRepository(repository: DefaultMediaRepository): MediaRepository =
             repository
+
+    @Singleton
+    @Provides
+    fun providesFavoriteRepository(repository: DefaultFavoriteRepository): FavoriteRepository =
+            repository
 }
