@@ -26,4 +26,10 @@
         android:icon="@drawable/ic_drawer_profile"
         android:title="@string/section_profile"
         />
+
+    <item
+        android:id="@+id/navigation_favorite"
+        android:icon="@drawable/ic_drawer_favorite"
+        android:title="@string/section_favorite"
+        />
 </menu>
