@@ -6,10 +6,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import net.yuzumone.tootrus.ui.MainActivity
-import net.yuzumone.tootrus.ui.MainViewModel
-import net.yuzumone.tootrus.ui.ProfileActivity
-import net.yuzumone.tootrus.ui.StatusDetailActivity
+import net.yuzumone.tootrus.ui.*
 
 @Module
 abstract class ActivityModule {
@@ -25,6 +22,9 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [ProfileActivityModule::class])
     abstract fun contributeProfileActivity(): ProfileActivity
+
+    @ContributesAndroidInjector(modules = [FavoriteActivityModule::class])
+    abstract fun contributeFavoriteActivity(): FavoriteActivity
 
     @Binds
     @IntoMap

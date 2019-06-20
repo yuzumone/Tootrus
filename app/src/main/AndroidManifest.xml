@@ -34,6 +34,10 @@
             android:name=".ui.MediaPreviewActivity"
             android:theme="@style/SemiTransparentTheme"
             />
+        <activity
+            android:name=".ui.FavoriteActivity"
+            android:label="@string/section_favorite"
+            />
         <service
             android:name=".service.PostStatusService"
             />
