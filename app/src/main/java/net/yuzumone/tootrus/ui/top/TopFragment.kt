@@ -18,6 +18,7 @@ import com.google.android.material.navigation.NavigationView
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTopBinding
+import net.yuzumone.tootrus.ui.FavoriteActivity
 import net.yuzumone.tootrus.ui.PostStatusActivity
 import net.yuzumone.tootrus.ui.ProfileActivity
 import net.yuzumone.tootrus.ui.StatusDetailActivity
@@ -149,6 +150,12 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
             R.id.navigation_profile -> {
                 topViewModel.acitonOpenUserProfile()
                 return true
+            }
+            R.id.navigation_favorite -> {
+                val intent = Intent(activity, FavoriteActivity::class.java)
+                requireActivity().run {
+                    startActivity(intent)
+                }
             }
         }
         return false
