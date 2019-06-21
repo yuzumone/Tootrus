@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import net.yuzumone.tootrus.ui.*
+import net.yuzumone.tootrus.ui.conversation.ConversationDialogFragment
+import net.yuzumone.tootrus.ui.conversation.ConversationViewModel
 
 @Module
 abstract class ActivityModule {
@@ -26,8 +28,16 @@ abstract class ActivityModule {
     @ContributesAndroidInjector(modules = [FavoriteActivityModule::class])
     abstract fun contributeFavoriteActivity(): FavoriteActivity
 
+    @ContributesAndroidInjector
+    abstract fun contributesConversationDialogFragment(): ConversationDialogFragment
+
     @Binds
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun bindSettingViewModel(viewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ConversationViewModel::class)
+    abstract fun bindConversationViewModel(viewModel: ConversationViewModel): ViewModel
 }
