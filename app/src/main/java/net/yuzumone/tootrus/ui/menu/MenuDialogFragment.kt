@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.databinding.FragmentMenuDialogBinding
 import net.yuzumone.tootrus.ui.ProfileActivity
+import net.yuzumone.tootrus.ui.conversation.ConversationDialogFragment
 
 class MenuDialogFragment : DialogFragment() {
 
@@ -55,6 +56,10 @@ class MenuDialogFragment : DialogFragment() {
                         startActivity(intent)
                     }
                 }
+                Menu.Action.Conversation.value -> {
+                    val dialog = ConversationDialogFragment.newReplyInstance(it.status!!)
+                    dialog.show(requireFragmentManager(), "conversation")
+                }
                 Menu.Action.Share.value -> {
                     requireActivity().run {
                         val intent = Intent(Intent.ACTION_SEND).apply {
@@ -76,6 +81,9 @@ class MenuDialogFragment : DialogFragment() {
         }
         status.mentions.forEach {
             menuList.add(Menu(title = it.username, accountId = it.id, action = "account"))
+        }
+        if (status.inReplyToId != null) {
+            menuList.add(Menu(title = "Conversation", status = status, action = "conversation"))
         }
         menuList.add(Menu(title = "Share", statusUrl = status.url, action = "share"))
         adapter.update(menuList)
