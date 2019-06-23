@@ -19,6 +19,7 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentConversionBinding
+import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import javax.inject.Inject
 
@@ -86,6 +87,12 @@ class ConversationDialogFragment : DialogFragment() {
         })
         viewModel.eventNavigationClick.observe(viewLifecycleOwner, Observer {
             dismiss()
+        })
+        viewModel.eventOpenStatus.observe(viewLifecycleOwner, Observer {
+            requireActivity().run {
+                val intent = StatusDetailActivity.createIntent(this, it.id)
+                startActivity(intent)
+            }
         })
     }
 }

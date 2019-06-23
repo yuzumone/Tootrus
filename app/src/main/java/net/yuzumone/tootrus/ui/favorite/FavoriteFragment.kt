@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentFavoriteBinding
+import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import javax.inject.Inject
 
@@ -60,6 +61,12 @@ class FavoriteFragment : Fragment() {
                 binding.progress.visibility = View.GONE
             }
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
+        })
+        viewModel.eventOpenStatus.observe(viewLifecycleOwner, Observer {
+            requireActivity().run {
+                val intent = StatusDetailActivity.createIntent(this, it.id)
+                startActivity(intent)
+            }
         })
     }
 }
