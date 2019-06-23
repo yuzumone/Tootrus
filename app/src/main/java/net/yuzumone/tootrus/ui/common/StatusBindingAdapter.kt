@@ -8,28 +8,50 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ItemStatusBinding
 
-class StatusBindingAdapter(
-        private val listener: OnStatusAdapterClickListener
-) : BindingRecyclerAdapter<Status, ItemStatusBinding>() {
+class StatusBindingAdapter() : BindingRecyclerAdapter<Status, ItemStatusBinding>() {
+
+    private var expandListener: OnStatusAdapterClickListener? = null
+    private var singleListener: OnStatusAdapterSingleClickListener? = null
+
+    constructor(listener: OnStatusAdapterClickListener) : this () {
+        this.expandListener = listener
+    }
+
+    constructor(listener: OnStatusAdapterSingleClickListener) : this () {
+        this.singleListener = listener
+    }
+
     override fun createBinding(parent: ViewGroup): ItemStatusBinding {
         return ItemStatusBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
     }
 
     override fun bind(binding: ItemStatusBinding, item: Status) {
-        binding.viewQuick.visibility = View.GONE
-        binding.viewThumbnail.clearThumbnail()
-        binding.viewWebCard.clearCard()
-        val anim = AnimationUtils.loadAnimation(binding.root.context, R.anim.anim_view_quick)
-        binding.root.setOnClickListener {
-            if (binding.viewQuick.visibility == View.GONE) {
-                binding.viewQuick.visibility = View.VISIBLE
-                binding.viewQuick.startAnimation(anim)
-            } else {
-                binding.viewQuick.visibility = View.GONE
+        binding.also {
+            it.viewQuick.visibility = View.GONE
+            it.viewThumbnail.clearThumbnail()
+            it.viewWebCard.clearCard()
+            it.status = item
+            it.expandListener = expandListener
+            it.singleListener = singleListener
+        }
+        if (expandListener != null) {
+            binding.singleListener = getViewExpandListener()
+        }
+    }
+
+    private fun getViewExpandListener(): OnStatusAdapterSingleClickListener {
+        return object : OnStatusAdapterSingleClickListener {
+            override fun onClick(view: View, status: Status) {
+                val anim = AnimationUtils.loadAnimation(view.context, R.anim.anim_view_quick)
+                val v = view.findViewById<View>(R.id.view_quick)
+                if (v.visibility == View.GONE) {
+                    v.visibility = View.VISIBLE
+                    v.startAnimation(anim)
+                } else {
+                    v.visibility = View.GONE
+                }
             }
         }
-        binding.status = item
-        binding.listener = listener
     }
 }
