@@ -36,4 +36,5 @@
     <string name="write_your_warning_hire">Write your warning hire</string>
     <string name="cw">CW</string>
     <string name="section_favorite">Favorite</string>
+    <string name="toot_shortcut_label">New Toot</string>
 </resources>

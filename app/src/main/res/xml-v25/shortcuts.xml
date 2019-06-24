@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="toot"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcuts_pencil"
+        android:shortcutShortLabel="@string/toot_shortcut_label"
+        android:shortcutLongLabel="@string/toot_shortcut_label"
+        >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="net.yuzumone.tootrus"
+            android:targetClass="net.yuzumone.tootrus.ui.PostStatusActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>
