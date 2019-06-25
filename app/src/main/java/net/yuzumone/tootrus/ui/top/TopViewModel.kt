@@ -20,6 +20,7 @@ import net.yuzumone.tootrus.domain.mastodon.timeline.GetLocalPublicUseCase
 import net.yuzumone.tootrus.domain.mastodon.timeline.GetTimelineUseCase
 import net.yuzumone.tootrus.ui.common.OnNotificationAdapterClickListener
 import net.yuzumone.tootrus.ui.common.OnStatusAdapterClickListener
+import net.yuzumone.tootrus.ui.common.OnStatusAdapterLongClickListener
 import net.yuzumone.tootrus.util.insertValues
 import net.yuzumone.tootrus.util.postInsertValue
 import net.yuzumone.tootrus.util.replaceStatus
@@ -35,7 +36,7 @@ class TopViewModel @Inject constructor(
         private val getVerifyCredentialsUseCase: GetVerifyCredentialsUseCase,
         getTimelineUseCase: GetTimelineUseCase,
         getNotificationsUseCase: GetNotificationsUseCase
-): ViewModel(), OnStatusAdapterClickListener, OnNotificationAdapterClickListener {
+): ViewModel(), OnStatusAdapterClickListener, OnNotificationAdapterClickListener, OnStatusAdapterLongClickListener {
 
     val homeStatuses = MutableLiveData<List<Status>>()
     val localStatuses = MutableLiveData<List<Status>>()
@@ -198,5 +199,10 @@ class TopViewModel @Inject constructor(
                 openStatusEvent.value = notification.status
             }
         }
+    }
+
+    override fun onLongClick(status: Status): Boolean {
+        openStatusEvent.value = status
+        return true
     }
 }

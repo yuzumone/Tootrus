@@ -15,6 +15,9 @@
         <variable
             name="singleListener"
             type="net.yuzumone.tootrus.ui.common.OnStatusAdapterSingleClickListener"/>
+        <variable
+            name="longClickListener"
+            type="net.yuzumone.tootrus.ui.common.OnStatusAdapterLongClickListener"/>
         <import type="android.view.View"/>
     </data>
 
@@ -23,6 +26,7 @@
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
         android:onClick="@{(v) -> singleListener.onClick(v, status)}"
+        android:onLongClick="@{(v) -> longClickListener.onLongClick(status)}"
         android:clickable="true"
         android:focusable="true"
         >
