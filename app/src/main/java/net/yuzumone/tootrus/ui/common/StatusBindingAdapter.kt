@@ -12,6 +12,7 @@ class StatusBindingAdapter() : BindingRecyclerAdapter<Status, ItemStatusBinding>
 
     private var expandListener: OnStatusAdapterClickListener? = null
     private var singleListener: OnStatusAdapterSingleClickListener? = null
+    private var longClickListener: OnStatusAdapterLongClickListener? =null
 
     constructor(listener: OnStatusAdapterClickListener) : this () {
         this.expandListener = listener
@@ -19,6 +20,11 @@ class StatusBindingAdapter() : BindingRecyclerAdapter<Status, ItemStatusBinding>
 
     constructor(listener: OnStatusAdapterSingleClickListener) : this () {
         this.singleListener = listener
+    }
+
+    constructor(listener: OnStatusAdapterClickListener, longClickListener: OnStatusAdapterLongClickListener) : this() {
+        this.expandListener = listener
+        this.longClickListener = longClickListener
     }
 
     override fun createBinding(parent: ViewGroup): ItemStatusBinding {
@@ -34,6 +40,7 @@ class StatusBindingAdapter() : BindingRecyclerAdapter<Status, ItemStatusBinding>
             it.status = item
             it.expandListener = expandListener
             it.singleListener = singleListener
+            it.longClickListener = longClickListener
         }
         if (expandListener != null) {
             binding.singleListener = getViewExpandListener()
