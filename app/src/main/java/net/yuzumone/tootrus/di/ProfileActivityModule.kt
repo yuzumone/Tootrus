@@ -17,6 +17,9 @@ abstract class ProfileActivityModule {
     abstract fun contributesProfileStatusesFragment(): ProfileStatusesFragment
 
     @ContributesAndroidInjector
+    abstract fun contributesProfileMediaStatusesFragment(): ProfileMediaStatusesFragment
+
+    @ContributesAndroidInjector
     abstract fun contributesProfileFollowingsFragment(): ProfileFollowingsFragment
 
     @ContributesAndroidInjector
