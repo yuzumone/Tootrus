@@ -37,4 +37,5 @@
     <string name="cw">CW</string>
     <string name="section_favorite">Favorite</string>
     <string name="toot_shortcut_label">New Toot</string>
+    <string name="profile_media">Media</string>
 </resources>

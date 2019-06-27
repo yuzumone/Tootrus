@@ -60,6 +60,7 @@ class ProfileFragment : Fragment() {
                 .get(ProfileViewModel::class.java)
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             add(getString(R.string.profile_toot, account.statusesCount), ProfileStatusesFragment())
+            add(getString(R.string.profile_media), ProfileMediaStatusesFragment())
             add(getString(R.string.profile_follows, account.followingCount), ProfileFollowingsFragment())
             add(getString(R.string.profile_followers, account.followersCount), ProfileFollowersFragment())
         }
@@ -81,6 +82,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         profileViewModel.getStatuses(account.id)
+        profileViewModel.getMediaStatuses(account.id)
         profileViewModel.getFollowing(account.id)
         profileViewModel.getFollowers(account.id)
         profileViewModel.userId.observe(viewLifecycleOwner, Observer {
