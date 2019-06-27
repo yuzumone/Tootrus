@@ -36,6 +36,7 @@ class ProfileViewModel @Inject constructor(
     val relationship = MutableLiveData<Relationship>()
     val accountAndRelationship = MutableLiveData<Pair<Account, Relationship>>()
     val statuses = MutableLiveData<List<Status>>()
+    val mediaStatuses = MutableLiveData<List<Status>>()
     val followings = MutableLiveData<List<Account>>()
     val followers = MutableLiveData<List<Account>>()
     val detailActionEvent = MutableLiveData<Status>()
@@ -79,6 +80,16 @@ class ProfileViewModel @Inject constructor(
         getStatusesUseCase(params) {
             when (it) {
                 is Success -> statuses.value = it.value
+                is Failure -> error.value = it.reason
+            }
+        }
+    }
+
+    fun getMediaStatuses(id: Long) {
+        val params = Params(id, true, false, false, Range())
+        getStatusesUseCase(params) {
+            when (it) {
+                is Success -> mediaStatuses.value = it.value
                 is Failure -> error.value = it.reason
             }
         }
