@@ -77,10 +77,16 @@ class MenuDialogFragment : DialogFragment() {
         val menuList = ArrayList<Menu>()
         menuList.add(Menu(title = status.account!!.userName, accountId = status.account!!.id, action = "account"))
         status.reblog?.let {
-            menuList.add(Menu(title = it.account!!.userName, accountId = it.account!!.id, action = "account"))
+            val menu = Menu(title = it.account!!.userName, accountId = it.account!!.id, action = "account")
+            if (!menuList.contains(menu)) {
+                menuList.add(menu)
+            }
         }
         status.mentions.forEach {
-            menuList.add(Menu(title = it.username, accountId = it.id, action = "account"))
+            val menu = Menu(title = it.username, accountId = it.id, action = "account")
+            if (!menuList.contains(menu)) {
+                menuList.add(Menu(title = it.username, accountId = it.id, action = "account"))
+            }
         }
         if (status.inReplyToId != null) {
             menuList.add(Menu(title = "Conversation", status = status, action = "conversation"))
