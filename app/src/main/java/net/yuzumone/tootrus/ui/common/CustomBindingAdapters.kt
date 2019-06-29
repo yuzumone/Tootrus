@@ -330,6 +330,20 @@ object CustomBindingAdapters {
         }
     }
 
+    @BindingAdapter("pin")
+    @JvmStatic
+    fun setPin(view: TextView, pin: Boolean) {
+        val lineHeight = view.lineHeight
+        if (pin) {
+            ResourcesCompat.getDrawable(view.resources, R.drawable.ic_item_pin, null)?.let {
+                it.setBounds(0, 0, lineHeight, lineHeight)
+                view.setCompoundDrawables(it, null, null, null)
+            }
+        } else {
+            view.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+        }
+    }
+
     @BindingAdapter("image_uris")
     @JvmStatic
     fun setImageUris(view: PostImageView, uris: List<String>?) {
