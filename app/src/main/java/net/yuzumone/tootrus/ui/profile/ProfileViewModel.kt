@@ -69,18 +69,25 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun getStatuses(
-            id: Long,
-            onlyMedia: Boolean = false,
-            excludeReplies: Boolean = false,
-            pinned: Boolean = false,
-            range: Range = Range()
-    ) {
-        val params = Params(id, onlyMedia, excludeReplies, pinned, range)
-        getStatusesUseCase(params) {
-            when (it) {
-                is Success -> statuses.value = it.value
-                is Failure -> error.value = it.reason
+    fun getStatusesWithPinned(id: Long) {
+        val list = arrayListOf<Status>()
+        val p1 = Params(id, false, false, true, Range())
+        getStatusesUseCase(p1) { v1 ->
+            when (v1) {
+                is Success -> {
+                    list.addAll(v1.value)
+                    val p2 = Params(id, false, true, false, Range())
+                    getStatusesUseCase(p2) { v2 ->
+                        when (v2) {
+                            is Success -> {
+                                list.addAll(v2.value)
+                                statuses.value = list
+                            }
+                            is Failure -> error.value = v2.reason
+                        }
+                    }
+                }
+                is Failure -> error.value = v1.reason
             }
         }
     }

@@ -81,7 +81,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        profileViewModel.getStatuses(account.id)
+        profileViewModel.getStatusesWithPinned(account.id)
         profileViewModel.getMediaStatuses(account.id)
         profileViewModel.getFollowing(account.id)
         profileViewModel.getFollowers(account.id)

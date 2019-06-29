@@ -94,6 +94,7 @@
                 app:created_at="@{status.reblog == null ? status.createdAt : status.reblog.createdAt}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:pin="@{status.pinned}"
                 tools:text="5s"
                 />
 
