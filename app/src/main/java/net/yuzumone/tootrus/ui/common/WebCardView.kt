@@ -1,7 +1,6 @@
 package net.yuzumone.tootrus.ui.common
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.AttributeSet
@@ -9,6 +8,7 @@ import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.databinding.DataBindingUtil
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ViewWebCardBinding
@@ -37,8 +37,11 @@ class WebCardView : LinearLayout {
                 val url = it.attr("href")
                 val v = bind(url)
                 v.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    context.startActivity(intent)
+                    CustomTabsIntent.Builder().apply {
+                        setToolbarColor(resources.getColor(R.color.colorPrimary, null))
+                    }.build().apply {
+                        launchUrl(context, Uri.parse(url))
+                    }
                 }
                 addView(v)
             }
