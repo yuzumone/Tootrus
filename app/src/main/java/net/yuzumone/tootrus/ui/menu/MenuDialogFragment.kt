@@ -1,5 +1,8 @@
 package net.yuzumone.tootrus.ui.menu
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +17,8 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.databinding.FragmentMenuDialogBinding
 import net.yuzumone.tootrus.ui.ProfileActivity
 import net.yuzumone.tootrus.ui.conversation.ConversationDialogFragment
+
+
 
 class MenuDialogFragment : DialogFragment() {
 
@@ -69,6 +74,11 @@ class MenuDialogFragment : DialogFragment() {
                         startActivity(intent)
                     }
                 }
+                Menu.Action.COPY_LINK.value -> {
+                    requireActivity().getSystemService(CLIPBOARD_SERVICE).let { m ->
+                        (m as ClipboardManager).primaryClip = ClipData.newPlainText("", it.statusUrl)
+                    }
+                }
             }
         })
     }
@@ -92,6 +102,7 @@ class MenuDialogFragment : DialogFragment() {
             menuList.add(Menu(title = "Conversation", status = status, action = "conversation"))
         }
         menuList.add(Menu(title = "Share", statusUrl = status.url, action = "share"))
+        menuList.add(Menu(title = "Copy link to toot", statusUrl = status.url, action = "copy_link"))
         adapter.update(menuList)
     }
 }
