@@ -11,6 +11,7 @@ data class Menu(
     enum class Action(val value: String) {
         Account("account"),
         Share("share"),
-        Conversation("conversation")
+        Conversation("conversation"),
+        COPY_LINK("copy_link")
     }
 }
