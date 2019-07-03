@@ -18,8 +18,6 @@ import net.yuzumone.tootrus.databinding.FragmentMenuDialogBinding
 import net.yuzumone.tootrus.ui.ProfileActivity
 import net.yuzumone.tootrus.ui.conversation.ConversationDialogFragment
 
-
-
 class MenuDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentMenuDialogBinding
@@ -46,12 +44,15 @@ class MenuDialogFragment : DialogFragment() {
             it.recyclerMenu.adapter = adapter
             it.recyclerMenu.layoutManager = LinearLayoutManager(activity)
         }
-        createMenu()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        menuViewModel.setStatus(status)
+        menuViewModel.menuList.observe(viewLifecycleOwner, Observer {
+            adapter.update(it)
+        })
         menuViewModel.menu.observe(viewLifecycleOwner, Observer {
             dismiss()
             when (it!!.action) {
@@ -81,28 +82,5 @@ class MenuDialogFragment : DialogFragment() {
                 }
             }
         })
-    }
-
-    private fun createMenu() {
-        val menuList = ArrayList<Menu>()
-        menuList.add(Menu(title = status.account!!.userName, accountId = status.account!!.id, action = "account"))
-        status.reblog?.let {
-            val menu = Menu(title = it.account!!.userName, accountId = it.account!!.id, action = "account")
-            if (!menuList.contains(menu)) {
-                menuList.add(menu)
-            }
-        }
-        status.mentions.forEach {
-            val menu = Menu(title = it.username, accountId = it.id, action = "account")
-            if (!menuList.contains(menu)) {
-                menuList.add(Menu(title = it.username, accountId = it.id, action = "account"))
-            }
-        }
-        if (status.inReplyToId != null) {
-            menuList.add(Menu(title = "Conversation", status = status, action = "conversation"))
-        }
-        menuList.add(Menu(title = "Share", statusUrl = status.url, action = "share"))
-        menuList.add(Menu(title = "Copy link to toot", statusUrl = status.url, action = "copy_link"))
-        adapter.update(menuList)
     }
 }
