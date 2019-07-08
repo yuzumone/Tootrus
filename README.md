@@ -2,7 +2,7 @@
 [![platform android](https://img.shields.io/badge/platform-android-green.svg)](#)
 [![language kotlin](https://img.shields.io/badge/language-kotlin-green.svg)](#)
 [![minSdkVersion 24](https://img.shields.io/badge/minSdkVersion-24-red.svg)](#)
-[![version v1.0.5](https://img.shields.io/badge/version-v1.0.5-blue.svg)](#)
+[![version v1.0.6](https://img.shields.io/badge/version-v1.0.6-blue.svg)](#)
 
 ## Libraries
 - Android Support Library
