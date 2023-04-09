@@ -77,7 +77,7 @@ class MenuDialogFragment : DialogFragment() {
                 }
                 Menu.Action.COPY_LINK.value -> {
                     requireActivity().getSystemService(CLIPBOARD_SERVICE).let { m ->
-                        (m as ClipboardManager).primaryClip = ClipData.newPlainText("", it.statusUrl)
+                        (m as ClipboardManager).setPrimaryClip(ClipData.newPlainText("", it.statusUrl))
                     }
                 }
             }
