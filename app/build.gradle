@@ -13,8 +13,8 @@ android {
         applicationId "net.yuzumone.tootrus"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.0.6"
+        versionCode 8
+        versionName "1.0.7-dev"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
