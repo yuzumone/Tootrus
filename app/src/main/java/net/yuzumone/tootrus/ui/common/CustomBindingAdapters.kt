@@ -140,10 +140,6 @@ object CustomBindingAdapters {
             val imagePipeline = Fresco.getImagePipeline()
             val dataSource = imagePipeline.fetchDecodedImage(request, null)
             dataSource.subscribe(object : BaseBitmapDataSubscriber() {
-                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
-
-                }
-
                 override fun onNewResultImpl(bitmap: Bitmap?) {
                     bitmap ?: return
                     val lineHeight = view.lineHeight
@@ -157,6 +153,10 @@ object CustomBindingAdapters {
                         view.text = sb
                         i += index + 1
                     }
+                }
+
+                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {
+
                 }
             }, UiThreadImmediateExecutorService.getInstance())
         }
@@ -185,10 +185,6 @@ object CustomBindingAdapters {
             val imagePipeline = Fresco.getImagePipeline()
             val dataSource = imagePipeline.fetchDecodedImage(request, null)
             dataSource.subscribe(object : BaseBitmapDataSubscriber() {
-                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
-
-                }
-
                 override fun onNewResultImpl(bitmap: Bitmap?) {
                     bitmap ?: return
                     val lineHeight = view.lineHeight
@@ -202,6 +198,10 @@ object CustomBindingAdapters {
                         view.text = sb
                         i += index + 1
                     }
+                }
+
+                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {
+
                 }
             }, UiThreadImmediateExecutorService.getInstance())
         }
@@ -227,10 +227,6 @@ object CustomBindingAdapters {
             val imagePipeline = Fresco.getImagePipeline()
             val dataSource = imagePipeline.fetchDecodedImage(request, null)
             dataSource.subscribe(object : BaseBitmapDataSubscriber() {
-                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
-
-                }
-
                 override fun onNewResultImpl(bitmap: Bitmap?) {
                     bitmap ?: return
                     val lineHeight = view.lineHeight
@@ -244,6 +240,10 @@ object CustomBindingAdapters {
                         view.text = sb
                         i += index + 1
                     }
+                }
+
+                override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>) {
+
                 }
             }, UiThreadImmediateExecutorService.getInstance())
         }
