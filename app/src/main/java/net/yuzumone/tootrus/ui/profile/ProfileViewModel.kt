@@ -52,6 +52,7 @@ class ProfileViewModel @Inject constructor(
         getUserIdPrefUseCase(Unit) {
             when (it) {
                 is Success -> userId.value = it.value
+                is Failure -> TODO()
             }
         }
     }

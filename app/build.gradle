@@ -1,14 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 31
-    dataBinding {
-        enabled = true
-    }
     defaultConfig {
         applicationId "net.yuzumone.tootrus"
         minSdkVersion 24
@@ -29,6 +25,17 @@ android {
     packagingOptions {
         resources.excludes.add("META-INF/*")
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
 }
 
 ext.lifecycle_version = '2.0.0'
@@ -37,9 +44,6 @@ ext.dagger_version = "2.16"
 ext.coroutines_version = '1.1.1'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // UI
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
@@ -77,9 +81,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    // JAX-B dependencies for JDK 9+
-    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
-    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 }
 
 apply plugin: 'com.google.gms.google-services'

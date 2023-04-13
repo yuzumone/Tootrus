@@ -120,6 +120,7 @@ class TopViewModel @Inject constructor(
                 is Success -> {
                     openUserAccountEvent.value = it.value
                 }
+                is Failure -> TODO()
             }
         }
     }
