@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sys1yagi.mastodon4j.api.entity.Account
 import dagger.Lazy
+import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.account.GetVerifyCredentialsUseCase
 import net.yuzumone.tootrus.domain.prefs.GetAccessTokenPrefUseCase
@@ -27,6 +28,7 @@ class MainViewModel @Inject constructor(
         getAccessTokenUseCase(Unit) {
             when (it) {
                 is Success -> accessToken.value = it.value
+                is Failure -> TODO()
             }
         }
         setFragment = accessToken.map {
@@ -46,6 +48,7 @@ class MainViewModel @Inject constructor(
                     storeUserIdPrefUseCase(it.value.id)
                     account.value = it.value
                 }
+                is Failure -> TODO()
             }
         }
     }
