@@ -4,11 +4,12 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 31
+    namespace 'net.yuzumone.tootrus'
+    compileSdk 33
     defaultConfig {
         applicationId "net.yuzumone.tootrus"
-        minSdkVersion 24
-        targetSdkVersion 28
+        minSdk 24
+        targetSdk 33
         versionCode 8
         versionName "1.0.7-dev"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
