@@ -44,7 +44,7 @@ class PostStatusDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewModel = ViewModelProviders.of(this).get(PostStatusDialogViewModel::class.java)
         viewModel.setRepliedStatus(repliedStatus)
         binding = FragmentPostStatusBinding.inflate(inflater, container, false).also {
@@ -67,7 +67,7 @@ class PostStatusDialogFragment : DialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dialog.window?.also {
+        dialog?.window?.also {
             it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
@@ -97,7 +97,7 @@ class PostStatusDialogFragment : DialogFragment() {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.let {
             it.inflate(R.menu.menu_post_status, menu)
@@ -107,7 +107,7 @@ class PostStatusDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         menu?.let {
             it.removeItem(R.id.menu_visibility_public)
@@ -140,7 +140,7 @@ class PostStatusDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.menu_post_status -> {
                 viewModel.postStatus()
@@ -186,7 +186,7 @@ class PostStatusDialogFragment : DialogFragment() {
 
     @AfterPermissionGranted(RC_READ_EXTERNAL_STORAGE)
     private fun selectImage() {
-        if (EasyPermissions.hasPermissions(activity!!, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (EasyPermissions.hasPermissions(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.addCategory(Intent.CATEGORY_OPENABLE)
             intent.type = "image/*"
@@ -207,7 +207,7 @@ class PostStatusDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         // finish parent activity when attached this fragment
         if (isAdded) {
             requireActivity().finish()

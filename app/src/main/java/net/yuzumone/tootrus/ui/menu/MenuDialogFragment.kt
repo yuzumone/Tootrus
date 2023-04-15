@@ -23,7 +23,7 @@ class MenuDialogFragment : DialogFragment() {
     private lateinit var binding: FragmentMenuDialogBinding
     private lateinit var menuViewModel: MenuViewModel
     private lateinit var adapter: MenuBindingAdapter
-    private val status by lazy { Gson().fromJson(arguments!!.getString(ARG_STATUS), Status::class.java) }
+    private val status by lazy { Gson().fromJson(requireArguments().getString(ARG_STATUS), Status::class.java) }
 
     companion object {
         private const val ARG_STATUS = "status"
@@ -37,7 +37,7 @@ class MenuDialogFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         menuViewModel = ViewModelProviders.of(this).get(MenuViewModel::class.java)
         adapter = MenuBindingAdapter(menuViewModel)
         binding = FragmentMenuDialogBinding.inflate(inflater, container, false).also {

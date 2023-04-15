@@ -27,19 +27,19 @@ class NotificationFragment : Fragment() {
     private lateinit var topViewModel: TopViewModel
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                              savedInstanceState: Bundle?): View {
+        topViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(TopViewModel::class.java)
         adapter = NotificationBindingAdapter(topViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
-        divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
+        divider.setDrawable(ContextCompat.getDrawable(requireActivity(), R.drawable.divider)!!)
         binding = FragmentNotificationBinding.inflate(inflater, container, false).apply {
             recyclerNotification.adapter = adapter
             recyclerNotification.layoutManager = layoutManager

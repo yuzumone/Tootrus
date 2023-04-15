@@ -35,14 +35,14 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
     private lateinit var topViewModel: TopViewModel
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        topViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                              savedInstanceState: Bundle?): View {
+        topViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(TopViewModel::class.java)
         topViewModel.startUserStream()
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
@@ -54,7 +54,7 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
             pager.adapter = adapter
             pager.offscreenPageLimit = 2
             pager.addOnPageChangeListener(
-                onPageSelected = { activity!!.title = adapter.getPageTitle(it) },
+                onPageSelected = { requireActivity().title = adapter.getPageTitle(it) },
                 onPageScrolled = { _, _, _ -> },
                 onPageScrollStateChanged = {}
             )
@@ -91,7 +91,7 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
         topViewModel.menuActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
-            fragment.show(fragmentManager, "menu")
+            fragment.show(parentFragmentManager, "menu")
         })
         topViewModel.favoriteError.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
