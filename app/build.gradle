@@ -73,9 +73,9 @@ dependencies {
     // parser
     implementation 'org.jsoup:jsoup:1.11.3'
     // firebase
-    implementation 'com.google.firebase:firebase-core:17.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
-    implementation 'com.google.firebase:firebase-analytics:17.0.0'
+    implementation platform('com.google.firebase:firebase-bom:31.3.0')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
     // permission
     implementation 'pub.devrel:easypermissions:3.0.0'
     // Test
