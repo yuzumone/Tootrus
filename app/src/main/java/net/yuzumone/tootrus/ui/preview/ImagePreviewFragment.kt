@@ -13,7 +13,7 @@ class ImagePreviewFragment : Fragment() {
 
     private lateinit var binding: FragmentImagePreviewBinding
     private val attachment by lazy {
-        Gson().fromJson(arguments!!.getString(ARG_ATTACHMENT), Attachment::class.java)
+        Gson().fromJson(requireArguments().getString(ARG_ATTACHMENT), Attachment::class.java)
     }
 
     companion object {
@@ -28,7 +28,7 @@ class ImagePreviewFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         binding = FragmentImagePreviewBinding.inflate(inflater, container, false)
         binding.attachment = attachment
         return binding.root

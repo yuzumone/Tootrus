@@ -44,19 +44,19 @@ class ConversationDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(ConversationViewModel::class.java)
         adapter = StatusBindingAdapter(viewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
-        divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
+        divider.setDrawable(ContextCompat.getDrawable(requireActivity(), R.drawable.divider)!!)
         binding = FragmentConversionBinding.inflate(inflater, container, false).also {
             it.viewModel = viewModel
             it.recyclerConversation.adapter = adapter
@@ -68,7 +68,7 @@ class ConversationDialogFragment : DialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dialog.window?.also {
+        dialog?.window?.also {
             it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }

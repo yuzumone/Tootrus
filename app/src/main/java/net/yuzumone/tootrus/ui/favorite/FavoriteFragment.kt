@@ -27,18 +27,18 @@ class FavoriteFragment : Fragment() {
     private lateinit var adapter: StatusBindingAdapter
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(FavoriteViewModel::class.java)
         adapter = StatusBindingAdapter(viewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
-        divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
+        divider.setDrawable(ContextCompat.getDrawable(requireActivity(), R.drawable.divider)!!)
         binding = FragmentFavoriteBinding.inflate(inflater, container, false).also {
             it.recyclerFavorite.adapter = adapter
             it.recyclerFavorite.layoutManager = layoutManager

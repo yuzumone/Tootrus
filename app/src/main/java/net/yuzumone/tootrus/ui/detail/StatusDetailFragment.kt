@@ -25,7 +25,7 @@ class StatusDetailFragment : Fragment() {
     private lateinit var statusDetailViewModel: StatusDetailViewModel
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private val status by lazy {
-        Gson().fromJson(arguments!!.getString(ARG_STATUS), Status::class.java)
+        Gson().fromJson(requireArguments().getString(ARG_STATUS), Status::class.java)
     }
 
     companion object {
@@ -39,13 +39,13 @@ class StatusDetailFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         statusDetailViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(StatusDetailViewModel::class.java)
         binding = FragmentStatusDetailBinding.inflate(inflater, container, false).also {
@@ -79,7 +79,7 @@ class StatusDetailFragment : Fragment() {
         statusDetailViewModel.openMenuActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
-            fragment.show(fragmentManager, "menu")
+            fragment.show(parentFragmentManager, "menu")
         })
         statusDetailViewModel.favoriteError.observe(viewLifecycleOwner, Observer {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()

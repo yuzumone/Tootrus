@@ -29,10 +29,10 @@ class ProfileFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentProfileBinding
     private val account by lazy {
-        Gson().fromJson(arguments!!.getString(ARG_ACCOUNT), Account::class.java)
+        Gson().fromJson(requireArguments().getString(ARG_ACCOUNT), Account::class.java)
     }
     private val relationship by lazy {
-        Gson().fromJson(arguments!!.getString(ARG_RELATIONSHIP), Relationship::class.java)
+        Gson().fromJson(requireArguments().getString(ARG_RELATIONSHIP), Relationship::class.java)
     }
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -49,14 +49,14 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        profileViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                              savedInstanceState: Bundle?): View {
+        profileViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ProfileViewModel::class.java)
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             add(getString(R.string.profile_toot, account.statusesCount), ProfileStatusesFragment())
@@ -121,7 +121,7 @@ class ProfileFragment : Fragment() {
         profileViewModel.menuActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
-            fragment.show(fragmentManager, "menu")
+            fragment.show(parentFragmentManager, "menu")
         })
         profileViewModel.openAccount.observe(viewLifecycleOwner, Observer {
             requireActivity().run {

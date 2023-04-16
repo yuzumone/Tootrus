@@ -25,19 +25,19 @@ class ProfileFollowersFragment : Fragment() {
     private lateinit var adapter: AccountBindingAdapter
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        profileViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                              savedInstanceState: Bundle?): View {
+        profileViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ProfileViewModel::class.java)
         adapter = AccountBindingAdapter(profileViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
-        divider.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.divider)!!)
+        divider.setDrawable(ContextCompat.getDrawable(requireActivity(), R.drawable.divider)!!)
         binding = FragmentProfileFollowersBinding.inflate(inflater, container, false).apply {
             recyclerProfileFollowers.adapter = adapter
             recyclerProfileFollowers.layoutManager = layoutManager

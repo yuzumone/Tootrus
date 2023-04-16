@@ -23,13 +23,13 @@ class OAuthFragment : Fragment() {
     private lateinit var binding: FragmentOauthBinding
     private lateinit var oauthViewModel: OAuthViewModel
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         oauthViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(OAuthViewModel::class.java)
         binding = FragmentOauthBinding.inflate(inflater, container, false).apply {
