@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -42,8 +41,7 @@ class ProfileActivity : AppCompatActivity(), HasSupportFragmentInjector {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
-        profileViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(ProfileViewModel::class.java)
+        profileViewModel = ViewModelProvider(this, viewModelFactory)[ProfileViewModel::class.java]
         profileViewModel.accountAndRelationship.observe(this, Observer {
             binding.progress.visibility = View.GONE
             if (it != null) {

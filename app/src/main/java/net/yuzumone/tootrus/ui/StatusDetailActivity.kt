@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -47,8 +46,7 @@ class StatusDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         binding.toolbar.setNavigationOnClickListener {
             finish()
         }
-        statusDetailViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(StatusDetailViewModel::class.java)
+        statusDetailViewModel = ViewModelProvider(this, viewModelFactory)[StatusDetailViewModel::class.java]
         statusDetailViewModel.status.observe(this, Observer { status ->
             binding.progress.visibility = View.GONE
             if (status != null) {

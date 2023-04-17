@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
@@ -42,8 +41,7 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        topViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(TopViewModel::class.java)
+        topViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[TopViewModel::class.java]
         topViewModel.startUserStream()
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             add(getString(R.string.section_home), HomeTimelineFragment())

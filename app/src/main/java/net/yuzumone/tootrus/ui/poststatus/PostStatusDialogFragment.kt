@@ -10,7 +10,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.R
@@ -45,7 +45,7 @@ class PostStatusDialogFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewModel = ViewModelProviders.of(this).get(PostStatusDialogViewModel::class.java)
+        viewModel = ViewModelProvider(this)[PostStatusDialogViewModel::class.java]
         viewModel.setRepliedStatus(repliedStatus)
         binding = FragmentPostStatusBinding.inflate(inflater, container, false).also {
             it.viewModel = viewModel

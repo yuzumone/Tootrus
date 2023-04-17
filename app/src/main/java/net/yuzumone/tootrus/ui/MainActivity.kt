@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -37,8 +36,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 binding.navigation, false)
         binding.navigation.addHeaderView(headerBinding.root)
         setSupportActionBar(binding.toolbar)
-        mainViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         mainViewModel.eventTransactionToTop.observe(this, Observer {
             val topFragment = TopFragment()
             supportFragmentManager.beginTransaction().replace(R.id.content, topFragment).commit()
