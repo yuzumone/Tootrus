@@ -3,6 +3,7 @@ package net.yuzumone.tootrus.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import com.sys1yagi.mastodon4j.api.entity.Account
 import dagger.Lazy
 import net.yuzumone.tootrus.domain.Failure
@@ -10,7 +11,6 @@ import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.account.GetVerifyCredentialsUseCase
 import net.yuzumone.tootrus.domain.prefs.GetAccessTokenPrefUseCase
 import net.yuzumone.tootrus.domain.prefs.StoreUserIdPrefUseCase
-import net.yuzumone.tootrus.util.map
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(

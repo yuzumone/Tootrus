@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.support.AndroidSupportInjection
@@ -46,8 +45,7 @@ class StatusDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        statusDetailViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(StatusDetailViewModel::class.java)
+        statusDetailViewModel = ViewModelProvider(this, viewModelFactory)[StatusDetailViewModel::class.java]
         binding = FragmentStatusDetailBinding.inflate(inflater, container, false).also {
             it.listener = statusDetailViewModel
             it.status = if (status.reblog == null) status else status.reblog

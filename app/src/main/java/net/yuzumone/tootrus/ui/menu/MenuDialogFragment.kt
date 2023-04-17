@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
@@ -38,7 +38,7 @@ class MenuDialogFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        menuViewModel = ViewModelProviders.of(this).get(MenuViewModel::class.java)
+        menuViewModel = ViewModelProvider(this)[MenuViewModel::class.java]
         adapter = MenuBindingAdapter(menuViewModel)
         binding = FragmentMenuDialogBinding.inflate(inflater, container, false).also {
             it.recyclerMenu.adapter = adapter

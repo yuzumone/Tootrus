@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentOauthBinding
@@ -30,8 +29,7 @@ class OAuthFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        oauthViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(OAuthViewModel::class.java)
+        oauthViewModel = ViewModelProvider(this, viewModelFactory)[OAuthViewModel::class.java]
         binding = FragmentOauthBinding.inflate(inflater, container, false).apply {
             viewModel = this@OAuthFragment.oauthViewModel
         }
@@ -51,8 +49,7 @@ class OAuthFragment : Fragment() {
             binding.inputInstanceName.error = getString(R.string.error)
         })
         oauthViewModel.transactionMainView.observe(viewLifecycleOwner, Observer {
-            val mainViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                    .get(MainViewModel::class.java)
+            val mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
             mainViewModel.eventTransactionToTop.value = Unit
         })
         oauthViewModel.accessTokenError.observe(viewLifecycleOwner, Observer {

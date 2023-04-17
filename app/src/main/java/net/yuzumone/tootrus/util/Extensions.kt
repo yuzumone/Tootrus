@@ -1,14 +1,8 @@
 package net.yuzumone.tootrus.util
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.viewpager.widget.ViewPager
 import com.sys1yagi.mastodon4j.api.entity.Status
-
-fun <X, Y> LiveData<X>.map(body: (X) -> Y): LiveData<Y> {
-    return Transformations.map(this, body)
-}
 
 fun <T> MutableLiveData<List<T>>.insertValue(value: T) {
     val list = arrayListOf<T>()

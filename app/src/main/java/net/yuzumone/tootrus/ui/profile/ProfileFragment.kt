@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Relationship
@@ -56,8 +55,7 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        profileViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(ProfileViewModel::class.java)
+        profileViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[ProfileViewModel::class.java]
         val adapter = ViewPagerAdapter(childFragmentManager).apply {
             add(getString(R.string.profile_toot, account.statusesCount), ProfileStatusesFragment())
             add(getString(R.string.profile_media), ProfileMediaStatusesFragment())
