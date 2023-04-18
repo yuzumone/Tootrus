@@ -48,13 +48,14 @@ ext.coroutines_version = '1.1.1'
 
 dependencies {
     // UI
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.browser:browser:1.0.0'
+    implementation 'androidx.browser:browser:1.5.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     // arch
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
