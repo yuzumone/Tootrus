@@ -95,7 +95,7 @@ class PostStatusDialogFragment : DialogFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.let {
+        inflater.let {
             it.inflate(R.menu.menu_post_status, menu)
             it.inflate(R.menu.menu_visibility_public, menu)
             it.inflate(R.menu.menu_nsfw_to_on, menu)
@@ -105,7 +105,7 @@ class PostStatusDialogFragment : DialogFragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        menu?.let {
+        menu.let {
             it.removeItem(R.id.menu_visibility_public)
             it.removeItem(R.id.menu_visibility_unlisted)
             it.removeItem(R.id.menu_visibility_private)
@@ -137,7 +137,7 @@ class PostStatusDialogFragment : DialogFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId) {
+        when (item.itemId) {
             R.id.menu_post_status -> {
                 viewModel.postStatus()
                 dismiss()
