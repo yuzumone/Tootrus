@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.*
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -61,7 +62,6 @@ class PostStatusDialogFragment : DialogFragment() {
             it.setSupportActionBar(binding.toolbar)
             it.title = ""
         }
-        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -91,88 +91,84 @@ class PostStatusDialogFragment : DialogFragment() {
                 startService(intent)
             }
         })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.let {
-            it.inflate(R.menu.menu_post_status, menu)
-            it.inflate(R.menu.menu_visibility_public, menu)
-            it.inflate(R.menu.menu_nsfw_to_on, menu)
-            it.inflate(R.menu.menu_content_warning, menu)
-        }
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        menu.let {
-            it.removeItem(R.id.menu_visibility_public)
-            it.removeItem(R.id.menu_visibility_unlisted)
-            it.removeItem(R.id.menu_visibility_private)
-            it.removeItem(R.id.menu_visibility_direct)
-            it.removeItem(R.id.menu_nsfw_to_on)
-            it.removeItem(R.id.menu_nsfw_to_off)
-        }
-        requireActivity().menuInflater.let {
-            when (visibility) {
-                Status.Visibility.Public -> {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.let {
+                    it.inflate(R.menu.menu_post_status, menu)
                     it.inflate(R.menu.menu_visibility_public, menu)
+                    it.inflate(R.menu.menu_nsfw_to_on, menu)
+                    it.inflate(R.menu.menu_content_warning, menu)
                 }
-                Status.Visibility.Unlisted -> {
-                    it.inflate(R.menu.menu_visibility_unlisted, menu)
+                menu.let {
+                    it.removeItem(R.id.menu_visibility_public)
+                    it.removeItem(R.id.menu_visibility_unlisted)
+                    it.removeItem(R.id.menu_visibility_private)
+                    it.removeItem(R.id.menu_visibility_direct)
+                    it.removeItem(R.id.menu_nsfw_to_on)
+                    it.removeItem(R.id.menu_nsfw_to_off)
                 }
-                Status.Visibility.Private -> {
-                    it.inflate(R.menu.menu_visibility_private, menu)
-                }
-                Status.Visibility.Direct -> {
-                    it.inflate(R.menu.menu_visibility_direct, menu)
+                menuInflater.let {
+                    when (visibility) {
+                        Status.Visibility.Public -> {
+                            it.inflate(R.menu.menu_visibility_public, menu)
+                        }
+                        Status.Visibility.Unlisted -> {
+                            it.inflate(R.menu.menu_visibility_unlisted, menu)
+                        }
+                        Status.Visibility.Private -> {
+                            it.inflate(R.menu.menu_visibility_private, menu)
+                        }
+                        Status.Visibility.Direct -> {
+                            it.inflate(R.menu.menu_visibility_direct, menu)
+                        }
+                    }
+                    if (isSensitive) {
+                        it.inflate(R.menu.menu_nsfw_to_off, menu)
+                    } else {
+                        it.inflate(R.menu.menu_nsfw_to_on, menu)
+                    }
                 }
             }
-            if (isSensitive) {
-                it.inflate(R.menu.menu_nsfw_to_off, menu)
-            } else {
-                it.inflate(R.menu.menu_nsfw_to_on, menu)
-            }
-        }
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_post_status -> {
-                viewModel.postStatus()
-                dismiss()
-            }
-            R.id.menu_add_image -> {
-                if (imageUris.size < 4) {
-                    selectImage()
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu_post_status -> {
+                        viewModel.postStatus()
+                        dismiss()
+                    }
+                    R.id.menu_add_image -> {
+                        if (imageUris.size < 4) {
+                            selectImage()
+                        }
+                    }
+                    R.id.menu_visibility_public, R.id.menu_visibility_unlisted,
+                    R.id.menu_visibility_private, R.id.menu_visibility_direct -> {
+                        val anim = AnimationUtils.loadAnimation(activity, R.anim.anim_toolbar_optinal_view_open)
+                        if (binding.viewVisibility.visibility == View.GONE) {
+                            binding.viewVisibility.visibility = View.VISIBLE
+                            binding.viewVisibility.startAnimation(anim)
+                        } else {
+                            binding.viewVisibility.visibility = View.GONE
+                        }
+                    }
+                    R.id.menu_nsfw_to_on -> {
+                        viewModel.setSensitive(true)
+                    }
+                    R.id.menu_nsfw_to_off -> {
+                        viewModel.setSensitive(false)
+                    }
+                    R.id.menu_content_warning -> {
+                        if (binding.inputSpoiler.visibility == View.VISIBLE) {
+                            binding.inputSpoiler.setText("")
+                            viewModel.setSpoilerTextVisibility(false)
+                        } else {
+                            viewModel.setSpoilerTextVisibility(true)
+                        }
+                    }
                 }
+                return true
             }
-            R.id.menu_visibility_public, R.id.menu_visibility_unlisted,
-            R.id.menu_visibility_private, R.id.menu_visibility_direct -> {
-                val anim = AnimationUtils.loadAnimation(activity, R.anim.anim_toolbar_optinal_view_open)
-                if (binding.viewVisibility.visibility == View.GONE) {
-                    binding.viewVisibility.visibility = View.VISIBLE
-                    binding.viewVisibility.startAnimation(anim)
-                } else {
-                    binding.viewVisibility.visibility = View.GONE
-                }
-            }
-            R.id.menu_nsfw_to_on -> {
-                viewModel.setSensitive(true)
-            }
-            R.id.menu_nsfw_to_off -> {
-                viewModel.setSensitive(false)
-            }
-            R.id.menu_content_warning -> {
-                if (binding.inputSpoiler.visibility == View.VISIBLE) {
-                    binding.inputSpoiler.setText("")
-                    viewModel.setSpoilerTextVisibility(false)
-                } else {
-                    viewModel.setSpoilerTextVisibility(true)
-                }
-            }
-        }
-        return true
+        }, viewLifecycleOwner)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
