@@ -1,12 +1,11 @@
 package net.yuzumone.tootrus.ui.poststatus
 
-import android.Manifest
-import android.app.Activity
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AnimationUtils
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.DialogFragment
@@ -18,8 +17,6 @@ import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentPostStatusBinding
 import net.yuzumone.tootrus.service.PostStatusService
 import net.yuzumone.tootrus.ui.common.PostImageView
-import pub.devrel.easypermissions.AfterPermissionGranted
-import pub.devrel.easypermissions.EasyPermissions
 
 class PostStatusDialogFragment : DialogFragment() {
 
@@ -31,11 +28,14 @@ class PostStatusDialogFragment : DialogFragment() {
     private val repliedStatus: Status? by lazy {
         Gson().fromJson(arguments?.getString(ARG_REPLIED_STATUS), Status::class.java)
     }
+    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri ?: return@registerForActivityResult
+        imageUris.add(uri.toString())
+        viewModel.setImageUris(imageUris)
+    }
 
     companion object {
         private const val ARG_REPLIED_STATUS = "replied_status"
-        private const val RC_READ_EXTERNAL_STORAGE = 1
-        private const val PICK_FROM_GALLERY = 10
         fun newReplyInstance(status: Status): PostStatusDialogFragment {
             return PostStatusDialogFragment().apply {
                 arguments = Bundle().apply {
@@ -45,13 +45,18 @@ class PostStatusDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         viewModel = ViewModelProvider(this)[PostStatusDialogViewModel::class.java]
         viewModel.setRepliedStatus(repliedStatus)
         binding = FragmentPostStatusBinding.inflate(inflater, container, false).also {
             it.viewModel = viewModel
             it.lifecycleOwner = viewLifecycleOwner
-            it.viewPostImage.setOnImageItemClickListener(object : PostImageView.OnImageItemClickListener {
+            it.viewPostImage.setOnImageItemClickListener(object :
+                PostImageView.OnImageItemClickListener {
                 override fun onClick(uri: String) {
                     imageUris.remove(uri)
                     viewModel.setImageUris(imageUris)
@@ -137,13 +142,15 @@ class PostStatusDialogFragment : DialogFragment() {
                         dismiss()
                     }
                     R.id.menu_add_image -> {
-                        if (imageUris.size < 4) {
-                            selectImage()
-                        }
+                        if (imageUris.size >= 4) return true
+                        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     }
                     R.id.menu_visibility_public, R.id.menu_visibility_unlisted,
                     R.id.menu_visibility_private, R.id.menu_visibility_direct -> {
-                        val anim = AnimationUtils.loadAnimation(activity, R.anim.anim_toolbar_optinal_view_open)
+                        val anim = AnimationUtils.loadAnimation(
+                            activity,
+                            R.anim.anim_toolbar_optinal_view_open
+                        )
                         if (binding.viewVisibility.visibility == View.GONE) {
                             binding.viewVisibility.visibility = View.VISIBLE
                             binding.viewVisibility.startAnimation(anim)
@@ -169,34 +176,6 @@ class PostStatusDialogFragment : DialogFragment() {
                 return true
             }
         }, viewLifecycleOwner)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-    }
-
-    @AfterPermissionGranted(RC_READ_EXTERNAL_STORAGE)
-    private fun selectImage() {
-        if (EasyPermissions.hasPermissions(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-            intent.type = "image/*"
-            startActivityForResult(Intent.createChooser(intent, "Choose a photo"), PICK_FROM_GALLERY)
-        } else {
-            EasyPermissions.requestPermissions(this, "Request read external storage",
-                    RC_READ_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == PICK_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
-            data ?: return
-            data.data?.let {
-                imageUris.add(it.toString())
-                viewModel.setImageUris(imageUris)
-            }
-        }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
