@@ -6,24 +6,29 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Attachment
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ActivityMediaPreviewBinding
 import net.yuzumone.tootrus.ui.preview.ImagePreviewFragment
-import net.yuzumone.tootrus.util.addOnPageChangeListener
 
 class MediaPreviewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMediaPreviewBinding
     private lateinit var adapter: ViewPagerAdapter
-    private val media by lazy { Gson().fromJson(intent.getStringExtra(ARG_MEDIA), Media::class.java) }
+    private val media by lazy {
+        Gson().fromJson(
+            intent.getStringExtra(ARG_MEDIA),
+            Media::class.java
+        )
+    }
 
     companion object {
         private const val ARG_MEDIA = "media"
-        fun createIntent(context: Context, media: Media) : Intent {
+        fun createIntent(context: Context, media: Media): Intent {
             return Intent(context, MediaPreviewActivity::class.java).apply {
                 putExtra(ARG_MEDIA, Gson().toJson(media))
             }
@@ -33,7 +38,7 @@ class MediaPreviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_media_preview)
-        adapter = ViewPagerAdapter(supportFragmentManager)
+        adapter = ViewPagerAdapter(this)
         media.attachments.forEach {
             adapter.add(ImagePreviewFragment.newInstance(it))
         }
@@ -45,40 +50,31 @@ class MediaPreviewActivity : AppCompatActivity() {
         binding.pager.also { it ->
             it.adapter = adapter
             it.currentItem = media.index
-            it.addOnPageChangeListener(
-                    onPageSelected = { binding.toolbar.title = adapter.getPageTitle(it) },
-                    onPageScrolled = { _, _, _ -> },
-                    onPageScrollStateChanged = {}
-            )
+            it.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    binding.toolbar.title = adapter.getPageTitle(position)
+                }
+            })
         }
     }
 
-    class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    class ViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
         private val fragments = ArrayList<Fragment>()
 
-        override fun getItem(position: Int): Fragment {
-            return fragments[position]
-        }
+        override fun getItemCount(): Int = fragments.size
 
-        override fun getCount(): Int {
-            return fragments.size
-        }
+        override fun createFragment(position: Int): Fragment = fragments[position]
 
-        override fun getPageTitle(position: Int): CharSequence {
-            val p = position + 1
-            val size = fragments.size
-            return "$p of $size"
-        }
+        fun getPageTitle(position: Int): String = "${position + 1} of ${fragments.size}"
 
         fun add(fragment: Fragment) {
             fragments.add(fragment)
-            notifyDataSetChanged()
         }
     }
 
     data class Media(
-            val attachments: List<Attachment>,
-            val index: Int
+        val attachments: List<Attachment>,
+        val index: Int
     )
 }
