@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Relationship
@@ -33,7 +34,8 @@ class ProfileFragment : Fragment() {
     private val relationship by lazy {
         Gson().fromJson(requireArguments().getString(ARG_RELATIONSHIP), Relationship::class.java)
     }
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     companion object {
         private const val ARG_ACCOUNT = "account"
@@ -53,14 +55,23 @@ class ProfileFragment : Fragment() {
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        profileViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[ProfileViewModel::class.java]
-        val adapter = ViewPagerAdapter(childFragmentManager).apply {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        profileViewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[ProfileViewModel::class.java]
+        val adapter = ViewPagerAdapter(requireActivity()).apply {
             add(getString(R.string.profile_toot, account.statusesCount), ProfileStatusesFragment())
             add(getString(R.string.profile_media), ProfileMediaStatusesFragment())
-            add(getString(R.string.profile_follows, account.followingCount), ProfileFollowingsFragment())
-            add(getString(R.string.profile_followers, account.followersCount), ProfileFollowersFragment())
+            add(
+                getString(R.string.profile_follows, account.followingCount),
+                ProfileFollowingsFragment()
+            )
+            add(
+                getString(R.string.profile_followers, account.followersCount),
+                ProfileFollowersFragment()
+            )
         }
         binding = FragmentProfileBinding.inflate(inflater, container, false).also {
             it.account = account
@@ -73,7 +84,9 @@ class ProfileFragment : Fragment() {
             }
             it.viewModel = profileViewModel
         }
-        binding.tab.setupWithViewPager(binding.pager)
+        TabLayoutMediator(binding.tab, binding.pager) { tab, position ->
+            tab.text = adapter.getPageTitle(position)
+        }.attach()
         return binding.root
     }
 
@@ -132,27 +145,20 @@ class ProfileFragment : Fragment() {
         })
     }
 
-    class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    class ViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
         private val fragments = ArrayList<Fragment>()
         private val titles = ArrayList<String>()
 
-        override fun getItem(position: Int): Fragment {
-            return fragments[position]
-        }
+        override fun getItemCount(): Int = fragments.size
 
-        override fun getCount(): Int {
-            return fragments.size
-        }
+        override fun createFragment(position: Int): Fragment = fragments[position]
 
-        override fun getPageTitle(position: Int): CharSequence {
-            return titles[position]
-        }
+        fun getPageTitle(position: Int): String = titles[position]
 
         fun add(title: String, fragment: Fragment) {
             fragments.add(fragment)
             titles.add(title)
-            notifyDataSetChanged()
         }
     }
 }

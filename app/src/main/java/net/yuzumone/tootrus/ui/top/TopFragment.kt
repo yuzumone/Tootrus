@@ -9,10 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.AndroidSupportInjection
 import net.yuzumone.tootrus.R
@@ -25,25 +26,29 @@ import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
 import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
-import net.yuzumone.tootrus.util.addOnPageChangeListener
 import javax.inject.Inject
 
 class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: FragmentTopBinding
     private lateinit var topViewModel: TopViewModel
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        topViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[TopViewModel::class.java]
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        topViewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[TopViewModel::class.java]
         topViewModel.startUserStream()
-        val adapter = ViewPagerAdapter(childFragmentManager).apply {
+        val adapter = ViewPagerAdapter(requireActivity()).apply {
             add(getString(R.string.section_home), HomeTimelineFragment())
             add(getString(R.string.section_notification), NotificationFragment())
             add(getString(R.string.section_local_timeline), LocalTimelineFragment())
@@ -51,11 +56,11 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
         binding = FragmentTopBinding.inflate(inflater, container, false).apply {
             pager.adapter = adapter
             pager.offscreenPageLimit = 2
-            pager.addOnPageChangeListener(
-                onPageSelected = { requireActivity().title = adapter.getPageTitle(it) },
-                onPageScrolled = { _, _, _ -> },
-                onPageScrollStateChanged = {}
-            )
+            pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    requireActivity().title = adapter.getPageTitle(position)
+                }
+            })
         }
         binding.postStatusButtonListener = getPostStatusButtonListener()
         return binding.root
@@ -159,27 +164,20 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
         return false
     }
 
-    class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    class ViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
         private val fragments = ArrayList<Fragment>()
         private val titles = ArrayList<String>()
 
-        override fun getItem(position: Int): Fragment {
-            return fragments[position]
-        }
+        override fun getItemCount(): Int = fragments.size
 
-        override fun getCount(): Int {
-            return fragments.size
-        }
+        override fun createFragment(position: Int): Fragment = fragments[position]
 
-        override fun getPageTitle(position: Int): CharSequence {
-            return titles[position]
-        }
+        fun getPageTitle(position: Int): String = titles[position]
 
         fun add(title: String, fragment: Fragment) {
             fragments.add(fragment)
             titles.add(title)
-            notifyDataSetChanged()
         }
     }
 }

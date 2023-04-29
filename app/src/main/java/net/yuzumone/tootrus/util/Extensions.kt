@@ -1,7 +1,6 @@
 package net.yuzumone.tootrus.util
 
 import androidx.lifecycle.MutableLiveData
-import androidx.viewpager.widget.ViewPager
 import com.sys1yagi.mastodon4j.api.entity.Status
 
 fun <T> MutableLiveData<List<T>>.insertValue(value: T) {
@@ -55,14 +54,3 @@ fun MutableLiveData<List<Status>>.replaceStatus(old: Status, new: Status) {
     }
     this.value = list
 }
-
-fun ViewPager.addOnPageChangeListener(
-        onPageScrollStateChanged: (Int) -> Unit,
-        onPageScrolled: (Int, Float, Int) -> Unit,
-        onPageSelected: (Int) -> Unit
-) = addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-    override fun onPageScrollStateChanged(state: Int): Unit = onPageScrollStateChanged(state)
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int): Unit =
-            onPageScrolled(position, positionOffset, positionOffsetPixels)
-    override fun onPageSelected(position: Int): Unit = onPageSelected(position)
-})
