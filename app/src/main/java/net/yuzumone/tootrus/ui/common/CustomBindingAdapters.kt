@@ -56,10 +56,10 @@ object CustomBindingAdapters {
     fun setBlurImage(view: SimpleDraweeView, imageUrl: String?) {
         imageUrl ?: return
         val request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(imageUrl))
-                .setPostprocessor(IterativeBoxBlurPostProcessor(40)).build()
+            .setPostprocessor(IterativeBoxBlurPostProcessor(40)).build()
         val controller = Fresco.newDraweeControllerBuilder()
-                .setImageRequest(request)
-                .build()
+            .setImageRequest(request)
+            .build()
         view.controller = controller
     }
 
@@ -85,10 +85,10 @@ object CustomBindingAdapters {
     @JvmStatic
     fun setRelativeDate(view: TextView, createAt: String) {
         val now = Date().time
-        val tootTime = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
-                .parse(createAt).time
+        val tootTime = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US).parse(createAt)
+        tootTime ?: return
         var relative: String? = null
-        var time = (now - tootTime) / 1000
+        var time = (now - tootTime.time) / 1000
         if (time <= 59) {
             relative = time.toString() + "s"
         }
@@ -111,8 +111,8 @@ object CustomBindingAdapters {
     @JvmStatic
     fun setAbsoluteDate(view: TextView, createAt: String?) {
         createAt ?: return
-        val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
-                .parse(createAt)
+        val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US).parse(createAt)
+        date ?: return
         view.text = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US).format(date)
     }
 
@@ -130,8 +130,8 @@ object CustomBindingAdapters {
         doc.select("p").append("\\n\\n")
         doc.select("br").append("\\n")
         val text = doc.text().replace("\\\\n\\s".toRegex(), "\\\\n")
-                .replace("\\\\n\\\\n$".toRegex(), "")
-                .split("\\n").joinToString("\n")
+            .replace("\\\\n\\\\n$".toRegex(), "")
+            .split("\\n").joinToString("\n")
         view.text = text
         val sb = SpannableStringBuilder(text)
         status.emojis.forEach { emoji ->
@@ -149,7 +149,12 @@ object CustomBindingAdapters {
                     while (text.indexOf(shortCode, i) != -1) {
                         val index = text.indexOf(shortCode, i)
                         val imageSpan = ImageSpan(drawable)
-                        sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
+                        sb.setSpan(
+                            imageSpan,
+                            index,
+                            index + shortCode.length,
+                            Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+                        )
                         view.text = sb
                         i += index + 1
                     }
@@ -172,8 +177,8 @@ object CustomBindingAdapters {
         doc.select("p").append("\\n\\n")
         doc.select("br").append("\\n")
         var text = doc.text().replace("\\\\n\\s".toRegex(), "\\\\n")
-                .replace("\\\\n\\\\n$".toRegex(), "")
-                .split("\\n").joinToString("\n")
+            .replace("\\\\n\\\\n$".toRegex(), "")
+            .split("\\n").joinToString("\n")
         if (status.spoilerText.isNotEmpty()) {
             text = "${status.spoilerText}\n\n$text"
         }
@@ -194,7 +199,12 @@ object CustomBindingAdapters {
                     while (text.indexOf(shortCode, i) != -1) {
                         val index = text.indexOf(shortCode, i)
                         val imageSpan = ImageSpan(drawable)
-                        sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
+                        sb.setSpan(
+                            imageSpan,
+                            index,
+                            index + shortCode.length,
+                            Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+                        )
                         view.text = sb
                         i += index + 1
                     }
@@ -217,8 +227,8 @@ object CustomBindingAdapters {
         doc.select("p").append("\\n\\n")
         doc.select("br").append("\\n")
         val text = doc.text().replace("\\\\n\\s".toRegex(), "\\\\n")
-                .replace("\\\\n\\\\n$".toRegex(), "")
-                .split("\\n").joinToString("\n")
+            .replace("\\\\n\\\\n$".toRegex(), "")
+            .split("\\n").joinToString("\n")
         view.text = text
         val sb = SpannableStringBuilder(text)
         account.emojis.forEach { emoji ->
@@ -236,7 +246,12 @@ object CustomBindingAdapters {
                     while (text.indexOf(shortCode, i) != -1) {
                         val index = text.indexOf(shortCode, i)
                         val imageSpan = ImageSpan(drawable)
-                        sb.setSpan(imageSpan, index, index + shortCode.length, Spanned.SPAN_EXCLUSIVE_INCLUSIVE)
+                        sb.setSpan(
+                            imageSpan,
+                            index,
+                            index + shortCode.length,
+                            Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+                        )
                         view.text = sb
                         i += index + 1
                     }
@@ -260,7 +275,7 @@ object CustomBindingAdapters {
     fun setWebCardViewVisibility(view: WebCardView, content: String?) {
         view.visibility = View.GONE
         val card = Jsoup.parse(content ?: "").select("a")
-                .filter { !it.attr("class").contains("mention") }
+            .filter { !it.attr("class").contains("mention") }
         if (card.isNotEmpty()) {
             view.visibility = View.VISIBLE
         }
@@ -297,7 +312,8 @@ object CustomBindingAdapters {
     @JvmStatic
     fun setRelationship(view: TextView, relationship: Relationship?) {
         relationship ?: return
-        val text = if (relationship.isFollowedBy) "This user is following you." else "This user is not following you."
+        val text =
+            if (relationship.isFollowedBy) "This user is following you." else "This user is not following you."
         view.text = text
     }
 
@@ -319,10 +335,11 @@ object CustomBindingAdapters {
                 }
             }
             Status.Visibility.Unlisted.value -> {
-                ResourcesCompat.getDrawable(view.resources, R.drawable.ic_item_unlisted, null)?.let {
-                    it.setBounds(0, 0, lineHeight, lineHeight)
-                    view.setCompoundDrawables(it, null, null, null)
-                }
+                ResourcesCompat.getDrawable(view.resources, R.drawable.ic_item_unlisted, null)
+                    ?.let {
+                        it.setBounds(0, 0, lineHeight, lineHeight)
+                        view.setCompoundDrawables(it, null, null, null)
+                    }
             }
             else -> {
                 view.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
