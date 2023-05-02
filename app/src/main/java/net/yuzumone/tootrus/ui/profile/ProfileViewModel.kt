@@ -2,6 +2,7 @@ package net.yuzumone.tootrus.ui.profile
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sys1yagi.mastodon4j.api.Range
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Relationship
@@ -19,16 +20,16 @@ import net.yuzumone.tootrus.util.replaceStatus
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
-        private val getAccountAndRelationShipsUseCase: GetAccountAndRelationShipUseCase,
-        private val getStatusesUseCase: GetStatusesUseCase,
-        private val getFollowingUseCase: GetFollowingUseCase,
-        private val getFollowersUseCase: GetFollowersUseCase,
-        private val postFollowUseCase: PostFollowUseCase,
-        private val postUnFollowUseCase: PostUnFollowUseCase,
-        private val postFavoriteUseCase: PostFavoriteUseCase,
-        private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
-        private val postReblogUseCase: PostReblogUseCase,
-        getUserIdPrefUseCase: GetUserIdPrefUseCase
+    private val getAccountAndRelationShipsUseCase: GetAccountAndRelationShipUseCase,
+    private val getStatusesUseCase: GetStatusesUseCase,
+    private val getFollowingUseCase: GetFollowingUseCase,
+    private val getFollowersUseCase: GetFollowersUseCase,
+    private val postFollowUseCase: PostFollowUseCase,
+    private val postUnFollowUseCase: PostUnFollowUseCase,
+    private val postFavoriteUseCase: PostFavoriteUseCase,
+    private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
+    private val postReblogUseCase: PostReblogUseCase,
+    getUserIdPrefUseCase: GetUserIdPrefUseCase
 ) : ViewModel(), OnStatusAdapterClickListener, OnAccountAdapterClickListener {
 
     val userId = MutableLiveData<Long>()
@@ -49,7 +50,7 @@ class ProfileViewModel @Inject constructor(
     val error = MutableLiveData<Exception>()
 
     init {
-        getUserIdPrefUseCase(Unit) {
+        getUserIdPrefUseCase(Unit, viewModelScope) {
             when (it) {
                 is Success -> userId.value = it.value
                 is Failure -> TODO()
@@ -58,7 +59,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getAccountAndRelationShip(id: Long) {
-        getAccountAndRelationShipsUseCase(id) {
+        getAccountAndRelationShipsUseCase(id, viewModelScope) {
             when (it) {
                 is Success -> {
                     account.value = it.value.first
@@ -72,13 +73,13 @@ class ProfileViewModel @Inject constructor(
 
     fun getStatusesWithPinned(id: Long) {
         val list = arrayListOf<Status>()
-        val p1 = Params(id, false, false, true, Range())
-        getStatusesUseCase(p1) { v1 ->
+        val p1 = Params(id, onlyMedia = false, excludeReplies = false, pinned = true, Range())
+        getStatusesUseCase(p1, viewModelScope) { v1 ->
             when (v1) {
                 is Success -> {
                     list.addAll(v1.value)
-                    val p2 = Params(id, false, true, false, Range())
-                    getStatusesUseCase(p2) { v2 ->
+                    val p2 = Params(id, onlyMedia = false, excludeReplies = true, pinned = false, Range())
+                    getStatusesUseCase(p2, viewModelScope) { v2 ->
                         when (v2) {
                             is Success -> {
                                 list.addAll(v2.value)
@@ -94,8 +95,8 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getMediaStatuses(id: Long) {
-        val params = Params(id, true, false, false, Range())
-        getStatusesUseCase(params) {
+        val params = Params(id, onlyMedia = true, excludeReplies = false, pinned = false, Range())
+        getStatusesUseCase(params, viewModelScope) {
             when (it) {
                 is Success -> mediaStatuses.value = it.value
                 is Failure -> error.value = it.reason
@@ -104,7 +105,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getFollowing(id: Long, range: Range = Range()) {
-        getFollowingUseCase(Pair(id, range)) {
+        getFollowingUseCase(Pair(id, range), viewModelScope) {
             when (it) {
                 is Success -> followings.value = it.value
                 is Failure -> error.value = it.reason
@@ -113,7 +114,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getFollowers(id: Long, range: Range = Range()) {
-        getFollowersUseCase(Pair(id, range)) {
+        getFollowersUseCase(Pair(id, range), viewModelScope) {
             when (it) {
                 is Success -> followers.value = it.value
                 is Failure -> error.value = it.reason
@@ -122,7 +123,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun postFollow(id: Long) {
-        postFollowUseCase(id) {
+        postFollowUseCase(id, viewModelScope) {
             when (it) {
                 is Success -> relationship.value = it.value
                 is Failure -> error.value = it.reason
@@ -131,7 +132,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun postUnFollow(id: Long) {
-        postUnFollowUseCase(id) {
+        postUnFollowUseCase(id, viewModelScope) {
             when (it) {
                 is Success -> relationship.value = it.value
                 is Failure -> error.value = it.reason
@@ -140,7 +141,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun postFavorite(target: Status) {
-        postFavoriteUseCase(target.id) {
+        postFavoriteUseCase(target.id, viewModelScope) {
             when (it) {
                 is Success -> {
                     statuses.replaceStatus(target, it.value)
@@ -152,7 +153,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun postUnfavorite(target: Status) {
-        postUnfavoriteUseCase(target.id) {
+        postUnfavoriteUseCase(target.id, viewModelScope) {
             when (it) {
                 is Success -> {
                     statuses.replaceStatus(target, it.value)
@@ -164,7 +165,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun postReblog(target: Status) {
-        postReblogUseCase(target.id) {
+        postReblogUseCase(target.id, viewModelScope) {
             when (it) {
                 is Success -> {
                     statuses.replaceStatus(target, it.value)

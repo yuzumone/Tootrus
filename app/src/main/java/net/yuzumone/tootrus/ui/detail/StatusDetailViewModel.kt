@@ -2,6 +2,7 @@ package net.yuzumone.tootrus.ui.detail
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
@@ -12,10 +13,10 @@ import net.yuzumone.tootrus.domain.mastodon.status.PostUnfavoriteUseCase
 import javax.inject.Inject
 
 class StatusDetailViewModel @Inject constructor(
-        private val getStatusUseCase: GetStatusUseCase,
-        private val postFavoriteUseCase: PostFavoriteUseCase,
-        private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
-        private val postReblogUseCase: PostReblogUseCase
+    private val getStatusUseCase: GetStatusUseCase,
+    private val postFavoriteUseCase: PostFavoriteUseCase,
+    private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
+    private val postReblogUseCase: PostReblogUseCase
 ) : ViewModel(), OnStatusDetailClickListener {
 
     val status = MutableLiveData<Status>()
@@ -29,7 +30,7 @@ class StatusDetailViewModel @Inject constructor(
     val reblogError = MutableLiveData<Exception>()
 
     fun getStatus(id: Long) {
-        getStatusUseCase(id) {
+        getStatusUseCase(id, viewModelScope) {
             when (it) {
                 is Success -> status.value = it.value
                 is Failure -> error.value = it.reason
@@ -38,7 +39,7 @@ class StatusDetailViewModel @Inject constructor(
     }
 
     private fun postFavorite(target: Status) {
-        postFavoriteUseCase(target.id) {
+        postFavoriteUseCase(target.id, viewModelScope) {
             when (it) {
                 is Success -> {
                     status.value = it.value
@@ -50,7 +51,7 @@ class StatusDetailViewModel @Inject constructor(
     }
 
     private fun postUnfavorite(target: Status) {
-        postUnfavoriteUseCase(target.id) {
+        postUnfavoriteUseCase(target.id, viewModelScope) {
             when (it) {
                 is Success -> {
                     status.value = it.value
@@ -62,7 +63,7 @@ class StatusDetailViewModel @Inject constructor(
     }
 
     private fun postReblog(target: Status) {
-        postReblogUseCase(target.id) {
+        postReblogUseCase(target.id, viewModelScope) {
             when (it) {
                 is Success -> {
                     status.value = it.value

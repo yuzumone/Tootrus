@@ -14,8 +14,13 @@ import android.os.Build
 import android.os.IBinder
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.GlobalScope
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
@@ -28,19 +33,25 @@ import okhttp3.RequestBody
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.io.Serializable
 import javax.inject.Inject
+import javax.inject.Scope
+import kotlin.math.floor
 
 class PostStatusService : Service() {
 
-    @Inject lateinit var postStatusUseCase: PostStatusUseCase
-    @Inject lateinit var postMediaUseCase: PostMediaUseCase
+    @Inject
+    lateinit var postStatusUseCase: PostStatusUseCase
+
+    @Inject
+    lateinit var postMediaUseCase: PostMediaUseCase
+
+    private lateinit var lifecycleScope: LifecycleCoroutineScope
 
     companion object {
         private const val ARG_POST_STATUS_PARAMS = "post_status_params"
         fun createIntent(context: Context, params: Params): Intent {
             return Intent(context, PostStatusService::class.java).apply {
-                putExtra(ARG_POST_STATUS_PARAMS, params)
+                putExtra(ARG_POST_STATUS_PARAMS, Gson().toJson(params))
             }
         }
     }
@@ -55,26 +66,36 @@ class PostStatusService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        lifecycleScope = ProcessLifecycleOwner.get().lifecycleScope
         val files = ArrayList<MultipartBody.Part>()
-        intent?.getSerializableExtra(ARG_POST_STATUS_PARAMS)?.let {
-            val params = it as Params
+        intent?.getStringExtra(ARG_POST_STATUS_PARAMS)?.let {
+            val params = Gson().fromJson(it, Params::class.java)
             params.uris?.forEach { uri ->
                 prepareUploadFile(Uri.parse(uri))?.let { file ->
-                    files.add(MultipartBody.Part.createFormData("file", file.name,
-                            RequestBody.create(MediaType.parse("image/png"), file)))
+                    files.add(
+                        MultipartBody.Part.createFormData(
+                            "file", file.name,
+                            RequestBody.create(MediaType.parse("image/png"), file)
+                        )
+                    )
                 }
             }
             if (files.size == 0) {
-                val status = PostStatusParams(params.status, params.inReplyToId, null,
-                        params.sensitive, params.spoilerText, params.visibility)
+                val status = PostStatusParams(
+                    params.status, params.inReplyToId, null,
+                    params.sensitive, params.spoilerText, params.visibility
+                )
                 postStatus(status)
             } else {
-                postMediaUseCase(files) { attachments ->
-                    when(attachments) {
+                ProcessLifecycleOwner.get().lifecycle
+                postMediaUseCase(files, lifecycleScope) { attachments ->
+                    when (attachments) {
                         is Success -> {
                             val mediaIds = attachments.value.map { attachment -> attachment.id }
-                            val status = PostStatusParams(params.status, params.inReplyToId, mediaIds,
-                                    params.sensitive, params.spoilerText, params.visibility)
+                            val status = PostStatusParams(
+                                params.status, params.inReplyToId, mediaIds,
+                                params.sensitive, params.spoilerText, params.visibility
+                            )
                             postStatus(status)
                             stopSelf()
                         }
@@ -91,7 +112,7 @@ class PostStatusService : Service() {
     }
 
     private fun postStatus(params: PostStatusParams) {
-        postStatusUseCase(params) { result ->
+        postStatusUseCase(params, lifecycleScope) { result ->
             when (result) {
                 is Success -> {
                     showToast(R.string.toot)
@@ -118,11 +139,11 @@ class PostStatusService : Service() {
             manager.createNotificationChannel(channel)
         }
         val notificationBuilder = NotificationCompat.Builder(this, id)
-                .setSmallIcon(android.R.drawable.ic_menu_send)
-                .setContentText(getString(R.string.toot_now))
-                .setAutoCancel(true)
-                .setSound(null)
-                .setVibrate(null)
+            .setSmallIcon(android.R.drawable.ic_menu_send)
+            .setContentText(getString(R.string.toot_now))
+            .setAutoCancel(true)
+            .setSound(null)
+            .setVibrate(null)
         return notificationBuilder.build()
     }
 
@@ -152,14 +173,14 @@ class PostStatusService : Service() {
                 }.compress(Bitmap.CompressFormat.JPEG, 100, fos)
             } else {
                 ImageDecoder.decodeBitmap(source)
-                        .compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                    .compress(Bitmap.CompressFormat.JPEG, 100, fos)
             }
             fos.flush()
         } else {
             val imageScaleWidth = options.outWidth / requestSize
             val imageScaleHeight = options.outHeight / requestSize
             if (imageScaleWidth > 2 && imageScaleHeight > 2) {
-                val imageScale = Math.floor(requestSize.toDouble())
+                val imageScale = floor(requestSize.toDouble())
                 val scaleOption = BitmapFactory.Options().also {
                     var i = 2
                     while (i <= imageScale) {
@@ -167,11 +188,13 @@ class PostStatusService : Service() {
                         i *= 2
                     }
                 }
-                BitmapFactory.decodeStream(BufferedInputStream(input), null,
-                        scaleOption)?.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                BitmapFactory.decodeStream(
+                    BufferedInputStream(input), null,
+                    scaleOption
+                )?.compress(Bitmap.CompressFormat.JPEG, 100, fos)
             } else {
                 BitmapFactory.decodeStream(BufferedInputStream(input))
-                        .compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                    .compress(Bitmap.CompressFormat.JPEG, 100, fos)
             }
             fos.flush()
         }
@@ -181,11 +204,11 @@ class PostStatusService : Service() {
     }
 
     data class Params(
-            val status: String,
-            val inReplyToId: Long?,
-            val uris: List<String>?,
-            val sensitive: Boolean,
-            val spoilerText: String?,
-            val visibility: Status.Visibility
-    ) : Serializable
+        val status: String,
+        val inReplyToId: Long?,
+        val uris: List<String>?,
+        val sensitive: Boolean,
+        val spoilerText: String?,
+        val visibility: Status.Visibility
+    )
 }
