@@ -3,6 +3,7 @@ package net.yuzumone.tootrus.ui.conversation
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
@@ -11,7 +12,7 @@ import net.yuzumone.tootrus.ui.common.OnStatusAdapterSingleClickListener
 import javax.inject.Inject
 
 class ConversationViewModel @Inject constructor(
-        private val getConversationUseCase: GetConversationUseCase
+    private val getConversationUseCase: GetConversationUseCase
 ) : ViewModel(), OnStatusAdapterSingleClickListener {
 
     val conversations = MutableLiveData<List<Status>>()
@@ -20,7 +21,7 @@ class ConversationViewModel @Inject constructor(
     val eventOpenStatus = MutableLiveData<Status>()
 
     fun getConversations(status: Status) {
-        getConversationUseCase(status) {
+        getConversationUseCase(status, viewModelScope) {
             when (it) {
                 is Success -> conversations.value = it.value
                 is Failure -> error.value = it.reason

@@ -1,9 +1,6 @@
 package net.yuzumone.tootrus.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
+import androidx.lifecycle.*
 import com.sys1yagi.mastodon4j.api.entity.Account
 import dagger.Lazy
 import net.yuzumone.tootrus.domain.Failure
@@ -14,18 +11,19 @@ import net.yuzumone.tootrus.domain.prefs.StoreUserIdPrefUseCase
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-        private val storeUserIdPrefUseCase: StoreUserIdPrefUseCase,
-        getAccessTokenUseCase: GetAccessTokenPrefUseCase
+    private val storeUserIdPrefUseCase: StoreUserIdPrefUseCase,
+    getAccessTokenUseCase: GetAccessTokenPrefUseCase
 ) : ViewModel() {
 
     private val accessToken = MutableLiveData<String>()
     val setFragment: LiveData<SetFragment>
-    val account =  MutableLiveData<Account>()
+    val account = MutableLiveData<Account>()
     val eventTransactionToTop = MutableLiveData<Unit>()
-    @Inject lateinit var getLazyVerifyCredentialUseCase: Lazy<GetVerifyCredentialsUseCase>
+    @Inject
+    lateinit var getLazyVerifyCredentialUseCase: Lazy<GetVerifyCredentialsUseCase>
 
     init {
-        getAccessTokenUseCase(Unit) {
+        getAccessTokenUseCase(Unit, viewModelScope) {
             when (it) {
                 is Success -> accessToken.value = it.value
                 is Failure -> TODO()
@@ -42,10 +40,10 @@ class MainViewModel @Inject constructor(
 
     fun getCredentials() {
         val getVerifyCredentialsUseCase = getLazyVerifyCredentialUseCase.get()
-        getVerifyCredentialsUseCase(Unit) {
+        getVerifyCredentialsUseCase(Unit, viewModelScope) {
             when (it) {
                 is Success -> {
-                    storeUserIdPrefUseCase(it.value.id)
+                    storeUserIdPrefUseCase(it.value.id, viewModelScope)
                     account.value = it.value
                 }
                 is Failure -> TODO()

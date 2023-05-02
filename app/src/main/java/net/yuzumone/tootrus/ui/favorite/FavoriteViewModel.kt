@@ -3,6 +3,7 @@ package net.yuzumone.tootrus.ui.favorite
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sys1yagi.mastodon4j.api.Range
 import com.sys1yagi.mastodon4j.api.entity.Status
 import net.yuzumone.tootrus.domain.Failure
@@ -12,7 +13,7 @@ import net.yuzumone.tootrus.ui.common.OnStatusAdapterSingleClickListener
 import javax.inject.Inject
 
 class FavoriteViewModel @Inject constructor(
-        getFavoriteUseCase: GetFavoritesUseCase
+    getFavoriteUseCase: GetFavoritesUseCase
 ) : ViewModel(), OnStatusAdapterSingleClickListener {
 
     val favorites = MutableLiveData<List<Status>>()
@@ -20,7 +21,7 @@ class FavoriteViewModel @Inject constructor(
     val eventOpenStatus = MutableLiveData<Status>()
 
     init {
-        getFavoriteUseCase(Range()) {
+        getFavoriteUseCase(Range(), viewModelScope) {
             when (it) {
                 is Success -> favorites.value = it.value
                 is Failure -> error.value = it.reason

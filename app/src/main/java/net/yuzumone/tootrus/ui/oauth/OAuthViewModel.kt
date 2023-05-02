@@ -2,6 +2,7 @@ package net.yuzumone.tootrus.ui.oauth
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.oauth.GetAccessTokenUseCase
@@ -12,9 +13,9 @@ import net.yuzumone.tootrus.vo.OAuthParameter
 import javax.inject.Inject
 
 class OAuthViewModel @Inject constructor(
-        private val getOAuthParameterUseCase: GetOAuthParameterUseCase,
-        private val getAccessTokenUseCase: GetAccessTokenUseCase,
-        private val storeInstanceNameAndTokenUseCase: StoreInstanceNameAndTokenUseCase
+    private val getOAuthParameterUseCase: GetOAuthParameterUseCase,
+    private val getAccessTokenUseCase: GetAccessTokenUseCase,
+    private val storeInstanceNameAndTokenUseCase: StoreInstanceNameAndTokenUseCase
 ) : ViewModel() {
 
     val oauthParameter = MutableLiveData<OAuthParameter>()
@@ -24,7 +25,7 @@ class OAuthViewModel @Inject constructor(
 
     fun getOAuthParameter(instanceName: String?) {
         val name = if (instanceName.isNullOrBlank()) "social.mikutter.hachune.net" else instanceName
-        getOAuthParameterUseCase(name) {
+        getOAuthParameterUseCase(name, viewModelScope) {
             when (it) {
                 is Success -> oauthParameter.value = it.value
                 is Failure -> oauthParameterError.value = it.reason
@@ -33,13 +34,15 @@ class OAuthViewModel @Inject constructor(
     }
 
     fun getAccessToken(code: String?) {
-        val params = Params(oauthParameter.value!!.instanceName, oauthParameter.value!!.clientId,
-                oauthParameter.value!!.clientSecret, code)
-        getAccessTokenUseCase(params) { token ->
+        val params = Params(
+            oauthParameter.value!!.instanceName, oauthParameter.value!!.clientId,
+            oauthParameter.value!!.clientSecret, code
+        )
+        getAccessTokenUseCase(params, viewModelScope) { token ->
             when (token) {
                 is Success -> {
                     val data = Pair(oauthParameter.value!!.instanceName, token.value.accessToken)
-                    storeInstanceNameAndTokenUseCase(data) {
+                    storeInstanceNameAndTokenUseCase(data, viewModelScope) {
                         when (it) {
                             is Success -> {
                                 transactionMainView.value = true

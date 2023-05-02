@@ -23,7 +23,12 @@ class MenuDialogFragment : DialogFragment() {
     private lateinit var binding: FragmentMenuDialogBinding
     private lateinit var menuViewModel: MenuViewModel
     private lateinit var adapter: MenuBindingAdapter
-    private val status by lazy { Gson().fromJson(requireArguments().getString(ARG_STATUS), Status::class.java) }
+    private val status by lazy {
+        Gson().fromJson(
+            requireArguments().getString(ARG_STATUS),
+            Status::class.java
+        )
+    }
 
     companion object {
         private const val ARG_STATUS = "status"
@@ -36,8 +41,10 @@ class MenuDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         menuViewModel = ViewModelProvider(this)[MenuViewModel::class.java]
         adapter = MenuBindingAdapter(menuViewModel)
         binding = FragmentMenuDialogBinding.inflate(inflater, container, false).also {
@@ -64,7 +71,7 @@ class MenuDialogFragment : DialogFragment() {
                 }
                 Menu.Action.Conversation.value -> {
                     val dialog = ConversationDialogFragment.newReplyInstance(it.status!!)
-                    dialog.show(requireFragmentManager(), "conversation")
+                    dialog.show(parentFragmentManager, "conversation")
                 }
                 Menu.Action.Share.value -> {
                     requireActivity().run {
@@ -77,7 +84,12 @@ class MenuDialogFragment : DialogFragment() {
                 }
                 Menu.Action.COPY_LINK.value -> {
                     requireActivity().getSystemService(CLIPBOARD_SERVICE).let { m ->
-                        (m as ClipboardManager).setPrimaryClip(ClipData.newPlainText("", it.statusUrl))
+                        (m as ClipboardManager).setPrimaryClip(
+                            ClipData.newPlainText(
+                                "",
+                                it.statusUrl
+                            )
+                        )
                     }
                 }
             }

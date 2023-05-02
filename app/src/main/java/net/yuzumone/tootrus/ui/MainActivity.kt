@@ -25,15 +25,20 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private lateinit var binding: ActivityMainBinding
     private lateinit var headerBinding: NavigationHeaderBinding
     private lateinit var mainViewModel: MainViewModel
-    @Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        headerBinding = DataBindingUtil.inflate(layoutInflater, R.layout.navigation_header,
-                binding.navigation, false)
+        headerBinding = DataBindingUtil.inflate(
+            layoutInflater, R.layout.navigation_header, binding.navigation, false
+        )
         binding.navigation.addHeaderView(headerBinding.root)
         setSupportActionBar(binding.toolbar)
         mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
@@ -49,23 +54,31 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         mainViewModel.setFragment.observe(this, Observer {
             when (it) {
                 SetFragment.OAUTH -> {
-                    supportFragmentManager.beginTransaction()
-                            .replace(R.id.content, OAuthFragment()).commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.content, OAuthFragment())
+                        .commit()
                 }
                 SetFragment.TOP -> {
                     val topFragment = TopFragment()
-                    supportFragmentManager.beginTransaction()
-                            .replace(R.id.content, topFragment).commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.content, topFragment)
+                        .commit()
                     initializeDrawer(topFragment)
                     mainViewModel.getCredentials()
+                }
+                else -> {
+                    // NOPE
                 }
             }
         })
     }
 
     private fun initializeDrawer(listener: NavigationView.OnNavigationItemSelectedListener) {
-        val drawerToggle = ActionBarDrawerToggle(this, binding.drawer, binding.toolbar,
-                R.string.open_drawer_content, R.string.close_drawer_content)
+        val drawerToggle = ActionBarDrawerToggle(
+            this,
+            binding.drawer,
+            binding.toolbar,
+            R.string.open_drawer_content,
+            R.string.close_drawer_content
+        )
         binding.drawer.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
         binding.navigation.inflateMenu(R.menu.navigation)

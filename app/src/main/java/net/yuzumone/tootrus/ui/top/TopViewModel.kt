@@ -2,6 +2,7 @@ package net.yuzumone.tootrus.ui.top
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sys1yagi.mastodon4j.api.Handler
 import com.sys1yagi.mastodon4j.api.Range
 import com.sys1yagi.mastodon4j.api.entity.Account
@@ -27,16 +28,17 @@ import net.yuzumone.tootrus.util.replaceStatus
 import javax.inject.Inject
 
 class TopViewModel @Inject constructor(
-        private val startUserStreamUseCase: StartUserStreamUseCase,
-        private val shutdownUserStreamUseCase: ShutdownUserStreamUseCase,
-        private val postFavoriteUseCase: PostFavoriteUseCase,
-        private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
-        private val postReblogUseCase: PostReblogUseCase,
-        private val getLocalPublicUseCase: GetLocalPublicUseCase,
-        private val getVerifyCredentialsUseCase: GetVerifyCredentialsUseCase,
-        getTimelineUseCase: GetTimelineUseCase,
-        getNotificationsUseCase: GetNotificationsUseCase
-): ViewModel(), OnStatusAdapterClickListener, OnNotificationAdapterClickListener, OnStatusAdapterLongClickListener {
+    private val startUserStreamUseCase: StartUserStreamUseCase,
+    private val shutdownUserStreamUseCase: ShutdownUserStreamUseCase,
+    private val postFavoriteUseCase: PostFavoriteUseCase,
+    private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
+    private val postReblogUseCase: PostReblogUseCase,
+    private val getLocalPublicUseCase: GetLocalPublicUseCase,
+    private val getVerifyCredentialsUseCase: GetVerifyCredentialsUseCase,
+    getTimelineUseCase: GetTimelineUseCase,
+    getNotificationsUseCase: GetNotificationsUseCase
+) : ViewModel(), OnStatusAdapterClickListener, OnNotificationAdapterClickListener,
+    OnStatusAdapterLongClickListener {
 
     val homeStatuses = MutableLiveData<List<Status>>()
     val localStatuses = MutableLiveData<List<Status>>()
@@ -58,19 +60,19 @@ class TopViewModel @Inject constructor(
 
     init {
         val range = Range()
-        getTimelineUseCase(range) {
+        getTimelineUseCase(range, viewModelScope) {
             when (it) {
                 is Success -> homeStatuses.value = it.value
                 is Failure -> homeError.value = it.reason
             }
         }
-        getNotificationsUseCase(range) {
+        getNotificationsUseCase(range, viewModelScope) {
             when (it) {
                 is Success -> notifications.value = it.value
                 is Failure -> notificationError.value = it.reason
             }
         }
-        getLocalPublicUseCase(range) {
+        getLocalPublicUseCase(range, viewModelScope) {
             when (it) {
                 is Success -> localStatuses.value = it.value
                 is Failure -> localError.value = it.reason
@@ -92,11 +94,11 @@ class TopViewModel @Inject constructor(
 
             }
         }
-        startUserStreamUseCase(handler)
+        startUserStreamUseCase(handler, viewModelScope)
     }
 
     fun shutdownUserStream() {
-        shutdownUserStreamUseCase(Unit)
+        shutdownUserStreamUseCase(Unit, viewModelScope)
     }
 
     fun updateLocalTimeline() {
@@ -105,7 +107,7 @@ class TopViewModel @Inject constructor(
             localError.value = NullPointerException()
         } else {
             val range = Range(sinceId = id)
-            getLocalPublicUseCase(range) {
+            getLocalPublicUseCase(range, viewModelScope) {
                 when (it) {
                     is Success -> localStatuses.insertValues(it.value)
                     is Failure -> localError.value = it.reason
@@ -115,7 +117,7 @@ class TopViewModel @Inject constructor(
     }
 
     fun acitonOpenUserProfile() {
-        getVerifyCredentialsUseCase(Unit) {
+        getVerifyCredentialsUseCase(Unit, viewModelScope) {
             when (it) {
                 is Success -> {
                     openUserAccountEvent.value = it.value
@@ -126,7 +128,7 @@ class TopViewModel @Inject constructor(
     }
 
     private fun postFavorite(target: Status) {
-        postFavoriteUseCase(target.id) {
+        postFavoriteUseCase(target.id, viewModelScope) {
             when (it) {
                 is Success -> {
                     homeStatuses.replaceStatus(target, it.value)
@@ -139,7 +141,7 @@ class TopViewModel @Inject constructor(
     }
 
     private fun postUnfavorite(target: Status) {
-        postUnfavoriteUseCase(target.id) {
+        postUnfavoriteUseCase(target.id, viewModelScope) {
             when (it) {
                 is Success -> {
                     homeStatuses.replaceStatus(target, it.value)
@@ -152,7 +154,7 @@ class TopViewModel @Inject constructor(
     }
 
     private fun postReblog(target: Status) {
-        postReblogUseCase(target.id) {
+        postReblogUseCase(target.id, viewModelScope) {
             when (it) {
                 is Success -> {
                     homeStatuses.replaceStatus(target, it.value)
@@ -196,7 +198,7 @@ class TopViewModel @Inject constructor(
                 openAccountEvent.value = notification.account
             }
             Notification.Type.Favourite.value, Notification.Type.Mention.value,
-                Notification.Type.Reblog.value -> {
+            Notification.Type.Reblog.value -> {
                 openStatusEvent.value = notification.status
             }
         }
