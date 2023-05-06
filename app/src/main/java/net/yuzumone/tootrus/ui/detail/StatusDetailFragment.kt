@@ -22,7 +22,8 @@ class StatusDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentStatusDetailBinding
     private lateinit var statusDetailViewModel: StatusDetailViewModel
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val status by lazy {
         Gson().fromJson(requireArguments().getString(ARG_STATUS), Status::class.java)
     }
@@ -43,9 +44,12 @@ class StatusDetailFragment : Fragment() {
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        statusDetailViewModel = ViewModelProvider(this, viewModelFactory)[StatusDetailViewModel::class.java]
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        statusDetailViewModel =
+            ViewModelProvider(this, viewModelFactory)[StatusDetailViewModel::class.java]
         binding = FragmentStatusDetailBinding.inflate(inflater, container, false).also {
             it.listener = statusDetailViewModel
             it.status = if (status.reblog == null) status else status.reblog

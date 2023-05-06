@@ -6,7 +6,7 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class GetConversationUseCase @Inject constructor(
-        private val repository: StatusRepository
+    private val repository: StatusRepository
 ) : UseCase<Status, List<Status>>() {
     override suspend fun run(params: Status): List<Status> {
         val statuses = ArrayList<Status>()

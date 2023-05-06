@@ -34,6 +34,7 @@ class ProfileFragment : Fragment() {
     private val relationship by lazy {
         Gson().fromJson(requireArguments().getString(ARG_RELATIONSHIP), Relationship::class.java)
     }
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 

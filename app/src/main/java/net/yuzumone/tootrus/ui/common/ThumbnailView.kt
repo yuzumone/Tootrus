@@ -45,7 +45,7 @@ class ThumbnailView : LinearLayout {
 
     private fun bindView(attachment: Attachment, isBlurImage: Boolean): View {
         val binding = DataBindingUtil.inflate<ViewThumbnailBinding>(
-                LayoutInflater.from(context), R.layout.view_thumbnail, this, false
+            LayoutInflater.from(context), R.layout.view_thumbnail, this, false
         ).also {
             it.attachment = attachment
             it.isBlurImage = isBlurImage

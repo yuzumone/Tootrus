@@ -45,7 +45,7 @@ class PostImageView : LinearLayout {
 
     private fun bindView(uri: String): View {
         val binding = DataBindingUtil.inflate<ViewPostImageBinding>(
-                LayoutInflater.from(context), R.layout.view_post_image, this, false
+            LayoutInflater.from(context), R.layout.view_post_image, this, false
         ).also {
             it.uri = uri
         }

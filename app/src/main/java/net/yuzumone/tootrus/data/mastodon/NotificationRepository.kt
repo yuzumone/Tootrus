@@ -12,7 +12,7 @@ interface NotificationRepository {
 }
 
 class DefaultNotificationRepository @Inject constructor(
-        @Named("client") private val client: MastodonClient
+    @Named("client") private val client: MastodonClient
 ) : NotificationRepository {
     override fun getNotifications(range: Range): List<Notification> {
         val result = Notifications(client).getNotifications(range).execute()

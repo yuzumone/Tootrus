@@ -5,7 +5,7 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class ShutdownUserStreamUseCase @Inject constructor(
-        private val repository: StreamRepository
+    private val repository: StreamRepository
 ) : UseCase<Unit, Unit>() {
     override suspend fun run(params: Unit) = repository.shutdown()
 }

@@ -13,7 +13,7 @@ interface StreamRepository {
 }
 
 class DefaultStreamRepository @Inject constructor(
-        @Named("streaming_client") private val client: MastodonClient
+    @Named("streaming_client") private val client: MastodonClient
 ) : StreamRepository {
 
     private lateinit var shutdownable: Shutdownable
@@ -24,7 +24,6 @@ class DefaultStreamRepository @Inject constructor(
     }
 
     override fun shutdown() {
-        shutdownable?.run { shutdown() }
+        shutdownable.run { shutdown() }
     }
-
 }

@@ -8,11 +8,11 @@ import javax.inject.Inject
 import javax.inject.Named
 
 interface PublicRepository {
-    fun getLocalPublic(range: Range):List<Status>
+    fun getLocalPublic(range: Range): List<Status>
 }
 
 class DefaultPublicRepository @Inject constructor(
-        @Named("client") private val client: MastodonClient
+    @Named("client") private val client: MastodonClient
 ) : PublicRepository {
     override fun getLocalPublic(range: Range): List<Status> {
         val result = Public(client).getLocalPublic(range).execute()

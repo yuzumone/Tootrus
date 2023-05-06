@@ -24,89 +24,93 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun providesOkHttpClientBuilder(): OkHttpClient.Builder =
-            OkHttpClient.Builder()
+        OkHttpClient.Builder()
 
     @Singleton
     @Provides
     fun providesGson(): Gson =
-            Gson()
+        Gson()
 
     @Singleton
     @Provides
     fun providesPreferenceStorage(context: Context): PreferenceStorage =
-            SharedPreferenceStorage(context)
+        SharedPreferenceStorage(context)
 
     @Singleton
     @Provides
     @Named("client")
     fun providesMastodonClient(
-            okHttpClientBuilder: OkHttpClient.Builder,
-            gson: Gson,
-            preferenceStorage: PreferenceStorage): MastodonClient {
+        okHttpClientBuilder: OkHttpClient.Builder,
+        gson: Gson,
+        preferenceStorage: PreferenceStorage
+    ): MastodonClient {
         return MastodonClient.Builder(
-                instanceName = preferenceStorage.instanceName ?: "",
-                okHttpClientBuilder = okHttpClientBuilder,
-                gson = gson)
-                .accessToken(preferenceStorage.accessToken ?: "").build()
+            instanceName = preferenceStorage.instanceName ?: "",
+            okHttpClientBuilder = okHttpClientBuilder,
+            gson = gson
+        )
+            .accessToken(preferenceStorage.accessToken ?: "").build()
     }
 
     @Singleton
     @Provides
     @Named("streaming_client")
     fun providesMastodonStreamingClient(
-            okHttpClientBuilder: OkHttpClient.Builder,
-            gson: Gson,
-            preferenceStorage: PreferenceStorage): MastodonClient {
+        okHttpClientBuilder: OkHttpClient.Builder,
+        gson: Gson,
+        preferenceStorage: PreferenceStorage
+    ): MastodonClient {
         return MastodonClient.Builder(
-                instanceName = preferenceStorage.instanceName ?: "",
-                okHttpClientBuilder = okHttpClientBuilder,
-                gson = gson)
-                .accessToken(preferenceStorage.accessToken ?: "")
-                .useStreamingApi().build()
+            instanceName = preferenceStorage.instanceName ?: "",
+            okHttpClientBuilder = okHttpClientBuilder,
+            gson = gson
+        )
+            .accessToken(preferenceStorage.accessToken ?: "")
+            .useStreamingApi().build()
     }
 
     @Singleton
     @Provides
     fun providesOAuthRepository(repository: DefaultOAuthRepository): OAuthRepository =
-            repository
+        repository
 
     @Singleton
     @Provides
     fun providesTimelineRepository(repository: DefaultTimelineRepository): TimelineRepository =
-            repository
+        repository
 
     @Singleton
     @Provides
     fun providesStatusRepository(repository: DefaultStatusRepository): StatusRepository =
-            repository
+        repository
 
     @Singleton
     @Provides
     fun providesStreamRepository(repository: DefaultStreamRepository): StreamRepository =
-            repository
+        repository
 
     @Singleton
     @Provides
     fun providesNotificationRepository(repository: DefaultNotificationRepository): NotificationRepository =
-            repository
+        repository
 
     @Singleton
     @Provides
     fun providesPublicRepository(repository: DefaultPublicRepository): PublicRepository =
-            repository
+        repository
 
     @Singleton
     @Provides
     fun providesAccountRepository(repository: DefaultAccountRepository): AccountRepository =
-            repository
+        repository
 
     @Singleton
     @Provides
     fun providesMediaRepository(repository: DefaultMediaRepository): MediaRepository =
-            repository
+        repository
 
     @Singleton
     @Provides
     fun providesFavoriteRepository(repository: DefaultFavoriteRepository): FavoriteRepository =
-            repository
+        repository
 }

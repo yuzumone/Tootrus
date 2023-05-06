@@ -6,7 +6,7 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class GetAccountUseCase @Inject constructor(
-        private val repository: AccountRepository
+    private val repository: AccountRepository
 ) : UseCase<Long, Account>() {
     override suspend fun run(params: Long) = repository.getAccount(params)
 }

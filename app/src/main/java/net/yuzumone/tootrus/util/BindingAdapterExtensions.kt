@@ -7,8 +7,8 @@ import androidx.databinding.BindingAdapter
 import com.sys1yagi.mastodon4j.api.entity.Status
 
 @BindingAdapter("navigation_click")
-fun Toolbar.onNavigationClick(clickListener: View.OnClickListener)
-        = setNavigationOnClickListener(clickListener)
+fun Toolbar.onNavigationClick(clickListener: View.OnClickListener) =
+    setNavigationOnClickListener(clickListener)
 
 @BindingAdapter("initialize_reply")
 fun EditText.setReplyText(status: Status?) {

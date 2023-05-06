@@ -12,8 +12,8 @@ interface FavoriteRepository {
 }
 
 class DefaultFavoriteRepository @Inject constructor(
-        @Named("client") private val client: MastodonClient
-): FavoriteRepository {
+    @Named("client") private val client: MastodonClient
+) : FavoriteRepository {
     override fun getFavorites(range: Range): List<Status> =
-            Favourites(client).getFavourites(range).execute().part
+        Favourites(client).getFavourites(range).execute().part
 }

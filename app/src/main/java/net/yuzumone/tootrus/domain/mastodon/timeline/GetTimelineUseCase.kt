@@ -7,8 +7,8 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class GetTimelineUseCase @Inject constructor(
-        private val repository: TimelineRepository
+    private val repository: TimelineRepository
 ) : UseCase<Range, List<Status>>() {
     override suspend fun run(params: Range) =
-            repository.getTimeline(params)
+        repository.getTimeline(params)
 }

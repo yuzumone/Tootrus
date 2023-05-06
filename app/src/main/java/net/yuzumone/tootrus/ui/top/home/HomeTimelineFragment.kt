@@ -24,16 +24,20 @@ class HomeTimelineFragment : Fragment() {
     private lateinit var binding: FragmentHomeTimelineBinding
     private lateinit var topViewModel: TopViewModel
     private lateinit var adapter: StatusBindingAdapter
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        topViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[TopViewModel::class.java]
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        topViewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[TopViewModel::class.java]
         adapter = StatusBindingAdapter(topViewModel, topViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)

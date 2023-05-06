@@ -19,6 +19,7 @@ class MainViewModel @Inject constructor(
     val setFragment: LiveData<SetFragment>
     val account = MutableLiveData<Account>()
     val eventTransactionToTop = MutableLiveData<Unit>()
+
     @Inject
     lateinit var getLazyVerifyCredentialUseCase: Lazy<GetVerifyCredentialsUseCase>
 

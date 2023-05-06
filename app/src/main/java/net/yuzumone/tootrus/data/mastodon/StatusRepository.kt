@@ -7,13 +7,15 @@ import javax.inject.Inject
 import javax.inject.Named
 
 interface StatusRepository {
-    fun postStatus(status: String,
-                   inReplyToId: Long?,
-                   mediaIds: List<Long>?,
-                   sensitive: Boolean,
-                   spoilerText: String?,
-                   visibility: Status.Visibility
+    fun postStatus(
+        status: String,
+        inReplyToId: Long?,
+        mediaIds: List<Long>?,
+        sensitive: Boolean,
+        spoilerText: String?,
+        visibility: Status.Visibility
     ): Status
+
     fun getStatus(id: Long): Status
     fun postFavorite(id: Long): Status
     fun postUnfavorite(id: Long): Status
@@ -21,21 +23,23 @@ interface StatusRepository {
 }
 
 class DefaultStatusRepository @Inject constructor(
-        @Named("client") private val client: MastodonClient
+    @Named("client") private val client: MastodonClient
 ) : StatusRepository {
-    override fun postStatus(status: String,
-                            inReplyToId: Long?,
-                            mediaIds: List<Long>?,
-                            sensitive: Boolean,
-                            spoilerText: String?,
-                            visibility: Status.Visibility): Status {
+    override fun postStatus(
+        status: String,
+        inReplyToId: Long?,
+        mediaIds: List<Long>?,
+        sensitive: Boolean,
+        spoilerText: String?,
+        visibility: Status.Visibility
+    ): Status {
         return Statuses(client).postStatus(
-                status = status,
-                inReplyToId = inReplyToId,
-                mediaIds = mediaIds,
-                sensitive = sensitive,
-                spoilerText = spoilerText,
-                visibility = visibility
+            status = status,
+            inReplyToId = inReplyToId,
+            mediaIds = mediaIds,
+            sensitive = sensitive,
+            spoilerText = spoilerText,
+            visibility = visibility
         ).execute()
     }
 

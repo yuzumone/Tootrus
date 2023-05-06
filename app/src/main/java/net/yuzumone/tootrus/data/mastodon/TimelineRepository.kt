@@ -12,8 +12,8 @@ interface TimelineRepository {
 }
 
 class DefaultTimelineRepository @Inject constructor(
-        @Named("client") private val client: MastodonClient
-): TimelineRepository {
+    @Named("client") private val client: MastodonClient
+) : TimelineRepository {
     override fun getTimeline(range: Range): List<Status> {
         val result = Timelines(client).getHome().execute()
         return result.part

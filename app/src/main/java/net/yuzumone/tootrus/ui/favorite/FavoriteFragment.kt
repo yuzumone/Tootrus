@@ -24,15 +24,21 @@ class FavoriteFragment : Fragment() {
     private lateinit var binding: FragmentFavoriteBinding
     private lateinit var viewModel: FavoriteViewModel
     private lateinit var adapter: StatusBindingAdapter
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[FavoriteViewModel::class.java]
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[FavoriteViewModel::class.java]
         adapter = StatusBindingAdapter(viewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
