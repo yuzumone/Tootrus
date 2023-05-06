@@ -13,14 +13,16 @@ import javax.inject.Inject
 
 class App : Application(), HasActivityInjector, HasServiceInjector {
 
-    @Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
-    @Inject lateinit var dispatchingServiceInjector: DispatchingAndroidInjector<Service>
+    @Inject
+    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
+    @Inject
+    lateinit var dispatchingServiceInjector: DispatchingAndroidInjector<Service>
 
     override fun onCreate() {
         super.onCreate()
         DaggerApplicationComponent.builder()
-                .create(this)
-                .inject(this)
+            .create(this)
+            .inject(this)
         Fresco.initialize(this)
     }
 

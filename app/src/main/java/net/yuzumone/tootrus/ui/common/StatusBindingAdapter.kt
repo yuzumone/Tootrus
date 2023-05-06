@@ -12,24 +12,27 @@ class StatusBindingAdapter() : BindingRecyclerAdapter<Status, ItemStatusBinding>
 
     private var expandListener: OnStatusAdapterClickListener? = null
     private var singleListener: OnStatusAdapterSingleClickListener? = null
-    private var longClickListener: OnStatusAdapterLongClickListener? =null
+    private var longClickListener: OnStatusAdapterLongClickListener? = null
 
-    constructor(listener: OnStatusAdapterClickListener) : this () {
+    constructor(listener: OnStatusAdapterClickListener) : this() {
         this.expandListener = listener
     }
 
-    constructor(listener: OnStatusAdapterSingleClickListener) : this () {
+    constructor(listener: OnStatusAdapterSingleClickListener) : this() {
         this.singleListener = listener
     }
 
-    constructor(listener: OnStatusAdapterClickListener, longClickListener: OnStatusAdapterLongClickListener) : this() {
+    constructor(
+        listener: OnStatusAdapterClickListener,
+        longClickListener: OnStatusAdapterLongClickListener
+    ) : this() {
         this.expandListener = listener
         this.longClickListener = longClickListener
     }
 
     override fun createBinding(parent: ViewGroup): ItemStatusBinding {
         return ItemStatusBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
+            .inflate(LayoutInflater.from(parent.context), parent, false)
     }
 
     override fun bind(binding: ItemStatusBinding, item: Status) {

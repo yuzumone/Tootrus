@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import net.yuzumone.tootrus.databinding.ItemMenuBinding
 import net.yuzumone.tootrus.ui.common.BindingRecyclerAdapter
 
-class MenuBindingAdapter(val listener: OnMenuClickListener): BindingRecyclerAdapter<Menu, ItemMenuBinding>() {
+class MenuBindingAdapter(val listener: OnMenuClickListener) :
+    BindingRecyclerAdapter<Menu, ItemMenuBinding>() {
     override fun createBinding(parent: ViewGroup): ItemMenuBinding {
         return ItemMenuBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     }

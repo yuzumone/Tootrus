@@ -13,11 +13,14 @@ interface AccountRepository {
     fun getAccount(id: Long): Account
     fun getVerifyCredentials(): Account
     fun getRelationShips(ids: List<Long>): List<Relationship>
-    fun getStatuses(id: Long,
-                    onlyMedia: Boolean,
-                    excludeReplies: Boolean,
-                    pinned: Boolean,
-                    range: Range): List<Status>
+    fun getStatuses(
+        id: Long,
+        onlyMedia: Boolean,
+        excludeReplies: Boolean,
+        pinned: Boolean,
+        range: Range
+    ): List<Status>
+
     fun getFollowers(id: Long, range: Range): List<Account>
     fun getFollowing(id: Long, range: Range): List<Account>
     fun postFollow(id: Long): Relationship
@@ -25,8 +28,8 @@ interface AccountRepository {
 }
 
 class DefaultAccountRepository @Inject constructor(
-        @Named("client") private val client: MastodonClient
-) : AccountRepository{
+    @Named("client") private val client: MastodonClient
+) : AccountRepository {
     override fun getAccount(id: Long): Account {
         return Accounts(client).getAccount(id).execute()
     }
@@ -39,12 +42,15 @@ class DefaultAccountRepository @Inject constructor(
         return Accounts(client).getRelationships(ids).execute()
     }
 
-    override fun getStatuses(id: Long,
-                             onlyMedia: Boolean,
-                             excludeReplies: Boolean,
-                             pinned: Boolean,
-                             range: Range): List<Status> {
-        return Accounts(client).getStatuses(id, onlyMedia, excludeReplies, pinned, range).execute().part
+    override fun getStatuses(
+        id: Long,
+        onlyMedia: Boolean,
+        excludeReplies: Boolean,
+        pinned: Boolean,
+        range: Range
+    ): List<Status> {
+        return Accounts(client).getStatuses(id, onlyMedia, excludeReplies, pinned, range)
+            .execute().part
     }
 
     override fun getFollowers(id: Long, range: Range): List<Account> {

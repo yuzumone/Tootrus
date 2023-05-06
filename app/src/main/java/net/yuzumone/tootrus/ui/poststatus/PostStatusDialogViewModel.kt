@@ -61,6 +61,13 @@ class PostStatusDialogViewModel : ViewModel() {
         val spoilerText = spoilerText.value ?: ""
         val visibility = statusVisibility.value ?: Status.Visibility.Public
         draft.value =
-                PostStatusService.Params(text, inReplyToId, imageUris, sensitive, spoilerText, visibility)
+            PostStatusService.Params(
+                text,
+                inReplyToId,
+                imageUris,
+                sensitive,
+                spoilerText,
+                visibility
+            )
     }
 }

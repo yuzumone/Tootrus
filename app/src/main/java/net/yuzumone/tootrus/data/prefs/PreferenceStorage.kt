@@ -30,9 +30,9 @@ class SharedPreferenceStorage @Inject constructor(context: Context) : Preference
 }
 
 class StringPreference(
-        private val pref: SharedPreferences,
-        private val key: String,
-        private val defaultValue: String?
+    private val pref: SharedPreferences,
+    private val key: String,
+    private val defaultValue: String?
 ) : ReadWriteProperty<Any, String?> {
 
     override fun getValue(thisRef: Any, property: KProperty<*>): String? {
@@ -45,9 +45,9 @@ class StringPreference(
 }
 
 class LongPreference(
-        private val pref: SharedPreferences,
-        private val key: String,
-        private val defaultValue: Long
+    private val pref: SharedPreferences,
+    private val key: String,
+    private val defaultValue: Long
 ) : ReadWriteProperty<Any, Long> {
 
     override fun getValue(thisRef: Any, property: KProperty<*>): Long {

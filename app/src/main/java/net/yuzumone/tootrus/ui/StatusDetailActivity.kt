@@ -25,8 +25,10 @@ class StatusDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private lateinit var binding: ActivityStatusDetailBinding
     private lateinit var statusDetailViewModel: StatusDetailViewModel
     private val id: Long by lazy { intent.getLongExtra(ARG_ID, 0L) }
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
 
     companion object {
         private const val ARG_ID = "id"
@@ -46,7 +48,8 @@ class StatusDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         binding.toolbar.setNavigationOnClickListener {
             finish()
         }
-        statusDetailViewModel = ViewModelProvider(this, viewModelFactory)[StatusDetailViewModel::class.java]
+        statusDetailViewModel =
+            ViewModelProvider(this, viewModelFactory)[StatusDetailViewModel::class.java]
         statusDetailViewModel.status.observe(this, Observer { status ->
             binding.progress.visibility = View.GONE
             if (status != null) {

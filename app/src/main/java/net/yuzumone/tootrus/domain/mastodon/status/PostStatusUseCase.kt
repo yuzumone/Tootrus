@@ -7,23 +7,24 @@ import java.io.Serializable
 import javax.inject.Inject
 
 class PostStatusUseCase @Inject constructor(
-        private val repository: StatusRepository
+    private val repository: StatusRepository
 ) : UseCase<PostStatusParams, Status>() {
     override suspend fun run(params: PostStatusParams) =
-            repository.postStatus(
-                    params.status,
-                    params.inReplyToId,
-                    params.mediaIds,
-                    params.sensitive,
-                    params.spoilerText,
-                    params.visibility)
+        repository.postStatus(
+            params.status,
+            params.inReplyToId,
+            params.mediaIds,
+            params.sensitive,
+            params.spoilerText,
+            params.visibility
+        )
 }
 
 data class PostStatusParams(
-        val status: String,
-        val inReplyToId: Long?,
-        val mediaIds: List<Long>?,
-        val sensitive: Boolean,
-        val spoilerText: String?,
-        val visibility: Status.Visibility
+    val status: String,
+    val inReplyToId: Long?,
+    val mediaIds: List<Long>?,
+    val sensitive: Boolean,
+    val spoilerText: String?,
+    val visibility: Status.Visibility
 ) : Serializable

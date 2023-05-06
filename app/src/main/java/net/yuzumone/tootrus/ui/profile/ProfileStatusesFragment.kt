@@ -22,16 +22,20 @@ class ProfileStatusesFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentProfileStatusesBinding
     private lateinit var adapter: StatusBindingAdapter
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        profileViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[ProfileViewModel::class.java]
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        profileViewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[ProfileViewModel::class.java]
         adapter = StatusBindingAdapter(profileViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)

@@ -27,7 +27,8 @@ class ConversationDialogFragment : DialogFragment() {
     private lateinit var binding: FragmentConversionBinding
     private lateinit var viewModel: ConversationViewModel
     private lateinit var adapter: StatusBindingAdapter
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val status by lazy {
         Gson().fromJson(arguments?.getString(ARG_STATUS), Status::class.java)
     }
@@ -48,8 +49,10 @@ class ConversationDialogFragment : DialogFragment() {
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         viewModel = ViewModelProvider(this, viewModelFactory)[ConversationViewModel::class.java]
         adapter = StatusBindingAdapter(viewModel)
         val layoutManager = LinearLayoutManager(activity)

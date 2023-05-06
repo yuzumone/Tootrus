@@ -6,7 +6,7 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class PostUnfavoriteUseCase @Inject constructor(
-        private val repository: StatusRepository
+    private val repository: StatusRepository
 ) : UseCase<Long, Status>() {
     override suspend fun run(params: Long) = repository.postUnfavorite(params)
 }

@@ -18,7 +18,8 @@ import javax.inject.Inject
 
 class OAuthFragment : Fragment() {
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var binding: FragmentOauthBinding
     private lateinit var oauthViewModel: OAuthViewModel
 
@@ -27,8 +28,10 @@ class OAuthFragment : Fragment() {
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         oauthViewModel = ViewModelProvider(this, viewModelFactory)[OAuthViewModel::class.java]
         binding = FragmentOauthBinding.inflate(inflater, container, false).apply {
             viewModel = this@OAuthFragment.oauthViewModel
@@ -49,7 +52,8 @@ class OAuthFragment : Fragment() {
             binding.inputInstanceName.error = getString(R.string.error)
         })
         oauthViewModel.transactionMainView.observe(viewLifecycleOwner, Observer {
-            val mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
+            val mainViewModel =
+                ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
             mainViewModel.eventTransactionToTop.value = Unit
         })
         oauthViewModel.accessTokenError.observe(viewLifecycleOwner, Observer {

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class BindingRecyclerAdapter<T, V : ViewDataBinding> :
-        RecyclerView.Adapter<BindingHolder<V>>(), Iterable<T> {
+    RecyclerView.Adapter<BindingHolder<V>>(), Iterable<T> {
 
     private var items: List<T>? = null
 
@@ -60,7 +60,8 @@ abstract class BindingRecyclerAdapter<T, V : ViewDataBinding> :
         return items!!.iterator()
     }
 
-    inner class RecyclerDiffCallback(private val old: List<T>, private val new :List<T>) : DiffUtil.Callback() {
+    inner class RecyclerDiffCallback(private val old: List<T>, private val new: List<T>) :
+        DiffUtil.Callback() {
 
         override fun getOldListSize(): Int = old.size
 

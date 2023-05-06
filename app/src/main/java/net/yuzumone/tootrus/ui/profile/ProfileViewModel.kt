@@ -78,7 +78,9 @@ class ProfileViewModel @Inject constructor(
             when (v1) {
                 is Success -> {
                     list.addAll(v1.value)
-                    val p2 = Params(id, onlyMedia = false, excludeReplies = true, pinned = false, Range())
+                    val p2 = Params(
+                        id, onlyMedia = false, excludeReplies = true, pinned = false, Range()
+                    )
                     getStatusesUseCase(p2, viewModelScope) { v2 ->
                         when (v2) {
                             is Success -> {

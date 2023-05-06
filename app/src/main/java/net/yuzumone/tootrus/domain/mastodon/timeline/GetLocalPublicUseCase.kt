@@ -7,7 +7,7 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class GetLocalPublicUseCase @Inject constructor(
-        private val repository: PublicRepository
+    private val repository: PublicRepository
 ) : UseCase<Range, List<Status>>() {
     override suspend fun run(params: Range) = repository.getLocalPublic(params)
 }

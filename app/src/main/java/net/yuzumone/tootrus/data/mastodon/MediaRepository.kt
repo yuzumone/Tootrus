@@ -12,7 +12,7 @@ interface MediaRepository {
 }
 
 class DefaultMediaRepository @Inject constructor(
-        @Named("client") private val client: MastodonClient
+    @Named("client") private val client: MastodonClient
 ) : MediaRepository {
     override fun postMedia(files: List<MultipartBody.Part>): List<Attachment> {
         val result = ArrayList<Attachment>()

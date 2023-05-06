@@ -6,12 +6,12 @@ import com.sys1yagi.mastodon4j.api.entity.Account
 import net.yuzumone.tootrus.databinding.ItemAccountBinding
 
 class AccountBindingAdapter(
-        private val listener: OnAccountAdapterClickListener
+    private val listener: OnAccountAdapterClickListener
 ) : BindingRecyclerAdapter<Account, ItemAccountBinding>() {
 
     override fun createBinding(parent: ViewGroup): ItemAccountBinding {
         return ItemAccountBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
+            .inflate(LayoutInflater.from(parent.context), parent, false)
     }
 
     override fun bind(binding: ItemAccountBinding, item: Account) {

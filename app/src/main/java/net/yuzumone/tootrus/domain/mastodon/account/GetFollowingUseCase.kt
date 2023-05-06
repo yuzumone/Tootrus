@@ -7,8 +7,8 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class GetFollowingUseCase @Inject constructor(
-        private val repository: AccountRepository
+    private val repository: AccountRepository
 ) : UseCase<Pair<Long, Range>, List<Account>>() {
     override suspend fun run(params: Pair<Long, Range>) =
-            repository.getFollowing(params.first, params.second)
+        repository.getFollowing(params.first, params.second)
 }

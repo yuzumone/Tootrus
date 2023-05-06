@@ -27,8 +27,9 @@ class ImagePreviewFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         binding = FragmentImagePreviewBinding.inflate(inflater, container, false)
         binding.attachment = attachment
         return binding.root

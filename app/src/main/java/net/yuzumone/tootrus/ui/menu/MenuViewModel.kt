@@ -19,9 +19,16 @@ class MenuViewModel : ViewModel(), OnMenuClickListener {
 
     private fun createMenu(status: Status): List<Menu> {
         val menuList = ArrayList<Menu>()
-        menuList.add(Menu(title = status.account!!.userName, accountId = status.account!!.id, action = "account"))
+        menuList.add(
+            Menu(
+                title = status.account!!.userName,
+                accountId = status.account!!.id,
+                action = "account"
+            )
+        )
         status.reblog?.let {
-            val menu = Menu(title = it.account!!.userName, accountId = it.account!!.id, action = "account")
+            val menu =
+                Menu(title = it.account!!.userName, accountId = it.account!!.id, action = "account")
             if (!menuList.contains(menu)) {
                 menuList.add(menu)
             }
@@ -36,7 +43,13 @@ class MenuViewModel : ViewModel(), OnMenuClickListener {
             menuList.add(Menu(title = "Conversation", status = status, action = "conversation"))
         }
         menuList.add(Menu(title = "Share", statusUrl = status.url, action = "share"))
-        menuList.add(Menu(title = "Copy link to toot", statusUrl = status.url, action = "copy_link"))
+        menuList.add(
+            Menu(
+                title = "Copy link to toot",
+                statusUrl = status.url,
+                action = "copy_link"
+            )
+        )
         return menuList
     }
 }

@@ -7,8 +7,8 @@ import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class PostMediaUseCase @Inject constructor(
-        private val repository: MediaRepository
-) : UseCase<List<MultipartBody.Part> , List<Attachment>>() {
+    private val repository: MediaRepository
+) : UseCase<List<MultipartBody.Part>, List<Attachment>>() {
     override suspend fun run(params: List<MultipartBody.Part>) =
-            repository.postMedia(params)
+        repository.postMedia(params)
 }

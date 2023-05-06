@@ -7,8 +7,8 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class GetFavoritesUseCase @Inject constructor(
-        private val repository: FavoriteRepository
+    private val repository: FavoriteRepository
 ) : UseCase<Range, List<Status>>() {
     override suspend fun run(params: Range): List<Status> =
-            repository.getFavorites(params)
+        repository.getFavorites(params)
 }

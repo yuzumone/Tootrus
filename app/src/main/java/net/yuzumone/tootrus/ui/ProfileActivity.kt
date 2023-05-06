@@ -25,8 +25,10 @@ class ProfileActivity : AppCompatActivity(), HasSupportFragmentInjector {
     private lateinit var binding: ActivityProfileBinding
     private lateinit var profileViewModel: ProfileViewModel
     private val id: Long by lazy { intent.getLongExtra(ARG_ID, 0L) }
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
 
     companion object {
         private const val ARG_ID = "id"
@@ -46,7 +48,8 @@ class ProfileActivity : AppCompatActivity(), HasSupportFragmentInjector {
             binding.progress.visibility = View.GONE
             if (it != null) {
                 val fragment = ProfileFragment.newInstance(it.first, it.second)
-                supportFragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit()
+                supportFragmentManager.beginTransaction().replace(android.R.id.content, fragment)
+                    .commit()
             } else {
                 Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show()
                 finish()

@@ -6,7 +6,7 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class GetVerifyCredentialsUseCase @Inject constructor(
-        private val repository: AccountRepository
+    private val repository: AccountRepository
 ) : UseCase<Unit, Account>() {
     override suspend fun run(params: Unit) = repository.getVerifyCredentials()
 }

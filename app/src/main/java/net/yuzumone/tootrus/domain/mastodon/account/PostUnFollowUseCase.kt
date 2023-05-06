@@ -6,7 +6,7 @@ import net.yuzumone.tootrus.domain.UseCase
 import javax.inject.Inject
 
 class PostUnFollowUseCase @Inject constructor(
-        private val repository: AccountRepository
+    private val repository: AccountRepository
 ) : UseCase<Long, Relationship>() {
     override suspend fun run(params: Long) = repository.postUnFollow(params)
 }

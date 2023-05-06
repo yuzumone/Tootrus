@@ -16,7 +16,8 @@ import javax.inject.Inject
 class FavoriteActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private lateinit var binding: ActivityFavoriteBinding
-    @Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
