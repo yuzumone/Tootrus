@@ -1,5 +1,6 @@
 package net.yuzumone.tootrus.ui.top
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import com.sys1yagi.mastodon4j.api.Range
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Notification
 import com.sys1yagi.mastodon4j.api.entity.Status
+import dagger.hilt.android.lifecycle.HiltViewModel
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.account.GetVerifyCredentialsUseCase
@@ -27,6 +29,7 @@ import net.yuzumone.tootrus.util.postInsertValue
 import net.yuzumone.tootrus.util.replaceStatus
 import javax.inject.Inject
 
+@HiltViewModel
 class TopViewModel @Inject constructor(
     private val startUserStreamUseCase: StartUserStreamUseCase,
     private val shutdownUserStreamUseCase: ShutdownUserStreamUseCase,
@@ -167,6 +170,7 @@ class TopViewModel @Inject constructor(
     }
 
     override fun actionDetail(status: Status) {
+        Log.d("actionDe", status.toString())
         detailActionEvent.value = status
     }
 

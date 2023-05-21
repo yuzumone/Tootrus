@@ -4,6 +4,7 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sys1yagi.mastodon4j.api.entity.Status
+import dagger.hilt.android.lifecycle.HiltViewModel
 import net.yuzumone.tootrus.service.PostStatusService
 
 class PostStatusDialogViewModel : ViewModel() {

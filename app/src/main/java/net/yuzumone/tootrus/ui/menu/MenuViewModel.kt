@@ -3,6 +3,7 @@ package net.yuzumone.tootrus.ui.menu
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sys1yagi.mastodon4j.api.entity.Status
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 class MenuViewModel : ViewModel(), OnMenuClickListener {
 

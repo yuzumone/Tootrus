@@ -3,6 +3,7 @@ package net.yuzumone.tootrus.ui
 import androidx.lifecycle.*
 import com.sys1yagi.mastodon4j.api.entity.Account
 import dagger.Lazy
+import dagger.hilt.android.lifecycle.HiltViewModel
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.account.GetVerifyCredentialsUseCase
@@ -10,9 +11,10 @@ import net.yuzumone.tootrus.domain.prefs.GetAccessTokenPrefUseCase
 import net.yuzumone.tootrus.domain.prefs.StoreUserIdPrefUseCase
 import javax.inject.Inject
 
+@HiltViewModel
 class MainViewModel @Inject constructor(
     private val storeUserIdPrefUseCase: StoreUserIdPrefUseCase,
-    getAccessTokenUseCase: GetAccessTokenPrefUseCase
+    getAccessTokenUseCase: GetAccessTokenPrefUseCase,
 ) : ViewModel() {
 
     private val accessToken = MutableLiveData<String>()

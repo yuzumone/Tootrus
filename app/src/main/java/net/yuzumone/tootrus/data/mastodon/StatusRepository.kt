@@ -3,8 +3,8 @@ package net.yuzumone.tootrus.data.mastodon
 import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.api.entity.Status
 import com.sys1yagi.mastodon4j.api.method.Statuses
+import net.yuzumone.tootrus.di.InterceptorMastodonClient
 import javax.inject.Inject
-import javax.inject.Named
 
 interface StatusRepository {
     fun postStatus(
@@ -23,7 +23,7 @@ interface StatusRepository {
 }
 
 class DefaultStatusRepository @Inject constructor(
-    @Named("client") private val client: MastodonClient
+    @InterceptorMastodonClient private val client: MastodonClient
 ) : StatusRepository {
     override fun postStatus(
         status: String,

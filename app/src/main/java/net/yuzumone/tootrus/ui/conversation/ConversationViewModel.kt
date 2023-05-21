@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sys1yagi.mastodon4j.api.entity.Status
+import dagger.hilt.android.lifecycle.HiltViewModel
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.status.GetConversationUseCase
 import net.yuzumone.tootrus.ui.common.OnStatusAdapterSingleClickListener
 import javax.inject.Inject
 
+@HiltViewModel
 class ConversationViewModel @Inject constructor(
     private val getConversationUseCase: GetConversationUseCase
 ) : ViewModel(), OnStatusAdapterSingleClickListener {

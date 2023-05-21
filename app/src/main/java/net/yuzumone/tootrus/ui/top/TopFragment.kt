@@ -1,8 +1,8 @@
 package net.yuzumone.tootrus.ui.top
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -10,12 +10,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentTopBinding
 import net.yuzumone.tootrus.ui.FavoriteActivity
@@ -26,27 +26,17 @@ import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
 import net.yuzumone.tootrus.ui.top.home.HomeTimelineFragment
 import net.yuzumone.tootrus.ui.top.local.LocalTimelineFragment
 import net.yuzumone.tootrus.ui.top.notification.NotificationFragment
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: FragmentTopBinding
-    private lateinit var topViewModel: TopViewModel
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
+    private val topViewModel: TopViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        topViewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[TopViewModel::class.java]
         topViewModel.startUserStream()
         val adapter = ViewPagerAdapter(requireActivity()).apply {
             add(getString(R.string.section_home), HomeTimelineFragment())
@@ -69,6 +59,8 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         topViewModel.detailActionEvent.observe(viewLifecycleOwner, Observer {
+            Log.d("detaiAction", "called")
+            Log.d("detailActionEvent", it.toString())
             it ?: return@Observer
             requireActivity().run {
                 val intent = StatusDetailActivity.createIntent(this, it.id)
@@ -82,44 +74,44 @@ class TopFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener 
                 startActivity(intent)
             }
         })
-        topViewModel.favoriteActionEvent.observe(viewLifecycleOwner, Observer {
+        topViewModel.favoriteActionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.unfavoriteActionEvent.observe(viewLifecycleOwner, Observer {
+        }
+        topViewModel.unfavoriteActionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.reblogActionEvent.observe(viewLifecycleOwner, Observer {
+        }
+        topViewModel.reblogActionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
-        })
+        }
         topViewModel.menuActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
             fragment.show(parentFragmentManager, "menu")
         })
-        topViewModel.favoriteError.observe(viewLifecycleOwner, Observer {
+        topViewModel.favoriteError.observe(viewLifecycleOwner) {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.reblogError.observe(viewLifecycleOwner, Observer {
+        }
+        topViewModel.reblogError.observe(viewLifecycleOwner) {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
-        })
-        topViewModel.openAccountEvent.observe(viewLifecycleOwner, Observer {
+        }
+        topViewModel.openAccountEvent.observe(viewLifecycleOwner) {
             requireActivity().run {
                 val intent = ProfileActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
-        })
-        topViewModel.openStatusEvent.observe(viewLifecycleOwner, Observer {
+        }
+        topViewModel.openStatusEvent.observe(viewLifecycleOwner) {
             requireActivity().run {
                 val intent = StatusDetailActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
-        })
-        topViewModel.openUserAccountEvent.observe(viewLifecycleOwner, Observer {
+        }
+        topViewModel.openUserAccountEvent.observe(viewLifecycleOwner) {
             requireActivity().run {
                 val intent = ProfileActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
-        })
+        }
     }
 
     private fun getPostStatusButtonListener(): View.OnClickListener {

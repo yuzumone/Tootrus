@@ -1,6 +1,5 @@
 package net.yuzumone.tootrus.ui.favorite
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,37 +7,27 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentFavoriteBinding
 import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
     private lateinit var binding: FragmentFavoriteBinding
-    private lateinit var viewModel: FavoriteViewModel
+    private val viewModel: FavoriteViewModel by activityViewModels()
     private lateinit var adapter: StatusBindingAdapter
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[FavoriteViewModel::class.java]
         adapter = StatusBindingAdapter(viewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
@@ -54,23 +43,23 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.favorites.observe(viewLifecycleOwner, Observer {
+        viewModel.favorites.observe(viewLifecycleOwner) {
             if (binding.progress.visibility == View.VISIBLE) {
                 binding.progress.visibility = View.GONE
             }
             adapter.update(it)
-        })
-        viewModel.error.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.error.observe(viewLifecycleOwner) {
             if (binding.progress.visibility == View.VISIBLE) {
                 binding.progress.visibility = View.GONE
             }
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
-        })
-        viewModel.eventOpenStatus.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.eventOpenStatus.observe(viewLifecycleOwner) {
             requireActivity().run {
                 val intent = StatusDetailActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
-        })
+        }
     }
 }

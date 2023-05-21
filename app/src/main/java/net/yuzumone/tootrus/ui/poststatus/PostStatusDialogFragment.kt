@@ -9,7 +9,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
@@ -76,26 +75,26 @@ class PostStatusDialogFragment : DialogFragment() {
             it.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
             it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
-        viewModel.statusVisibility.observe(viewLifecycleOwner, Observer {
+        viewModel.statusVisibility.observe(viewLifecycleOwner) {
             visibility = it
             requireActivity().invalidateOptionsMenu()
             if (binding.viewVisibility.visibility == View.VISIBLE) {
                 binding.viewVisibility.visibility = View.GONE
             }
-        })
-        viewModel.isSensitive.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.isSensitive.observe(viewLifecycleOwner) {
             isSensitive = it
             requireActivity().invalidateOptionsMenu()
-        })
-        viewModel.eventNavigationClick.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.eventNavigationClick.observe(viewLifecycleOwner) {
             dismiss()
-        })
-        viewModel.draft.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.draft.observe(viewLifecycleOwner) {
             requireActivity().run {
                 val intent = PostStatusService.createIntent(this, it)
                 startService(intent)
             }
-        })
+        }
         requireActivity().addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.let {

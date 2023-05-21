@@ -1,29 +1,26 @@
 package net.yuzumone.tootrus.ui.detail
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentStatusDetailBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
 import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class StatusDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentStatusDetailBinding
-    private lateinit var statusDetailViewModel: StatusDetailViewModel
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val statusDetailViewModel: StatusDetailViewModel by activityViewModels()
     private val status by lazy {
         Gson().fromJson(requireArguments().getString(ARG_STATUS), Status::class.java)
     }
@@ -39,17 +36,10 @@ class StatusDetailFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        statusDetailViewModel =
-            ViewModelProvider(this, viewModelFactory)[StatusDetailViewModel::class.java]
         binding = FragmentStatusDetailBinding.inflate(inflater, container, false).also {
             it.listener = statusDetailViewModel
             it.status = if (status.reblog == null) status else status.reblog
@@ -66,28 +56,28 @@ class StatusDetailFragment : Fragment() {
                 startActivity(intent)
             }
         })
-        statusDetailViewModel.favoriteActionEvent.observe(viewLifecycleOwner, Observer {
+        statusDetailViewModel.favoriteActionEvent.observe(viewLifecycleOwner) {
             binding.status = it
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
-        })
-        statusDetailViewModel.unfavoriteActionEvent.observe(viewLifecycleOwner, Observer {
+        }
+        statusDetailViewModel.unfavoriteActionEvent.observe(viewLifecycleOwner) {
             binding.status = it
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
-        })
-        statusDetailViewModel.reblogActionEvent.observe(viewLifecycleOwner, Observer {
+        }
+        statusDetailViewModel.reblogActionEvent.observe(viewLifecycleOwner) {
             binding.status = it
             Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
-        })
+        }
         statusDetailViewModel.openMenuActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
             fragment.show(parentFragmentManager, "menu")
         })
-        statusDetailViewModel.favoriteError.observe(viewLifecycleOwner, Observer {
+        statusDetailViewModel.favoriteError.observe(viewLifecycleOwner) {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
-        })
-        statusDetailViewModel.reblogError.observe(viewLifecycleOwner, Observer {
+        }
+        statusDetailViewModel.reblogError.observe(viewLifecycleOwner) {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
-        })
+        }
     }
 }

@@ -5,17 +5,22 @@ import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.MastodonClient
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import net.yuzumone.tootrus.App
 import net.yuzumone.tootrus.data.mastodon.*
 import net.yuzumone.tootrus.data.prefs.PreferenceStorage
 import net.yuzumone.tootrus.data.prefs.SharedPreferenceStorage
 import okhttp3.OkHttpClient
-import javax.inject.Named
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
-class ApplicationModule {
+@InstallIn(SingletonComponent::class)
+object ApplicationModule {
 
+    @Singleton
     @Provides
     fun provideContext(application: App): Context {
         return application.applicationContext
@@ -33,12 +38,12 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun providesPreferenceStorage(context: Context): PreferenceStorage =
+    fun providesPreferenceStorage(@ApplicationContext context: Context): PreferenceStorage =
         SharedPreferenceStorage(context)
 
     @Singleton
     @Provides
-    @Named("client")
+    @InterceptorMastodonClient
     fun providesMastodonClient(
         okHttpClientBuilder: OkHttpClient.Builder,
         gson: Gson,
@@ -54,7 +59,7 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    @Named("streaming_client")
+    @InterceptorMastodonStreamingClient
     fun providesMastodonStreamingClient(
         okHttpClientBuilder: OkHttpClient.Builder,
         gson: Gson,
@@ -114,3 +119,11 @@ class ApplicationModule {
     fun providesFavoriteRepository(repository: DefaultFavoriteRepository): FavoriteRepository =
         repository
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class InterceptorMastodonClient
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class InterceptorMastodonStreamingClient
