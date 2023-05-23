@@ -1,41 +1,30 @@
 package net.yuzumone.tootrus.ui.profile
 
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentProfileFollowersBinding
 import net.yuzumone.tootrus.ui.common.AccountBindingAdapter
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class ProfileFollowersFragment : Fragment() {
 
-    private lateinit var profileViewModel: ProfileViewModel
+    private val profileViewModel: ProfileViewModel by activityViewModels()
     private lateinit var binding: FragmentProfileFollowersBinding
     private lateinit var adapter: AccountBindingAdapter
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        profileViewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[ProfileViewModel::class.java]
         adapter = AccountBindingAdapter(profileViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
@@ -50,8 +39,9 @@ class ProfileFollowersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        profileViewModel.followers.observe(viewLifecycleOwner, Observer {
+        Log.d("ProfileFollowers", profileViewModel.toString())
+        profileViewModel.followers.observe(viewLifecycleOwner) {
             adapter.update(it)
-        })
+        }
     }
 }

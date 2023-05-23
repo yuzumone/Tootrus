@@ -5,30 +5,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
+import dagger.hilt.android.AndroidEntryPoint
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.ActivityStatusDetailBinding
 import net.yuzumone.tootrus.ui.detail.StatusDetailFragment
 import net.yuzumone.tootrus.ui.detail.StatusDetailViewModel
-import javax.inject.Inject
 
-class StatusDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
+@AndroidEntryPoint
+class StatusDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStatusDetailBinding
-    private lateinit var statusDetailViewModel: StatusDetailViewModel
+    private val statusDetailViewModel: StatusDetailViewModel by viewModels()
     private val id: Long by lazy { intent.getLongExtra(ARG_ID, 0L) }
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Fragment>
 
     companion object {
         private const val ARG_ID = "id"
@@ -40,7 +31,6 @@ class StatusDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_status_detail)
         setSupportActionBar(binding.toolbar)
@@ -48,9 +38,7 @@ class StatusDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         binding.toolbar.setNavigationOnClickListener {
             finish()
         }
-        statusDetailViewModel =
-            ViewModelProvider(this, viewModelFactory)[StatusDetailViewModel::class.java]
-        statusDetailViewModel.status.observe(this, Observer { status ->
+        statusDetailViewModel.status.observe(this) { status ->
             binding.progress.visibility = View.GONE
             if (status != null) {
                 val fragment = StatusDetailFragment.newInstance(status)
@@ -59,13 +47,9 @@ class StatusDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show()
                 finish()
             }
-        })
+        }
         if (savedInstanceState == null) {
             statusDetailViewModel.getStatus(id)
         }
-    }
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return dispatchingActivityInjector
     }
 }

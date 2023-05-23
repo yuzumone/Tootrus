@@ -4,8 +4,8 @@ import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.api.Handler
 import com.sys1yagi.mastodon4j.api.Shutdownable
 import com.sys1yagi.mastodon4j.api.method.Streaming
+import net.yuzumone.tootrus.di.InterceptorMastodonStreamingClient
 import javax.inject.Inject
-import javax.inject.Named
 
 interface StreamRepository {
     fun user(handler: Handler)
@@ -13,7 +13,7 @@ interface StreamRepository {
 }
 
 class DefaultStreamRepository @Inject constructor(
-    @Named("streaming_client") private val client: MastodonClient
+    @InterceptorMastodonStreamingClient private val client: MastodonClient
 ) : StreamRepository {
 
     private lateinit var shutdownable: Shutdownable

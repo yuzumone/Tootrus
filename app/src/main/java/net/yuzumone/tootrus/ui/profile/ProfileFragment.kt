@@ -1,6 +1,5 @@
 package net.yuzumone.tootrus.ui.profile
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,25 +7,25 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Relationship
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentProfileBinding
 import net.yuzumone.tootrus.ui.PostStatusActivity
 import net.yuzumone.tootrus.ui.ProfileActivity
 import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.menu.MenuDialogFragment
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
-    private lateinit var profileViewModel: ProfileViewModel
+    private val profileViewModel: ProfileViewModel by activityViewModels()
     private lateinit var binding: FragmentProfileBinding
     private val account by lazy {
         Gson().fromJson(requireArguments().getString(ARG_ACCOUNT), Account::class.java)
@@ -34,9 +33,6 @@ class ProfileFragment : Fragment() {
     private val relationship by lazy {
         Gson().fromJson(requireArguments().getString(ARG_RELATIONSHIP), Relationship::class.java)
     }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     companion object {
         private const val ARG_ACCOUNT = "account"
@@ -51,17 +47,10 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        profileViewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[ProfileViewModel::class.java]
         val adapter = ViewPagerAdapter(requireActivity()).apply {
             add(getString(R.string.profile_toot, account.statusesCount), ProfileStatusesFragment())
             add(getString(R.string.profile_media), ProfileMediaStatusesFragment())
@@ -97,16 +86,16 @@ class ProfileFragment : Fragment() {
         profileViewModel.getMediaStatuses(account.id)
         profileViewModel.getFollowing(account.id)
         profileViewModel.getFollowers(account.id)
-        profileViewModel.userId.observe(viewLifecycleOwner, Observer {
+        profileViewModel.userId.observe(viewLifecycleOwner) {
             binding.userId = it
-        })
-        profileViewModel.account.observe(viewLifecycleOwner, Observer {
+        }
+        profileViewModel.account.observe(viewLifecycleOwner) {
             binding.account = it
             binding.toolbar.title = it?.userName
-        })
-        profileViewModel.relationship.observe(viewLifecycleOwner, Observer {
+        }
+        profileViewModel.relationship.observe(viewLifecycleOwner) {
             binding.relationship = it
-        })
+        }
         profileViewModel.detailActionEvent.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             requireActivity().run {
@@ -121,29 +110,30 @@ class ProfileFragment : Fragment() {
                 startActivity(intent)
             }
         })
-        profileViewModel.favoriteActionEvent.observe(viewLifecycleOwner, Observer {
+        profileViewModel.favoriteActionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(activity, getString(R.string.favorited), Toast.LENGTH_SHORT).show()
-        })
-        profileViewModel.unfavoriteActionEvent.observe(viewLifecycleOwner, Observer {
+        }
+        profileViewModel.unfavoriteActionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(activity, getString(R.string.unfavorite), Toast.LENGTH_SHORT).show()
-        })
-        profileViewModel.reblogActionEvent.observe(viewLifecycleOwner, Observer {
+        }
+        profileViewModel.reblogActionEvent.observe(viewLifecycleOwner) {
             Toast.makeText(activity, getString(R.string.reblogged), Toast.LENGTH_SHORT).show()
-        })
-        profileViewModel.menuActionEvent.observe(viewLifecycleOwner, Observer {
+        }
+        profileViewModel.menuActionEvent.observe(/* owner = */ viewLifecycleOwner, /* observer = */
+            Observer {
             it ?: return@Observer
             val fragment = MenuDialogFragment.newInstance(it)
             fragment.show(parentFragmentManager, "menu")
         })
-        profileViewModel.openAccount.observe(viewLifecycleOwner, Observer {
+        profileViewModel.openAccount.observe(viewLifecycleOwner) {
             requireActivity().run {
                 val intent = ProfileActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
-        })
-        profileViewModel.error.observe(viewLifecycleOwner, Observer {
+        }
+        profileViewModel.error.observe(viewLifecycleOwner) {
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
-        })
+        }
     }
 
     class ViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {

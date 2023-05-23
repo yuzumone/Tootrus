@@ -6,8 +6,8 @@ import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Relationship
 import com.sys1yagi.mastodon4j.api.entity.Status
 import com.sys1yagi.mastodon4j.api.method.Accounts
+import net.yuzumone.tootrus.di.InterceptorMastodonClient
 import javax.inject.Inject
-import javax.inject.Named
 
 interface AccountRepository {
     fun getAccount(id: Long): Account
@@ -28,7 +28,7 @@ interface AccountRepository {
 }
 
 class DefaultAccountRepository @Inject constructor(
-    @Named("client") private val client: MastodonClient
+    @InterceptorMastodonClient private val client: MastodonClient
 ) : AccountRepository {
     override fun getAccount(id: Long): Account {
         return Accounts(client).getAccount(id).execute()

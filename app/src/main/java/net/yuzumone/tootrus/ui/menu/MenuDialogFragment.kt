@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -57,10 +56,10 @@ class MenuDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         menuViewModel.setStatus(status)
-        menuViewModel.menuList.observe(viewLifecycleOwner, Observer {
+        menuViewModel.menuList.observe(viewLifecycleOwner) {
             adapter.update(it)
-        })
-        menuViewModel.menu.observe(viewLifecycleOwner, Observer {
+        }
+        menuViewModel.menu.observe(viewLifecycleOwner) {
             dismiss()
             when (it!!.action) {
                 Menu.Action.Account.value -> {
@@ -93,6 +92,6 @@ class MenuDialogFragment : DialogFragment() {
                     }
                 }
             }
-        })
+        }
     }
 }

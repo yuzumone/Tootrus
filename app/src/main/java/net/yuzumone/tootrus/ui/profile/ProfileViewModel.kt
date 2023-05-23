@@ -7,6 +7,7 @@ import com.sys1yagi.mastodon4j.api.Range
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Relationship
 import com.sys1yagi.mastodon4j.api.entity.Status
+import dagger.hilt.android.lifecycle.HiltViewModel
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.account.*
@@ -19,6 +20,7 @@ import net.yuzumone.tootrus.ui.common.OnStatusAdapterClickListener
 import net.yuzumone.tootrus.util.replaceStatus
 import javax.inject.Inject
 
+@HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val getAccountAndRelationShipsUseCase: GetAccountAndRelationShipUseCase,
     private val getStatusesUseCase: GetStatusesUseCase,
@@ -29,7 +31,7 @@ class ProfileViewModel @Inject constructor(
     private val postFavoriteUseCase: PostFavoriteUseCase,
     private val postUnfavoriteUseCase: PostUnfavoriteUseCase,
     private val postReblogUseCase: PostReblogUseCase,
-    getUserIdPrefUseCase: GetUserIdPrefUseCase
+    getUserIdPrefUseCase: GetUserIdPrefUseCase,
 ) : ViewModel(), OnStatusAdapterClickListener, OnAccountAdapterClickListener {
 
     val userId = MutableLiveData<Long>()

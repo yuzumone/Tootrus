@@ -1,6 +1,5 @@
 package net.yuzumone.tootrus.ui.conversation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,26 +8,23 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentConversionBinding
 import net.yuzumone.tootrus.ui.StatusDetailActivity
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class ConversationDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentConversionBinding
-    private lateinit var viewModel: ConversationViewModel
+    private val viewModel: ConversationViewModel by activityViewModels()
     private lateinit var adapter: StatusBindingAdapter
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val status by lazy {
         Gson().fromJson(arguments?.getString(ARG_STATUS), Status::class.java)
     }
@@ -44,16 +40,10 @@ class ConversationDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this, viewModelFactory)[ConversationViewModel::class.java]
         adapter = StatusBindingAdapter(viewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
@@ -74,22 +64,22 @@ class ConversationDialogFragment : DialogFragment() {
             it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
         viewModel.getConversations(status)
-        viewModel.conversations.observe(viewLifecycleOwner, Observer {
+        viewModel.conversations.observe(viewLifecycleOwner) {
             binding.progress.visibility = View.GONE
             adapter.update(it)
-        })
-        viewModel.error.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.error.observe(viewLifecycleOwner) {
             binding.progress.visibility = View.GONE
             Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
-        })
-        viewModel.eventNavigationClick.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.eventNavigationClick.observe(viewLifecycleOwner) {
             dismiss()
-        })
-        viewModel.eventOpenStatus.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.eventOpenStatus.observe(viewLifecycleOwner) {
             requireActivity().run {
                 val intent = StatusDetailActivity.createIntent(this, it.id)
                 startActivity(intent)
             }
-        })
+        }
     }
 }

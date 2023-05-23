@@ -1,42 +1,31 @@
 package net.yuzumone.tootrus.ui.top.local
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.databinding.FragmentLocalTimelineBinding
 import net.yuzumone.tootrus.ui.common.StatusBindingAdapter
 import net.yuzumone.tootrus.ui.top.TopViewModel
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class LocalTimelineFragment : Fragment() {
 
     private lateinit var binding: FragmentLocalTimelineBinding
     private lateinit var adapter: StatusBindingAdapter
-    private lateinit var topViewModel: TopViewModel
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
+    private val topViewModel: TopViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        topViewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[TopViewModel::class.java]
         adapter = StatusBindingAdapter(topViewModel, topViewModel)
         val layoutManager = LinearLayoutManager(activity)
         val divider = DividerItemDecoration(activity, layoutManager.orientation)
@@ -54,14 +43,14 @@ class LocalTimelineFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topViewModel.localStatuses.observe(viewLifecycleOwner, Observer {
+        topViewModel.localStatuses.observe(viewLifecycleOwner) {
             binding.swipeRefresh.isRefreshing = false
             adapter.update(it)
-        })
-        topViewModel.localError.observe(viewLifecycleOwner, Observer {
+        }
+        topViewModel.localError.observe(viewLifecycleOwner) {
             if (binding.swipeRefresh.isRefreshing) {
                 binding.swipeRefresh.isRefreshing = false
             }
-        })
+        }
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sys1yagi.mastodon4j.api.entity.Status
+import dagger.hilt.android.lifecycle.HiltViewModel
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.status.GetStatusUseCase
@@ -12,6 +13,7 @@ import net.yuzumone.tootrus.domain.mastodon.status.PostReblogUseCase
 import net.yuzumone.tootrus.domain.mastodon.status.PostUnfavoriteUseCase
 import javax.inject.Inject
 
+@HiltViewModel
 class StatusDetailViewModel @Inject constructor(
     private val getStatusUseCase: GetStatusUseCase,
     private val postFavoriteUseCase: PostFavoriteUseCase,

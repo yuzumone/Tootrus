@@ -19,8 +19,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.api.entity.Status
-import dagger.android.AndroidInjection
-import kotlinx.coroutines.GlobalScope
+import dagger.hilt.android.AndroidEntryPoint
 import net.yuzumone.tootrus.R
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
@@ -34,17 +33,15 @@ import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
-import javax.inject.Scope
 import kotlin.math.floor
 
+@AndroidEntryPoint
 class PostStatusService : Service() {
 
     @Inject
     lateinit var postStatusUseCase: PostStatusUseCase
-
     @Inject
     lateinit var postMediaUseCase: PostMediaUseCase
-
     private lateinit var lifecycleScope: LifecycleCoroutineScope
 
     companion object {
@@ -58,11 +55,6 @@ class PostStatusService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
-    }
-
-    override fun onCreate() {
-        AndroidInjection.inject(this)
-        super.onCreate()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

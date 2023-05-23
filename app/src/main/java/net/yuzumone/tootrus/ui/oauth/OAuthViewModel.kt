@@ -3,6 +3,7 @@ package net.yuzumone.tootrus.ui.oauth
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import net.yuzumone.tootrus.domain.Failure
 import net.yuzumone.tootrus.domain.Success
 import net.yuzumone.tootrus.domain.mastodon.oauth.GetAccessTokenUseCase
@@ -12,10 +13,11 @@ import net.yuzumone.tootrus.domain.prefs.StoreInstanceNameAndTokenUseCase
 import net.yuzumone.tootrus.vo.OAuthParameter
 import javax.inject.Inject
 
+@HiltViewModel
 class OAuthViewModel @Inject constructor(
     private val getOAuthParameterUseCase: GetOAuthParameterUseCase,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
-    private val storeInstanceNameAndTokenUseCase: StoreInstanceNameAndTokenUseCase
+    private val storeInstanceNameAndTokenUseCase: StoreInstanceNameAndTokenUseCase,
 ) : ViewModel() {
 
     val oauthParameter = MutableLiveData<OAuthParameter>()
