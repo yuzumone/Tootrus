@@ -84,7 +84,7 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:2.6.0'
     implementation 'me.relex:photodraweeview:2.1.0'
     // parser
-    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.jsoup:jsoup:1.13.1'
     // firebase
     implementation platform('com.google.firebase:firebase-bom:31.3.0')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
