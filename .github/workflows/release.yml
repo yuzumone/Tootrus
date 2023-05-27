@@ -1,25 +1,21 @@
-name: Android CI
+name: Release apk
 
 on:
   pull_request:
-    types: [opened, synchronize]
-  push:
-    branches:
-      - main
+    types:
+      - closed
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true && contains(github.head_ref, 'release')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'temurin'
           cache: gradle
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
       - run: echo "${{secrets.ANDROID_RELEASE_BASE64_KEY}}" | base64 -d > ./keystore.jks
       - run: echo "keyAlias=keystore" >> key.properties
       - run: echo "keyPassword=${{secrets.ANDROID_RELEASE_KEY_PASSWORD}}" >> key.properties
@@ -27,5 +23,13 @@ jobs:
       - run: echo "storePassword=${{secrets.ANDROID_RELEASE_STORE_PASSWORD}}" >> key.properties
       - name: Create Google Services JSON
         run: echo "${{secrets.GOOGLE_SERVICES_JSON}}" | base64 -d > ./app/google-services.json
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: build apk
+        run: ./gradlew assembleRelease
+      - run: ls -la app/build/outputs/apk/release/
+      - name: deploygate and update distribution
+        run: |
+          curl \
+          -H "Authorization: token ${{secrets.DEPLOYGATE_API_KEY}}" \
+          -F "file=@app/build/outputs/apk/release/app-release.apk" \
+          --form-string "distribution_key=d6defeeb208f5ff444e7d543e667ecd6cd7a0eaa" \
+          "https://deploygate.com/api/users/yuzumone/apps"
