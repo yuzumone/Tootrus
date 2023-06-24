@@ -2,7 +2,7 @@
 [![platform android](https://img.shields.io/badge/platform-android-green.svg)](#)
 [![language kotlin](https://img.shields.io/badge/language-kotlin-green.svg)](#)
 [![minSdkVersion 24](https://img.shields.io/badge/minSdkVersion-24-red.svg)](#)
-[![version v1.0.7](https://img.shields.io/badge/version-v1.0.7-blue.svg)](#)
+[![version v1.0.8](https://img.shields.io/badge/version-v1.0.8-blue.svg)](#)
 [![APK](https://img.shields.io/badge/APK-deploygate-green)](https://dply.me/i3zn8s)
 
 ## Libraries
